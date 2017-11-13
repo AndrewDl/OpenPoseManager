@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="OpenPoseManager:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/OpenPoseManager_jar</output-path>
+    <root id="archive" name="OpenPoseManager.jar">
+      <element id="module-output" name="OpenPoseManager" />
+    </root>
+  </artifact>
+</component>
