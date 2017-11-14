@@ -1,4 +1,5 @@
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,6 +47,7 @@ public class Main {
         }
         System.out.println(fileList.size());
         System.out.println(fileList.get(0).getName());
+        //System.out.println(fileList.get(0).toString().split("\\.")[0]);
 
         loop(task,processName,fileList);
 
@@ -65,16 +67,24 @@ public class Main {
                     System.out.println("itWorks");
                 }else{
                     System.out.println("itNotWorks");
-                    cmdLine = "D:\\Program Files (x86)\\CifrusMark\\bin\\OpenPoseDemo.exe -video "+fileList.get(i).toString()+" -write_keypoint_json output/ -process_real_time";
-                    task.startTask(cmdLine);
-                    if(i>fileList.size())break;
+                   // System.out.println("== filename:" + fileList.get(i).getName());
+                   // System.out.println(fileList.get(i).toString().split(".mp4")[0]);
+                    cmdLine = "D:\\Program Files (x86)\\CifrusMark\\bin\\OpenPoseDemo.exe -video "
+                            +fileList.get(i).toString()+" -write_keypoint_json output/tests/"
+                            +fileList.get(i).getName().split("\\.")[0]+"/ -process_real_time";
+
+                            task.startTask(cmdLine);
+                    System.out.println(fileList.get(i).toString());
+                    i++;
                 }
                 System.out.println(new Date());
                 Thread.sleep(5 * 1000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            if(i>=fileList.size()){
+                System.out.println("We've done here!");
+                break;}
         }
     }
 
