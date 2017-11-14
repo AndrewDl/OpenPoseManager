@@ -71,7 +71,7 @@ public class Main {
                    // System.out.println(fileList.get(i).toString().split(".mp4")[0]);
                     cmdLine = "D:\\Program Files (x86)\\CifrusMark\\bin\\OpenPoseDemo.exe -video "
                             +fileList.get(i).toString()+" -write_keypoint_json output/tests/"
-                            +fileList.get(i).getName().split("\\.")[0]+"/ -process_real_time";
+                            +fileList.get(i).getName().split("\\.")[0]+"/";
 
                             task.startTask(cmdLine);
                     System.out.println(fileList.get(i).toString());
