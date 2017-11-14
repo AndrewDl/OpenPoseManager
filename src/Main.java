@@ -11,7 +11,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        String processName = "8432";//"Telegram.exe";
+        String processName = "OpenPoseDemo.exe";//"Telegram.exe";
         String inputFolder = ".";
         String outputFolder = "output";
 
@@ -40,14 +40,14 @@ public class Main {
 
         //scan for needed files in folder. validate their names;
         for(File f : files){
-            if(f.getName().endsWith(".dav")){
+            if(f.getName().endsWith(".mp4")){
                 fileList.add(f);
             }
         }
         System.out.println(fileList.size());
-        System.out.println(fileList.get(0));
+        System.out.println(fileList.get(0).getName());
 
-        loop(task,processName);
+        loop(task,processName,fileList);
 
     }
 
@@ -56,14 +56,18 @@ public class Main {
         Platform.exit();
     }
 
-    private static void loop(TasksClass task,String processName){
+    private static void loop(TasksClass task, String processName, List<File> fileList){
+        Integer i=0;
+        String cmdLine;
         for(;;){
             try {
                 if(task.isProcessRunning(processName)!=false){
                     System.out.println("itWorks");
                 }else{
                     System.out.println("itNotWorks");
-                    task.startTask("C:\\Users\\Laimi\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe");
+                    cmdLine = "D:\\Program Files (x86)\\CifrusMark\\bin\\OpenPoseDemo.exe -video "+fileList.get(i).toString()+" -write_keypoint_json output/ -process_real_time";
+                    task.startTask(cmdLine);
+                    if(i>fileList.size())break;
                 }
                 System.out.println(new Date());
                 Thread.sleep(5 * 1000);
