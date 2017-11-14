@@ -3,10 +3,7 @@ import javafx.application.Platform;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Andrew on 11/08/17.
@@ -14,7 +11,7 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
-        String processName = "Telegram.exe";
+        String processName = "8432";//"Telegram.exe";
         String inputFolder = ".";
         String outputFolder = "output";
 
@@ -48,22 +45,33 @@ public class Main {
             }
         }
         System.out.println(fileList.size());
-        try {
-            if(task.isProcessRunning(processName)!=false){
-                System.out.println("itWorks");
-            }else{
-                System.out.println("itNotWorks");
-                task.startTask("C:\\Users\\Laimi\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println(fileList.get(0));
+
+        loop(task,processName);
 
     }
 
     private static void errorMessage(){
         System.out.println("Invalid args. Use -input D:/path/to/the/input/folder/ -output D:/output/folder/path/");
         Platform.exit();
+    }
+
+    private static void loop(TasksClass task,String processName){
+        for(;;){
+            try {
+                if(task.isProcessRunning(processName)!=false){
+                    System.out.println("itWorks");
+                }else{
+                    System.out.println("itNotWorks");
+                    task.startTask("C:\\Users\\Laimi\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe");
+                }
+                System.out.println(new Date());
+                Thread.sleep(5 * 1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
 }

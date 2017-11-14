@@ -20,7 +20,7 @@ public class TasksClass {
                 p.getInputStream()));
         String line;
         while ((line = reader.readLine())!=null){
-            //  System.out.println(line); //
+            // System.out.println(line); //
             if(line.contains(serviceName)) {
                 return true;
             }
@@ -33,7 +33,8 @@ public class TasksClass {
      */
     public void startTask(String cmdLine)throws Exception{
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec(cmdLine);
+       // Process pr =
+        rt.exec(cmdLine);
     }
 
     /**
