@@ -18,8 +18,6 @@ public class Main {
         String mode = "";
         String outputFolderForVideos = outputFolder+"computedVideos\\";
 
-        TasksClass task = new TasksClass();
-
         if (args.length >=4) {
             if (args[0].equals("-input")) {
                 inputFolder = args[1];
@@ -29,6 +27,8 @@ public class Main {
             } else errorMessage();
             mode = args[4];
         }
+
+        TasksClass task = new TasksClass();
 
         File folder = new File(inputFolder);
 

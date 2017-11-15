@@ -33,7 +33,6 @@ public class TasksClass {
      */
     public void startTask(String cmdLine)throws Exception{
         Runtime rt = Runtime.getRuntime();
-       // Process pr =
         rt.exec(cmdLine);
     }
 
