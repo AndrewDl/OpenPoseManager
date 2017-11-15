@@ -1,54 +1,30 @@
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 /**
  * Created by Andrew on 11/08/17.
  */
 public class Main {
+
     public static void main(String[] args) {
+        Data data = null;
+        XMLwriterReader reader = new XMLwriterReader("data.xml");
 
-        String inputFolder = ".";
-        String outputFolder = "output";
-
-        if (args.length == 4) {
-            if (args[0].equals("-input")) {
-                inputFolder = args[1];
-            } else errorMessage();
-            if (args[2].equals("-output")) {
-                outputFolder = args[3]+outputFolder;
-            } else errorMessage();
-
+        try {
+            data = (Data)reader.ReadFile(Data.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        VideoLoader vl = new VideoLoader(data);
 
-        File folder = new File(inputFolder);
 
-        if(!folder.exists()){
-            System.out.println("folder does not exist");
-            return;
-        }
-
-        File[] files = folder.listFiles();
-
-        List<File> fileList = new ArrayList<>();
-
-        //scan for needed files in folder. validate their names;
-        for(File f : files){
-            if(f.getName().endsWith(".dav")){
-                fileList.add(f);
-            }
-        }
-
-        System.out.println(fileList.size());
-
-    }
-
-    private static void errorMessage(){
-        System.out.println("Invalid args. Use -input D:/path/to/the/input/folder/ -output D:/output/folder/path/");
-        Platform.exit();
     }
 }
