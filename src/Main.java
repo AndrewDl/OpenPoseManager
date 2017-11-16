@@ -14,6 +14,9 @@ public class Main {
 
     public static void main(String[] args) {
         Data data = null;
+        /**
+         * loading pathes and additional args from xml file
+         */
         XMLwriterReader reader = new XMLwriterReader("data.xml");
 
         try {
@@ -23,6 +26,9 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        /**
+         * starting processing
+         */
         VideoLoader vl = new VideoLoader(data);
 
 
