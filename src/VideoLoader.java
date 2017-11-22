@@ -21,7 +21,9 @@ public class VideoLoader {
     String outputFolderForVideos = outputFolder+"/computedVideos/";
     String outputFolderForFails = outputFolder+"/failedVideos/";
     Integer index = 0;
-    File currentVideo;
+    File currentVideoFolder;
+    File tempVideoFolder;
+    Boolean failed = false;
     VideoLoader(Data data){
 
         /**
@@ -85,10 +87,13 @@ public class VideoLoader {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
+
                         if(task.isProcessRunning("WerFault.exe")){
                             String cmdLine = "TASKKILL /f /IM WerFault.exe";
                             System.out.println("WerFault closed");
-                            task.startTask(cmdLine);}
+                            task.startTask(cmdLine);
+                            failed = true;
+                        }
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -173,7 +178,6 @@ public class VideoLoader {
         Integer i=0;
         String cmdLine;
         Boolean status = false;
-        Boolean failed = false;
         File failfolder = new File(outputFolderForFails);
 
        // String outputFolderForVideos = outputFolder+"\\computedVideos\\";
@@ -187,7 +191,7 @@ public class VideoLoader {
                         System.out.println(new Date());
                         status=true;
                         System.out.println("0s");
-                        //проверяем есть ли строки в папке, если нет вешаем флаг и на следущем шаге кидаем видос в фейлы
+                        //НЕ АКТУАЛЬНО//проверяем есть ли строки в папке, если нет вешаем флаг и на следущем шаге кидаем видос в фейлы
                       //  for(int g = 0; g<5; g++){
                         Thread.sleep(10 * 1000);
                         System.out.println("30s");
@@ -197,13 +201,13 @@ public class VideoLoader {
                         
 
                         if(!folder.exists()){
-                            System.out.println("killing process");
-                            cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            task.startTask(cmdLine);
+                           // System.out.println("killing process");
+                           // cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            //task.startTask(cmdLine);
                              //task.killProcess(processName);
                             System.out.println("process should be killed already!");
                             failed = true;
-                        }else{failed = false;}
+                        }
 //                        File[] files = folder.listFiles();
 //                        List<File> jSonFiles = new ArrayList<>();
 //                        for(File f : files){
@@ -220,6 +224,7 @@ public class VideoLoader {
                     //if(status)jSonTimer.stop();
                 }else{
                     status=false;
+                    failed = false;
                     System.out.println("No process found...");
                     System.out.println("Starting new process...");
                     System.out.println(new Date());
@@ -277,9 +282,9 @@ public class VideoLoader {
         }
     }
     private File getCurrentVideoFolder(){
-        return this.currentVideo;
+        return this.currentVideoFolder;
     }
     private void setCurrentVideoFolder(File file){
-
+    this.currentVideoFolder = file;
     }
 }
