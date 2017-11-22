@@ -6,15 +6,15 @@ import java.io.InputStreamReader;
  * Created by Laimi on 13.11.2017.
  */
 public class TasksClass {
-    private static final String TASKLIST = "tasklist";
-    private static final String KILL = "taskkill /F /IM";
+    private String TASKLIST = "tasklist";
+    private String KILL = "taskkill /F /IM";
     /**
      * This method searching given task in windows tasklist
      * @param serviceName
      * @return
      * @throws Exception
      */
-    public static boolean isProcessRunning(String serviceName)throws Exception{
+    public  boolean isProcessRunning(String serviceName)throws Exception{
         Process p = Runtime.getRuntime().exec(TASKLIST);
         BufferedReader reader = new BufferedReader( new InputStreamReader(
                 p.getInputStream()));
@@ -39,9 +39,9 @@ public class TasksClass {
     /**
      * I guess programm need more permissions to kill other tasks
      */
-//    private static void killProcess(String serviceName) throws Exception {
-//        Runtime.getRuntime().exec(KILL + serviceName);
-//    }
+    public void killProcess(String serviceName) throws Exception {
+     Runtime.getRuntime().exec(KILL+"WerFault.exe");
+   }
 
 
 }

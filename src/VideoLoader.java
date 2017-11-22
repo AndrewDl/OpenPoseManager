@@ -1,6 +1,9 @@
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.application.Platform;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,21 +13,26 @@ import java.util.List;
  * Created by Laimi on 15.11.2017.
  */
 public class VideoLoader {
+    private Timer jSonTimer;
     String processName = "OpenPoseDemo.exe";//"Telegram.exe";
     String inputFolder = ".";
     String outputFolder = "output\\";
     String param = "";
     String outputFolderForVideos = outputFolder+"/computedVideos/";
-
+    String outputFolderForFails = outputFolder+"/failedVideos/";
+    Integer index = 0;
+    File currentVideo;
     VideoLoader(Data data){
 
         /**
          * pathes and params
          */
+
         inputFolder = data.getVideoSource();
         outputFolder = data.getVideoDestination();
         param = data.getParameters();
         outputFolderForVideos = outputFolder + "\\computedVideos\\";
+        outputFolderForFails = outputFolder + "\\failedVideos\\";
 //        if (args.length==4) {
 //            if (args[0].equals("-input")) {
 //                inputFolder = args[1];
@@ -72,8 +80,49 @@ public class VideoLoader {
         }
         else {System.out.println("Number of files:"+fileList.size());
         mkDir(outputFolderForVideos);
+        mkDir(outputFolderForFails);
+            jSonTimer = new Timer(3000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        if(task.isProcessRunning("WerFault.exe")){
+                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            System.out.println("WerFault closed");
+                            task.startTask(cmdLine);}
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+         jSonTimer.start();
         loop(task,fileList);
+        jSonTimer.stop();
     }
+        //File folder2 = new File(outputFolder + "test1/");
+//                        jSonTimer = new Timer(3000, new ActionListener() {
+//                            @Override
+//                            public void actionPerformed(ActionEvent e) {
+//                                if(folder2.exists()){
+//                                    System.out.println("timer");
+//                                    File[] files = folder2.listFiles();
+//                                    List<File> jSonFiles = new ArrayList<>();
+//                                    Integer jSonCheck_1 = 0;
+//                                    Integer jSonCheck_2 = 0;
+//                                    for(File f: files){
+//                                        jSonCheck_1++;
+//
+//                                        if(index > 0&&jSonCheck_2==jSonCheck_1){
+//                                            try {
+//                                                task.killProcess(processName);
+//                                            } catch (Exception e1) {
+//                                                e1.printStackTrace();
+//                                            }
+//                                        }
+//                                        jSonCheck_2 = jSonCheck_1;
+//                                        index++;
+//                                    }}}});
+//                       jSonTimer.start();
+
     }
 
 //        System.out.println(fileList.get(0).getName());
@@ -82,7 +131,7 @@ public class VideoLoader {
      * method creates dir for computed videos
      * @param outputFolderForVideos
      */
-    public static void mkDir(String outputFolderForVideos) {
+    public void mkDir(String outputFolderForVideos) {
 
         File theDir = new File(outputFolderForVideos);
 
@@ -116,6 +165,7 @@ public class VideoLoader {
      * while process not running it is forms cmdLine for openposedemo.exe and starts it
      * every new loop iteration previously computed video placing into special folder
      * after all iterations manager waits for openpose process to stop, and only then replacing last video and stops.
+     * Pay attention that index changes while new video process was started
      * @param task
      * @param fileList
      */
@@ -123,16 +173,51 @@ public class VideoLoader {
         Integer i=0;
         String cmdLine;
         Boolean status = false;
+        Boolean failed = false;
+        File failfolder = new File(outputFolderForFails);
+
        // String outputFolderForVideos = outputFolder+"\\computedVideos\\";
         System.out.println("Starting loop");
         for(;;){
             try {
                 if(task.isProcessRunning(processName)!=false){
                     if(status!=true){
+                        index = 0;
                         System.out.println("Process works");
                         System.out.println(new Date());
                         status=true;
+                        System.out.println("0s");
+                        //проверяем есть ли строки в папке, если нет вешаем флаг и на следущем шаге кидаем видос в фейлы
+                      //  for(int g = 0; g<5; g++){
+                        Thread.sleep(10 * 1000);
+                        System.out.println("30s");
+                        File folder = new File(outputFolder +fileList.get(i-1).getName().split("\\.")[0]);
+                        System.out.println("debug");
+                        setCurrentVideoFolder(folder);
+                        
+
+                        if(!folder.exists()){
+                            System.out.println("killing process");
+                            cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            task.startTask(cmdLine);
+                             //task.killProcess(processName);
+                            System.out.println("process should be killed already!");
+                            failed = true;
+                        }else{failed = false;}
+//                        File[] files = folder.listFiles();
+//                        List<File> jSonFiles = new ArrayList<>();
+//                        for(File f : files){
+//                            if(f.getName().endsWith(".json")){
+//                                jSonFiles.add(f);
+//                            }}
+//                        if(jSonFiles.size() == 0) {
+//                            System.out.println("No files found, shutting process down!");
+//                            task.killProcess(processName);
+//                        }
+
+
                     }
+                    //if(status)jSonTimer.stop();
                 }else{
                     status=false;
                     System.out.println("No process found...");
@@ -146,10 +231,17 @@ public class VideoLoader {
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
                     task.startTask(cmdLine);
                     System.out.println(inputFolder+fileList.get(i).getName());
-                    if(i>0){ File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
-                        // File destination = new File(".\\output\\tests\\ComputedVideos\\"+fileList.get(i-1).getName());
-                        fileList.get(i-1).renameTo(destination);
-                        System.out.println(destination);}
+                    if(i>0){
+                        if(failed){
+                            File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
+                            fileList.get(i-1).renameTo(destination);
+                            System.out.println(destination);
+                        }else {
+                            File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
+                            fileList.get(i-1).renameTo(destination);
+                            System.out.println(destination);
+                        } // File destination = new File(".\\output\\tests\\ComputedVideos\\"+fileList.get(i-1).getName());
+                        }
                     i++;
                 }
                 Thread.sleep(5 * 1000);
@@ -158,8 +250,7 @@ public class VideoLoader {
             }
             if(i>=fileList.size()){
                 System.out.println("We've done here! Waiting for OpenPoseDemo finish processing!");
-
-                File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
+               // File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
 
                 for(;;){
                     try {
@@ -167,7 +258,12 @@ public class VideoLoader {
                             Thread.sleep(5 * 1000);
                         else
                         {
-                            fileList.get(i-1).renameTo(destination);
+                            if(failed)
+                            {File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
+                                fileList.get(i-1).renameTo(destination);}
+                            else
+                            {File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
+                                fileList.get(i-1).renameTo(destination);}
                             System.out.println("Got it!");
                             System.out.println(new Date());
                             break;
@@ -179,5 +275,11 @@ public class VideoLoader {
 
                 break;}
         }
+    }
+    private File getCurrentVideoFolder(){
+        return this.currentVideo;
+    }
+    private void setCurrentVideoFolder(File file){
+
     }
 }
