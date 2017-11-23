@@ -35,25 +35,6 @@ public class VideoLoader {
         param = data.getParameters();
         outputFolderForVideos = outputFolder + "\\computedVideos\\";
         outputFolderForFails = outputFolder + "\\failedVideos\\";
-//        if (args.length==4) {
-//            if (args[0].equals("-input")) {
-//                inputFolder = args[1];
-//            } else errorMessage();
-//            if (args[2].equals("-output")) {
-//                outputFolder = args[3]+outputFolder;
-//            } else errorMessage();
-//        }
-//        if (args.length==4) {
-//            if (args[0].equals("-input")) {
-//                inputFolder = args[1];
-//            } else errorMessage();
-//            if (args[2].equals("-output")) {
-//                outputFolder = args[3]+outputFolder;
-//            } else errorMessage();
-//            if (args[4].equals("-process_real_time")){
-//                mode = args[4];
-//            }
-//        }
 
         TasksClass task = new TasksClass();
 
@@ -83,12 +64,23 @@ public class VideoLoader {
         else {System.out.println("Number of files:"+fileList.size());
         mkDir(outputFolderForVideos);
         mkDir(outputFolderForFails);
-            jSonTimer = new Timer(3000, new ActionListener() {
+            jSonTimer = new Timer(10000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-
-                        if(task.isProcessRunning("WerFault.exe")){
+                        System.out.println("boop!");
+                        currentVideoFolder = getCurrentVideoFolder();
+                        if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists())
+                        tempVideoFolder = getCurrentVideoFolder();
+                        if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()){
+                            if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
+                                String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                                System.out.println("WerFault closed");
+                                task.startTask(cmdLine);
+                                failed = true;
+                            }
+                        }
+                        if(task.isProcessRunning("WerFault.exe")&&!currentVideoFolder.exists()){
                             String cmdLine = "TASKKILL /f /IM WerFault.exe";
                             System.out.println("WerFault closed");
                             task.startTask(cmdLine);
@@ -99,38 +91,12 @@ public class VideoLoader {
                     }
                 }
             });
-         jSonTimer.start();
+            jSonTimer.start();
         loop(task,fileList);
         jSonTimer.stop();
     }
-        //File folder2 = new File(outputFolder + "test1/");
-//                        jSonTimer = new Timer(3000, new ActionListener() {
-//                            @Override
-//                            public void actionPerformed(ActionEvent e) {
-//                                if(folder2.exists()){
-//                                    System.out.println("timer");
-//                                    File[] files = folder2.listFiles();
-//                                    List<File> jSonFiles = new ArrayList<>();
-//                                    Integer jSonCheck_1 = 0;
-//                                    Integer jSonCheck_2 = 0;
-//                                    for(File f: files){
-//                                        jSonCheck_1++;
-//
-//                                        if(index > 0&&jSonCheck_2==jSonCheck_1){
-//                                            try {
-//                                                task.killProcess(processName);
-//                                            } catch (Exception e1) {
-//                                                e1.printStackTrace();
-//                                            }
-//                                        }
-//                                        jSonCheck_2 = jSonCheck_1;
-//                                        index++;
-//                                    }}}});
-//                       jSonTimer.start();
 
     }
-
-//        System.out.println(fileList.get(0).getName());
 
     /**
      * method creates dir for computed videos
@@ -190,47 +156,30 @@ public class VideoLoader {
                         System.out.println("Process works");
                         System.out.println(new Date());
                         status=true;
-                        System.out.println("0s");
+                        System.out.println("sleep...");
                         //НЕ АКТУАЛЬНО//проверяем есть ли строки в папке, если нет вешаем флаг и на следущем шаге кидаем видос в фейлы
                       //  for(int g = 0; g<5; g++){
                         Thread.sleep(10 * 1000);
-                        System.out.println("30s");
+                        System.out.println("awaken...");
                         File folder = new File(outputFolder +fileList.get(i-1).getName().split("\\.")[0]);
-                        System.out.println("debug");
-                        setCurrentVideoFolder(folder);
-                        
-
+                        //System.out.println("debug");
                         if(!folder.exists()){
                            // System.out.println("killing process");
                            // cmdLine = "TASKKILL /f /IM WerFault.exe";
                             //task.startTask(cmdLine);
                              //task.killProcess(processName);
+                            setCurrentVideoFolder(folder);
                             System.out.println("process should be killed already!");
                             failed = true;
                         }
-//                        File[] files = folder.listFiles();
-//                        List<File> jSonFiles = new ArrayList<>();
-//                        for(File f : files){
-//                            if(f.getName().endsWith(".json")){
-//                                jSonFiles.add(f);
-//                            }}
-//                        if(jSonFiles.size() == 0) {
-//                            System.out.println("No files found, shutting process down!");
-//                            task.killProcess(processName);
-//                        }
-
 
                     }
                     //if(status)jSonTimer.stop();
                 }else{
                     status=false;
-                    failed = false;
                     System.out.println("No process found...");
                     System.out.println("Starting new process...");
                     System.out.println(new Date());
-//                    cmdLine = "D:\\Program Files (x86)\\CifrusMark\\bin\\OpenPoseDemo.exe -video "
-//                            +fileList.get(i).toString()+" -write_keypoint_json output/tests/"
-//                            +fileList.get(i).getName().split("\\.")[0]+"/ -process_real_time";
                     cmdLine="bin\\OpenPoseDemo.exe -video "+inputFolder
                             +fileList.get(i).getName()+" -write_keypoint_json "+outputFolder
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
@@ -247,6 +196,7 @@ public class VideoLoader {
                             System.out.println(destination);
                         } // File destination = new File(".\\output\\tests\\ComputedVideos\\"+fileList.get(i-1).getName());
                         }
+                    failed = false;
                     i++;
                 }
                 Thread.sleep(5 * 1000);
@@ -287,4 +237,19 @@ public class VideoLoader {
     private void setCurrentVideoFolder(File file){
     this.currentVideoFolder = file;
     }
+    private boolean compareFolders(File folder1, File folder2){
+        if(folder1.exists()&&folder2.exists()){
+            File[] files1 = folder1.listFiles();
+            File[] files2 = folder2.listFiles();
+            List<File> jSonFiles = new ArrayList<>();
+            Integer c1 = 0, c2 = 0;
+            for (File f : files2) c1++;
+            for (File f : files1) c2++;
+            if (c1 == c2) return true;
+            else
+                return false;
+        }
+        return false;
+    }
+
 }
