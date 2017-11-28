@@ -1,4 +1,5 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
+package sample;
+
 import javafx.application.Platform;
 
 import javax.swing.*;

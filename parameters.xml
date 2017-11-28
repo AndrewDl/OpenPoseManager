@@ -1,0 +1,9 @@
+<object-stream>
+    <java.lang.Class>
+        <jsonSource>/some/source</jsonSource>
+        <profileName>profile_1</profileName>
+        <videoSource>input/</videoSource>
+        <videoDestination>output/</videoDestination>
+        <arguments>-process_real_time</arguments>
+    </java.lang.Class>
+</object-stream>

@@ -1,11 +1,8 @@
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
+package sample;
 
-import java.io.BufferedReader;
-import java.io.File;
+import sample.parameters.Parameters;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
 
 /**
  * Created by Andrew on 11/08/17.
@@ -18,7 +15,7 @@ public class Main {
          * loading pathes and additional args from xml file
          */
         XMLwriterReader reader = new XMLwriterReader("data.xml");
-
+        Parameters parameters = Parameters.loadParameters("parameters.xml");
         try {
             data = (Data)reader.ReadFile(Data.class);
         } catch (IOException e) {

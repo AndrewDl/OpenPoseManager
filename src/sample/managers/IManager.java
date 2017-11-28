@@ -1,4 +1,4 @@
-package managers;
+package sample.managers;
 
 /**
  * Implementation of this interface should contain logic for handling of specific tasks

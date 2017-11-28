@@ -1,4 +1,4 @@
-package parameters;
+package sample.parameters;
 
 /**
  * Created by Andrew on 11/28/17.
@@ -8,5 +8,5 @@ public interface IOpenPoseParams {
 
     String getVideoDestination();
 
-    String getParameters();
+    String getArguments();
 }
