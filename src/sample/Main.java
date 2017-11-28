@@ -10,23 +10,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        Data data = null;
-        /**
-         * loading pathes and additional args from xml file
-         */
-        XMLwriterReader reader = new XMLwriterReader("data.xml");
-        Parameters parameters = Parameters.loadParameters("parameters.xml");
-        try {
-            data = (Data)reader.ReadFile(Data.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        /**
-         * starting processing
-         */
-        VideoLoader vl = new VideoLoader(data);
+
+
+        Controller controller = new Controller(args);
 
 
     }

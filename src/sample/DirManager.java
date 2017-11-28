@@ -11,8 +11,8 @@ public class DirManager {
      */
     private String path;
     private File[] files;
-    List<String> dirList = new ArrayList<>();
-    List<String> fileList = new ArrayList<>();
+    private List<String> dirList = new ArrayList<>();
+    private List<String> fileList = new ArrayList<>();
 
 
     private void getFileList(String path){

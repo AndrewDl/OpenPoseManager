@@ -1,7 +1,8 @@
 <object-stream>
     <java.lang.Class>
-        <jsonSource>/some/source</jsonSource>
-        <profileName>profile_1</profileName>
+        <jsonSource>C:\Users\p0keT\Desktop\eva</jsonSource>
+        <profileName>3_06</profileName>
+        <newVisionPath>NewVision.jar</newVisionPath>
         <videoSource>input/</videoSource>
         <videoDestination>output/</videoDestination>
         <arguments>-process_real_time</arguments>
