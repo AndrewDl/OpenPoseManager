@@ -2,6 +2,9 @@ package sample;
 
 import sample.parameters.Parameters;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 /**
@@ -10,10 +13,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-
-
         Controller controller = new Controller(args);
 
+        while(true){}
 
     }
 }

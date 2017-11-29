@@ -16,7 +16,7 @@ public class Controller {
     }
 
     public void initialize(){
-        Parameters parameters = Parameters.loadParameters("parameters.xml");
+        Parameters parameters = Parameters.loadParameters("managerParameters\\parameters.xml");
 
         //треба зчитати список папок з json-ами
         DirManager dirManager = new DirManager();
