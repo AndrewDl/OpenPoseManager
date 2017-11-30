@@ -1,5 +1,6 @@
 package sample;
 
+import sample.managers.VideoLoader;
 import sample.parameters.Parameters;
 
 import java.io.IOException;

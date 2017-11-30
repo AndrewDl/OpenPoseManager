@@ -1,6 +1,9 @@
-package sample;
+package sample.managers;
 
 import javafx.application.Platform;
+import sample.Data;
+import sample.DirManager;
+import sample.TasksClass;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * Created by Laimi on 15.11.2017.
  */
-public class VideoLoader {
+public class VideoLoader implements IManager{
     private Timer jSonTimer;
     String processName = "OpenPoseDemo.exe";//"Telegram.exe";
     String inputFolder = ".";
@@ -25,6 +28,7 @@ public class VideoLoader {
     File currentVideoFolder;
     File tempVideoFolder;
     Boolean failed = false;
+    DirManager dirMan;
     VideoLoader(Data data){
 
         /**
@@ -49,22 +53,27 @@ public class VideoLoader {
             return;
         }
 
-        File[] files = folder.listFiles();
+      //  File[] files = folder.listFiles();
 
         List<File> fileList = new ArrayList<>();
 
+        fileList = dirMan.getVideoNamesList(inputFolder);
+
+
+       // fileList = DirMan.getVideoNamesList(inputFolder);
+
         //scan for needed files in folder. validate their names;
-        for(File f : files){
-            if(f.getName().endsWith(".mp4")){
-                fileList.add(f);
-            }
-        }
-        if(fileList.size() == 0) {
-            System.out.println("No files found!");
-        }
-        else {System.out.println("Number of files:"+fileList.size());
-        mkDir(outputFolderForVideos);
-        mkDir(outputFolderForFails);
+//        for(File f : files){
+//            if(f.getName().endsWith(".mp4")){
+//                fileList.add(f);
+//            }
+//        }
+//        if(fileList.size() == 0) {
+//            System.out.println("No files found!");
+//        }
+//      else {System.out.println("Number of files:"+fileList.size());
+        dirMan.mkDir(outputFolderForVideos);
+        dirMan.mkDir(outputFolderForFails);
             /**
              * timer for errors
              */
@@ -99,34 +108,6 @@ public class VideoLoader {
         loop(task,fileList);
         jSonTimer.stop();
     }
-
-    }
-
-    /**
-     * method creates dir for computed videos
-     * @param outputFolderForVideos
-     */
-    public void mkDir(String outputFolderForVideos) {
-
-        File theDir = new File(outputFolderForVideos);
-
-// if the directory does not exist, create it
-        if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.getName());
-            boolean result = false;
-
-            try {
-                theDir.mkdir();
-                result = true;
-            } catch (SecurityException se) {
-                //handle it
-            }
-            if (result) {
-                System.out.println("DIR created");
-            }
-        }
-
-}
 
 
 

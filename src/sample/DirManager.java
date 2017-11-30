@@ -12,7 +12,8 @@ public class DirManager {
     private String path;
     private File[] files;
     List<String> dirList = new ArrayList<>();
-    List<String> fileList = new ArrayList<>();
+    List<String> namesFileList = new ArrayList<>();
+    List<File> fileList = new ArrayList<>();
 
 
     private void getFileList(String path){
@@ -44,12 +45,12 @@ public class DirManager {
         return dirList;
     }
 
-    public List<String> getVideoNamesList(String path){
+    public List<File> getVideoNamesList(String path){
         getFileList(path);
 
         for(File f : files){
             if(f.getName().endsWith(".mp4")){
-                fileList.add(f.getName());
+                fileList.add(f);
             }
         }
         if(fileList.size() == 0) {
@@ -57,4 +58,27 @@ public class DirManager {
         }
         return fileList;
     }
+
+    public void mkDir(String outputFolderForVideos) {
+
+        File theDir = new File(outputFolderForVideos);
+
+// if the directory does not exist, create it
+        if (!theDir.exists()) {
+            System.out.println("creating directory: " + theDir.getName());
+            boolean result = false;
+
+            try {
+                theDir.mkdir();
+                result = true;
+            } catch (SecurityException se) {
+                //handle it
+            }
+            if (result) {
+                System.out.println("DIR created");
+            }
+        }
+
+    }
+
 }
