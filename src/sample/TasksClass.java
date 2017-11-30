@@ -33,7 +33,7 @@ public class TasksClass {
     /**
      * method starts process using CMDLine
      */
-    public void startTask(String cmdLine)throws Exception{
+    public static void startTask(String cmdLine)throws Exception{
         Runtime rt = Runtime.getRuntime();
         rt.exec(cmdLine);
     }
@@ -42,7 +42,7 @@ public class TasksClass {
      * I guess programm need more permissions to kill other tasks
      */
     public void killProcess(String serviceName) throws Exception {
-     Runtime.getRuntime().exec(KILL+"WerFault.exe");
+     Runtime.getRuntime().exec(KILL+serviceName);
    }
 
 

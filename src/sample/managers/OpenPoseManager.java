@@ -29,7 +29,9 @@ public class VideoLoader implements IManager{
     File tempVideoFolder;
     Boolean failed = false;
     DirManager dirMan;
-    VideoLoader(Data data){
+    Thread opm;
+
+    public VideoLoader(Data data){
 
         /**
          * pathes and params
@@ -40,6 +42,11 @@ public class VideoLoader implements IManager{
         param = data.getParameters();
         outputFolderForVideos = outputFolder + "\\computedVideos\\";
         outputFolderForFails = outputFolder + "\\failedVideos\\";
+
+        Thread opm = new Thread (new Runnable() {
+            @Override
+            public void run(){
+
 
         TasksClass task = new TasksClass();
 
@@ -59,19 +66,6 @@ public class VideoLoader implements IManager{
 
         fileList = dirMan.getVideoNamesList(inputFolder);
 
-
-       // fileList = DirMan.getVideoNamesList(inputFolder);
-
-        //scan for needed files in folder. validate their names;
-//        for(File f : files){
-//            if(f.getName().endsWith(".mp4")){
-//                fileList.add(f);
-//            }
-//        }
-//        if(fileList.size() == 0) {
-//            System.out.println("No files found!");
-//        }
-//      else {System.out.println("Number of files:"+fileList.size());
         dirMan.mkDir(outputFolderForVideos);
         dirMan.mkDir(outputFolderForFails);
             /**
@@ -104,12 +98,21 @@ public class VideoLoader implements IManager{
                     }
                 }
             });
-            jSonTimer.start();
+        jSonTimer.start();
         loop(task,fileList);
         jSonTimer.stop();
+            }});
     }
 
+    @Override
+    public void start() {
+        opm.start();
+    }
 
+    @Override
+    public void stop() {
+        opm.interrupt();
+    }
 
     private void errorMessage(){
         System.out.println("Invalid args. Use -input D:/path/to/the/input/folder/ -output D:/output/folder/path/");

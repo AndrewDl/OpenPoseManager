@@ -10,8 +10,10 @@ import java.io.IOException;
  */
 public class Parameters implements IOpenPoseParams, INewVisionParams {
 
+
     private String jsonSource = "";
     private String profileName = "";
+    private String newVisionPath = "";
     private String videoSource= "";
     private String videoDestination = "";
     private String arguments = "";
@@ -47,38 +49,61 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     @Override
     public String getJsonSource() {
-        return null;
+        return jsonSource;
     }
 
     @Override
-    public String setJsonSource() {
-        return null;
+    public void setJsonSource(String jsonSource) {
+        this.jsonSource = jsonSource;
     }
 
     @Override
     public String getProfileName() {
-        return null;
+        return profileName;
     }
 
     @Override
-    public String setProfileName() {
-        return null;
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
+
+    @Override
+    public String getNewVisionPath() {
+        return newVisionPath;
+    }
+
+    @Override
+    public void setNewVisionPath(String newVisionPath) {
+        this.newVisionPath = newVisionPath;
     }
 
     @Override
     public String getVideoSource() {
-        return null;
+        return videoSource;
+    }
+
+    public void setVideoSource(String videoSource) {
+        this.videoSource = videoSource;
     }
 
     @Override
     public String getVideoDestination() {
-        return null;
+        return videoDestination;
+    }
+
+    public void setVideoDestination(String videoDestination) {
+        this.videoDestination = videoDestination;
     }
 
     @Override
     public String getArguments() {
-        return null;
+        return arguments;
     }
+
+    public void setArguments(String arguments) {
+        this.arguments = arguments;
+    }
+
 
 
 }

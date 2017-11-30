@@ -8,9 +8,12 @@ public interface INewVisionParams {
      * @return path to folder that contains folders with jsons.
      */
     String getJsonSource();
-    String setJsonSource();
+    void setJsonSource(String jsonSource);
 
     String getProfileName();
-    String setProfileName();
+    void setProfileName(String profileName);
+
+    String getNewVisionPath();
+    void setNewVisionPath(String newVisionPath);
 
 }
