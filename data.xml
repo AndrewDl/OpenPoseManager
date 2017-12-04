@@ -1,0 +1,7 @@
+<object-stream>
+  <java.lang.Class>
+    <videoSource>input/</videoSource>
+    <videoDestination>output/</videoDestination>
+    <parameters>-process_real_time</parameters>
+  </java.lang.Class>
+</object-stream>
