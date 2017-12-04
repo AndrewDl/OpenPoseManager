@@ -101,6 +101,7 @@ public class OpenPoseManager implements IManager{
         jSonTimer.start();
         loop(task,fileList);
         jSonTimer.stop();
+
             }});
     }
 
