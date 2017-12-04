@@ -1,12 +1,5 @@
 package sample;
 
-import sample.parameters.Parameters;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
 /**
  * Created by Andrew on 11/08/17.
  */

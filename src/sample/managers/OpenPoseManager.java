@@ -1,6 +1,9 @@
-package sample;
+package sample.managers;
 
 import javafx.application.Platform;
+import sample.Data;
+import sample.DirManager;
+import sample.TasksClass;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * Created by Laimi on 15.11.2017.
  */
-public class VideoLoader {
+public class OpenPoseManager implements IManager{
     private Timer jSonTimer;
     String processName = "OpenPoseDemo.exe";//"Telegram.exe";
     String inputFolder = ".";
@@ -25,17 +28,25 @@ public class VideoLoader {
     File currentVideoFolder;
     File tempVideoFolder;
     Boolean failed = false;
-    VideoLoader(Data data){
+    DirManager dirMan;
+    Thread opm;
+
+    public OpenPoseManager(Data data){
 
         /**
          * pathes and params
          */
 
-        inputFolder = data.getVideoSource();
-        outputFolder = data.getVideoDestination();
-        param = data.getParameters();
-        outputFolderForVideos = outputFolder + "\\computedVideos\\";
-        outputFolderForFails = outputFolder + "\\failedVideos\\";
+        this.inputFolder = data.getVideoSource();
+        this.outputFolder = data.getVideoDestination();
+        this.param = data.getParameters();
+        this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
+        this.outputFolderForFails = outputFolder + "\\failedVideos\\";
+
+        Thread opm = new Thread (new Runnable() {
+            @Override
+            public void run(){
+
 
         TasksClass task = new TasksClass();
 
@@ -49,22 +60,14 @@ public class VideoLoader {
             return;
         }
 
-        File[] files = folder.listFiles();
+      //  File[] files = folder.listFiles();
 
         List<File> fileList = new ArrayList<>();
 
-        //scan for needed files in folder. validate their names;
-        for(File f : files){
-            if(f.getName().endsWith(".mp4")){
-                fileList.add(f);
-            }
-        }
-        if(fileList.size() == 0) {
-            System.out.println("No files found!");
-        }
-        else {System.out.println("Number of files:"+fileList.size());
-        mkDir(outputFolderForVideos);
-        mkDir(outputFolderForFails);
+        fileList = dirMan.getVideoNamesList(inputFolder);
+
+        dirMan.mkDir(outputFolderForVideos);
+        dirMan.mkDir(outputFolderForFails);
             /**
              * timer for errors
              */
@@ -95,40 +98,21 @@ public class VideoLoader {
                     }
                 }
             });
-            jSonTimer.start();
+        jSonTimer.start();
         loop(task,fileList);
         jSonTimer.stop();
+            }});
     }
 
+    @Override
+    public void start() {
+        opm.start();
     }
 
-    /**
-     * method creates dir for computed videos
-     * @param outputFolderForVideos
-     */
-    public void mkDir(String outputFolderForVideos) {
-
-        File theDir = new File(outputFolderForVideos);
-
-// if the directory does not exist, create it
-        if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.getName());
-            boolean result = false;
-
-            try {
-                theDir.mkdir();
-                result = true;
-            } catch (SecurityException se) {
-                //handle it
-            }
-            if (result) {
-                System.out.println("DIR created");
-            }
-        }
-
-}
-
-
+    @Override
+    public void stop() {
+        opm.interrupt();
+    }
 
     private void errorMessage(){
         System.out.println("Invalid args. Use -input D:/path/to/the/input/folder/ -output D:/output/folder/path/");
