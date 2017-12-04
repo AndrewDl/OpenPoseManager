@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Laimi on 15.11.2017.
  */
-public class VideoLoader implements IManager{
+public class OpenPoseManager implements IManager{
     private Timer jSonTimer;
     String processName = "OpenPoseDemo.exe";//"Telegram.exe";
     String inputFolder = ".";
@@ -31,17 +31,17 @@ public class VideoLoader implements IManager{
     DirManager dirMan;
     Thread opm;
 
-    public VideoLoader(Data data){
+    public OpenPoseManager(Data data){
 
         /**
          * pathes and params
          */
 
-        inputFolder = data.getVideoSource();
-        outputFolder = data.getVideoDestination();
-        param = data.getParameters();
-        outputFolderForVideos = outputFolder + "\\computedVideos\\";
-        outputFolderForFails = outputFolder + "\\failedVideos\\";
+        this.inputFolder = data.getVideoSource();
+        this.outputFolder = data.getVideoDestination();
+        this.param = data.getParameters();
+        this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
+        this.outputFolderForFails = outputFolder + "\\failedVideos\\";
 
         Thread opm = new Thread (new Runnable() {
             @Override
