@@ -4,11 +4,13 @@ import javafx.application.Platform;
 import sample.Data;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.parameters.INewVisionParams;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,7 @@ public class OpenPoseManager implements IManager{
     DirManager dirMan;
     Thread opm;
 
-    public OpenPoseManager(Data data){
+    public OpenPoseManager(INewVisionParams data){
 
         /**
          * pathes and params
