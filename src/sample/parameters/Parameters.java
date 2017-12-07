@@ -105,5 +105,4 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     }
 
 
-
 }

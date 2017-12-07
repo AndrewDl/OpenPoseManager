@@ -4,7 +4,6 @@
     <root id="archive" name="OpenPoseManager.jar">
       <element id="module-output" name="OpenPoseManager" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libraries/xstream-1.4.9.jar" path-in-jar="/" />
-      <element id="library" level="project" name="xstream-1.4.9" />
     </root>
   </artifact>
 </component>

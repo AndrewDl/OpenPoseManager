@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import sample.Data;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.parameters.Parameters;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -31,7 +32,7 @@ public class OpenPoseManager implements IManager{
     DirManager dirMan;
     Thread opm;
 
-    public OpenPoseManager(Data data){
+    public OpenPoseManager(Parameters data){
 
         /**
          * pathes and params
@@ -39,7 +40,7 @@ public class OpenPoseManager implements IManager{
 
         this.inputFolder = data.getVideoSource();
         this.outputFolder = data.getVideoDestination();
-        this.param = data.getParameters();
+        this.param = data.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
 
