@@ -43,13 +43,43 @@ public class OpenPoseManager implements IManager{
         this.param = data.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
+        TasksClass task = new TasksClass();
 
-        Thread opm = new Thread (new Runnable() {
+        /**
+         * timer for errors
+         */
+        jSonTimer = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    System.out.println("boop!");
+                    currentVideoFolder = getCurrentVideoFolder();
+                    if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists())
+                        tempVideoFolder = getCurrentVideoFolder();
+                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()){
+                        if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
+                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            System.out.println("WerFault closed");
+                            task.startTask(cmdLine);
+                            failed = true;
+                        }
+                    }
+                    if(task.isProcessRunning("WerFault.exe")&&!currentVideoFolder.exists()){
+                        String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                        System.out.println("WerFault closed");
+                        task.startTask(cmdLine);
+                        failed = true;
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        opm = new Thread (new Runnable() {
             @Override
             public void run(){
 
-
-        TasksClass task = new TasksClass();
 
         File folder = new File(inputFolder);
 
@@ -69,50 +99,22 @@ public class OpenPoseManager implements IManager{
 
         dirMan.mkDir(outputFolderForVideos);
         dirMan.mkDir(outputFolderForFails);
-            /**
-             * timer for errors
-             */
-            jSonTimer = new Timer(10000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        System.out.println("boop!");
-                        currentVideoFolder = getCurrentVideoFolder();
-                        if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists())
-                        tempVideoFolder = getCurrentVideoFolder();
-                        if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()){
-                            if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
-                                String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                                System.out.println("WerFault closed");
-                                task.startTask(cmdLine);
-                                failed = true;
-                            }
-                        }
-                        if(task.isProcessRunning("WerFault.exe")&&!currentVideoFolder.exists()){
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
-                        }
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            });
+
         jSonTimer.start();
         loop(task,fileList);
-        jSonTimer.stop();
             }});
     }
 
     @Override
     public void start() {
         opm.start();
+
     }
 
     @Override
     public void stop() {
         opm.interrupt();
+        jSonTimer.stop();
     }
 
     private void errorMessage(){
