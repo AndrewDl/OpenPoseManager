@@ -32,6 +32,7 @@ public class OpenPoseManager implements IManager{
     DirManager dirMan;
     Thread opm;
 
+
     public OpenPoseManager(Parameters data){
 
         /**
@@ -237,7 +238,5 @@ public class OpenPoseManager implements IManager{
         }
         return false;
     }
-
-
 
 }
