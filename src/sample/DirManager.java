@@ -6,10 +6,6 @@ import java.util.List;
 
 public class DirManager {
 
-    /**
-     * path to the folder with videos or folders with jsons
-     */
-    private String path;
     private File[] files;
     List<String> dirList = new ArrayList<>();
     List<String> namesFileList = new ArrayList<>();
@@ -79,6 +75,16 @@ public class DirManager {
             }
         }
 
+    }
+
+    public boolean isToProcessFolderInDir(String path){
+        //всі не перебираємо, якщо є хоть одна то тру
+        return false;
+    }
+
+    public String getToProcessFolderName(String path){
+        //всі не перебирає, повертає перше, що попадеться
+        return null;
     }
 
 }

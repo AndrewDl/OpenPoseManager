@@ -33,11 +33,15 @@ public class Controller {
         if(mode.equals("p")){
             newVisionManager.start();
             openPoseManager.start();
-        }else{if(mode.equals("op")){
-            openPoseManager.start();
-        }else{if(mode.equals("nv")){
-           newVisionManager.start();
-        }}}
+        }else{
+            if(mode.equals("op")){
+                openPoseManager.start();
+            }else{
+                if(mode.equals("nv")){
+                    newVisionManager.start();
+                }
+            }
+        }
 
 
 
