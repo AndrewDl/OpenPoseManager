@@ -77,14 +77,63 @@ public class DirManager {
 
     }
 
+    /**
+     * Checks the folders for the "_toProcess" at the end of the name
+     * @param path path to the folder with folders for checking
+     * @return true if at list one folder with "_toProcess" at the end of the name exist,
+     *          false if not
+     */
     public boolean isToProcessFolderInDir(String path){
         //всі не перебираємо, якщо є хоть одна то тру
+        File[] fList;
+
+        File F = new File(path);
+        fList = F.listFiles();
+
+        for(int i=0; i<fList.length-1; i++)
+        {
+            //Нужны только папки в место isFile() пишим isDirectory()
+            if(fList[i].isDirectory() && isToProcessContains(fList[i].getName())==true){
+                return true;
+            }
+        }
         return false;
     }
 
+    /**
+     * @param path path to the folder with folders for checking
+     * @return the name of the folder with the "_toProcess" at the end of the name
+     * if at list one exist
+     */
     public String getToProcessFolderName(String path){
-        //всі не перебирає, повертає перше, що попадеться
+
+        File[] fList;
+
+        File F = new File(path);
+        fList = F.listFiles();
+
+        for(int i=0; i<fList.length-1; i++)
+        {
+            //Нужны только папки в место isFile() пишим isDirectory()
+            if(fList[i].isDirectory() && isToProcessContains(fList[i].getName())==true){
+                return fList[i].getName();
+            }
+        }
         return null;
+    }
+
+    /**
+     *
+     * @param str name of the folder that may contains "_toProcess" at the end of the name
+     * @return true if contains, false if not
+     */
+    private boolean isToProcessContains(String str){
+        String[] _splitArr = str.split("_");
+
+        if(_splitArr[_splitArr.length-1].equals("_toProcess")){
+            return true;
+        }
+        return false;
     }
 
 }
