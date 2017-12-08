@@ -26,7 +26,7 @@ public class Controller {
         DirManager dirManager = new DirManager();
         jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(parameters.getJsonSource());
         NewVisionManager newVisionManager = new NewVisionManager(jsonFoldersList, parameters);
-        newVisionManager.start();
+
         //створюємо NewVision менеджер, передаєм туди список папок і стартуєм
         arguments.setArgs(args);
         mode = arguments.getMode();
