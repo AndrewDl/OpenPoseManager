@@ -29,18 +29,18 @@ public class OpenPoseManager implements IManager{
     File currentVideoFolder;
     File tempVideoFolder;
     Boolean failed = false;
-    DirManager dirMan;
+    DirManager dirMan = new DirManager();
     Thread opm;
 
-    public OpenPoseManager(Parameters data){
+    public OpenPoseManager(Parameters param){
 
         /**
          * pathes and params
          */
 
-        this.inputFolder = data.getVideoSource();
-        this.outputFolder = data.getVideoDestination();
-        this.param = data.getArguments();
+        this.inputFolder = param.getVideoSource();
+        this.outputFolder = param.getVideoDestination();
+        this.param = param.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
         TasksClass task = new TasksClass();
@@ -174,6 +174,9 @@ public class OpenPoseManager implements IManager{
                             System.out.println(destination);
                         }else {
                             File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
+                            File toProcess = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]);
+                            File folderDestination = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                            toProcess.renameTo(folderDestination);
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
                         }
@@ -198,7 +201,11 @@ public class OpenPoseManager implements IManager{
                                 fileList.get(i-1).renameTo(destination);}
                             else
                             {File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
-                                fileList.get(i-1).renameTo(destination);}
+                                fileList.get(i-1).renameTo(destination);
+                                File toProcess = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]);
+                                File folderDestination = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                                toProcess.renameTo(folderDestination);}
+                            jSonTimer.stop();
                             System.out.println("Got it!");
                             System.out.println(new Date());
                             break;

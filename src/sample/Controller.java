@@ -24,8 +24,8 @@ public class Controller {
 
         //треба зчитати список папок з json-ами
         DirManager dirManager = new DirManager();
-        jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(parameters.getJsonSource());
-        NewVisionManager newVisionManager = new NewVisionManager(jsonFoldersList, parameters);
+//        jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(parameters.getJsonSource());
+     NewVisionManager newVisionManager = new NewVisionManager(jsonFoldersList, parameters);
 
         //створюємо NewVision менеджер, передаєм туди список папок і стартуєм
         arguments.setArgs(args);

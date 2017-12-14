@@ -20,5 +20,5 @@ public interface INewVisionParams {
 
     String getVideoDestination();
 
-    String getParameters();
+    String getArguments();
 }

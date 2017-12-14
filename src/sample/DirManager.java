@@ -19,6 +19,7 @@ public class DirManager {
     private void getFileList(String path){
         File folder = new File(path);
 
+
         /**
          * checking on availability of folder
          */
@@ -28,7 +29,7 @@ public class DirManager {
         }
 
         files = folder.listFiles();
-
+        System.out.println("file.length:"+files.length);
     }
 
     public List<String> getJsonFoldersList(String path){
@@ -46,8 +47,9 @@ public class DirManager {
     }
 
     public List<File> getVideoNamesList(String path){
+        System.out.println("before getFileList");
         getFileList(path);
-
+        System.out.println("after");
         for(File f : files){
             if(f.getName().endsWith(".mp4")){
                 fileList.add(f);
@@ -56,6 +58,7 @@ public class DirManager {
         if(fileList.size() == 0) {
             System.out.println("Files not found");
         }
+        System.out.println("fileList.length:"+fileList.size());
         return fileList;
     }
 
