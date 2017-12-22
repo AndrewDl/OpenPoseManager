@@ -44,7 +44,7 @@ public class NewVisionManager implements IManager{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
-                    jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(params.getJsonSource(), toProcessKey);
+                    jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
                     jsonFolderPointer=0;
                 }else {
                     if(jsonFolderPointer>0){

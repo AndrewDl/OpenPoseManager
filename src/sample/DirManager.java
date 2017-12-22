@@ -20,12 +20,13 @@ public class DirManager {
          * checking on availability of folder
          */
         if(!folder.exists()){
-            System.out.println("folder does not exist");
+            System.out.println("NV:folder does not exist");
             return;
         }
 
         files = folder.listFiles();
-        System.out.println("file.length:"+files.length);
+
+        System.out.println("NV:file.length:"+files.length);
     }
 
     public List<String> getJsonFoldersList(String path){
@@ -37,7 +38,7 @@ public class DirManager {
             }
         }
         if(dirList.size() == 0) {
-            System.out.println("No directories found");
+            System.out.println("NV:No directories found");
         }
         return dirList;
     }
@@ -50,15 +51,17 @@ public class DirManager {
      */
     public List<String> getJsonFoldersList(String path, String key){
         getFileList(path);
-
-        for(File f : files){
-            if(f.isDirectory()==true && isToProcessContains(f.getName(), key)==true){
-                dirList.add(f.getName());
+        if(files!=null) {
+            for (File f : files) {
+                if (f.isDirectory() == true && isToProcessContains(f.getName(), key) == true) {
+                    dirList.add(f.getName());
+                }
             }
         }
-        if(dirList.size() == 0) {
-            System.out.println("No directories found");
+        if (dirList.size() == 0) {
+            System.out.println("NV:No directories found");
         }
+
         return dirList;
     }
 

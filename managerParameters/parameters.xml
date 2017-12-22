@@ -1,7 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
 <object-stream>
     <java.lang.Class>
         <!--path to the folder with json folders-->
-        <jsonSource>C:\Users\p0keT\Desktop\eva</jsonSource>
+        <jsonSource>D:\Program Files (x86)\CifrusMark\output\jsonFolders</jsonSource>
         <!--profile that will start-->
         <profileName>3_06</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен

@@ -24,7 +24,7 @@ public class OpenPoseManager implements IManager{
     String param = "";
     String outputFolderForVideos = outputFolder+"/computedVideos/";
     String outputFolderForFails = outputFolder+"/failedVideos/";
-    String outputFolderForJsons = outputFolder+"/jSons/";
+    String outputFolderForJsons = outputFolder+"/jsonFolders/";
     Integer index = 0;
     File currentVideoFolder;
     File tempVideoFolder;
@@ -174,7 +174,7 @@ public class OpenPoseManager implements IManager{
                         System.out.println("sleep...");
                         Thread.sleep(10 * 1000);
                         System.out.println("awaken...");
-                        File folder = new File(outputFolder +fileList.get(i-1).getName().split("\\.")[0]);
+                        File folder = new File(outputFolderForJsons +fileList.get(i-1).getName().split("\\.")[0]);
                         if(folder.exists())setCurrentVideoFolder(folder);
                         if(!folder.exists()){
                             setCurrentVideoFolder(folder);
