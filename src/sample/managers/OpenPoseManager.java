@@ -54,29 +54,40 @@ public class OpenPoseManager implements IManager{
         jSonTimer = new Timer(10000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+
                     //jSonTimer.wait(10000);
                     System.out.println("boop!");
                     currentVideoFolder = getCurrentVideoFolder();
+                    Integer c1 = 0;
+                    c1 = getListOfFolderFiles(currentVideoFolder);
+                    Integer cTemp = 0;
+                try {
                     if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()&&currentVideoFolder!=null)
                         tempVideoFolder = getCurrentVideoFolder();
+
+                cTemp = getListOfFolderFiles(tempVideoFolder);
+
                     if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&currentVideoFolder.exists()){
-                        if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
+                      //  if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
+                        if(c1==cTemp) {
                             String cmdLine = "TASKKILL /f /IM WerFault.exe";
                             System.out.println("WerFault closed");
                             task.startTask(cmdLine);
                             failed = true;
                         }
                     }
-                    if(task.isProcessRunning("WerFault.exe")&&!currentVideoFolder.exists()){
-                        String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                        System.out.println("WerFault closed");
-                        task.startTask(cmdLine);
-                        failed = true;
-                    }
+
+
+                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
+                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            System.out.println("WerFault closed");
+                            task.startTask(cmdLine);
+                            failed = true;
+                        }
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
+
             }
         });
 /**
@@ -233,6 +244,7 @@ public class OpenPoseManager implements IManager{
         }
     }
     private File getCurrentVideoFolder(){
+        if(currentVideoFolder == null) System.out.println("NULL");
         return this.currentVideoFolder;
     }
     private void setCurrentVideoFolder(File file){
@@ -258,6 +270,21 @@ public class OpenPoseManager implements IManager{
                 return false;
         }
         return false;
+    }
+
+    /**
+     * @param folder
+     * @return amount of files in folder
+     */
+    private Integer getListOfFolderFiles(File folder){
+        Integer c = 0;
+        if(folder!=null&&folder.exists()){
+         File[] files = folder.listFiles();
+         List<File> jSonFiles = new ArrayList<>();
+         for(File f : files)c++;
+         return c;
+     }
+     else return c;
     }
 
 }
