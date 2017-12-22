@@ -1,6 +1,7 @@
 package sample.managers;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
+import sample.DirManager;
 import sample.TasksClass;
 import sample.parameters.INewVisionParams;
 
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 public class NewVisionManager implements IManager{
 
     private String jsonFolderPath;
-    private ArrayList<String> names;
     private String newVisionPath;
     private String profileName;
     private Timer timerNewVisionWorkManager;
@@ -25,34 +25,47 @@ public class NewVisionManager implements IManager{
     private int PID = 0;
     private final String TASKLIST = "tasklist";
     private int jsonFolderPointer=0;
+    private ArrayList<String> jsonFoldersList;
+    private static final String toProcessKey = "toProcess";
+    private static final String completedKey = "completed";
+    private DirManager dirManager = new DirManager();
+
 
     /**
-     * @param names of folders with jsons
      * @param params
      */
-    public NewVisionManager(ArrayList<String> names, INewVisionParams params){
-        this.names = names;
+    public NewVisionManager(INewVisionParams params){
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
 
+
         timerNewVisionWorkManager = new Timer(4000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(checkNewVisionWork()==false && jsonFolderPointer<names.size()){
-                    try {
-                        String str = "cmd.exe /c start java -jar "+newVisionPath+" nogui "+profileName+" "+jsonFolderPath+"\\"+names.get(jsonFolderPointer)+"\\";
-                        System.out.println(str+"\n"+(jsonFolderPointer+1)+"/"+names.size());
-                        TasksClass.startTask(str);
-                    } catch (Exception ee) {
-                        ee.printStackTrace();
+                if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
+                    jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(params.getJsonSource(), toProcessKey);
+                    jsonFolderPointer=0;
+                }else {
+                    if(jsonFolderPointer>0){
+                        String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
+                        dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
+                        System.out.println(newName);
                     }
-                    jsonFolderPointer++;
-                }else{
-                    if(jsonFolderPointer>=names.size())
-                    {
-                        System.out.println("All json folders are computed");
-                        stop();
+                    if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
+
+                        try {
+                            String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                            System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
+                            TasksClass.startTask(str);
+                        } catch (Exception ee) {
+                            System.out.println(ee);
+                        }
+                        jsonFolderPointer++;
+                    } else {
+                        if (jsonFolderPointer >= jsonFoldersList.size()) {
+                            jsonFoldersList.clear();
+                        }
                     }
                 }
             }

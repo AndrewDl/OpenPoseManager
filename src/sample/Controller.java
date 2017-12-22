@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Controller {
     private String mode;
     private String[] args;
-    private ArrayList<String> jsonFoldersList;
+
     Arguments arguments = new Arguments();
 
     Controller(String[] args){
@@ -22,14 +22,12 @@ public class Controller {
         Parameters parameters = Parameters.loadParameters("managerParameters\\parameters.xml");
         OpenPoseManager openPoseManager = new OpenPoseManager(parameters);
 
-        //треба зчитати список папок з json-ами
-        DirManager dirManager = new DirManager();
-        jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(parameters.getJsonSource());
-        NewVisionManager newVisionManager = new NewVisionManager(jsonFoldersList, parameters);
-        newVisionManager.start();
+        NewVisionManager newVisionManager = new NewVisionManager(parameters);
+
         //створюємо NewVision менеджер, передаєм туди список папок і стартуєм
         arguments.setArgs(args);
-        mode = arguments.getMode();
+        //mode = arguments.getMode();
+        mode = "nv";
         if(mode.equals("p")){
             newVisionManager.start();
             openPoseManager.start();
