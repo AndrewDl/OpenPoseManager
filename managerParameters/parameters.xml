@@ -1,10 +1,17 @@
 <object-stream>
     <java.lang.Class>
+        <!--path to the folder with json folders-->
         <jsonSource>C:\Users\p0keT\Desktop\eva</jsonSource>
+        <!--profile that will start-->
         <profileName>3_06</profileName>
+        <!--path to the NewVision jar file. як виявилося джарнік повинен
+            лежати в одній папці з менеджером-->
         <newVisionPath>NewVision.jar</newVisionPath>
+        <!--path to the video that OpenPose will process-->
         <videoSource>input/</videoSource>
+        <!--destination of the output json folder-->
         <videoDestination>output/</videoDestination>
+        <!--OpenPose arguments-->
         <arguments>-process_real_time</arguments>
         <openPose></openPose>
     </java.lang.Class>
