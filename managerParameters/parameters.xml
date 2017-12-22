@@ -9,10 +9,11 @@
         <newVisionPath>NewVision.jar</newVisionPath>
         <!--path to the video that OpenPose will process-->
         <videoSource>input/</videoSource>
-        <!--destination of the output json folder-->
+        <!--destination of the output of the OpenPose & OpenPoseManager-->
         <videoDestination>output/</videoDestination>
         <!--OpenPose arguments-->
         <arguments>-process_real_time</arguments>
-        <openPose></openPose>
+        <!--name of current OpenPose executable file-->
+        <openPose>OpenPoseDemo.exe</openPose>
     </java.lang.Class>
 </object-stream>

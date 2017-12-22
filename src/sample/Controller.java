@@ -11,12 +11,11 @@ public class Controller {
     private String mode;
     private String[] args;
 
-    Arguments arguments = new Arguments();
-
     Controller(String[] args){
         this.args = args;
         initialize();
     }
+
 
     public void initialize(){
         Parameters parameters = Parameters.loadParameters("managerParameters\\parameters.xml");

@@ -24,6 +24,7 @@ public class OpenPoseManager implements IManager{
     String param = "";
     String outputFolderForVideos = outputFolder+"/computedVideos/";
     String outputFolderForFails = outputFolder+"/failedVideos/";
+    String outputFolderForJsons = outputFolder+"/jSons/";
     Integer index = 0;
     File currentVideoFolder;
     File tempVideoFolder;
@@ -116,6 +117,7 @@ public class OpenPoseManager implements IManager{
 
         dirMan.mkDir(outputFolderForVideos);
         dirMan.mkDir(outputFolderForFails);
+        dirMan.mkDir(outputFolderForJsons);
 
         jSonTimer.start();
         loop(task,fileList);
@@ -187,7 +189,7 @@ public class OpenPoseManager implements IManager{
                     System.out.println("Starting new process...");
                     System.out.println(new Date());
                     cmdLine="bin\\"+processName+" -video "+inputFolder
-                            +fileList.get(i).getName()+" -write_keypoint_json "+outputFolder
+                            +fileList.get(i).getName()+" -write_keypoint_json "+outputFolderForJsons
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
                     task.startTask(cmdLine);
                     System.out.println(inputFolder+fileList.get(i).getName());
@@ -198,8 +200,8 @@ public class OpenPoseManager implements IManager{
                             System.out.println(destination);
                         }else {
                             File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
-                            File toProcess = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]);
-                            File folderDestination = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                            File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
+                            File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
                             toProcess.renameTo(folderDestination);
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
@@ -227,8 +229,8 @@ public class OpenPoseManager implements IManager{
                             else
                             {File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
                                 fileList.get(i-1).renameTo(destination);
-                                File toProcess = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]);
-                                File folderDestination = new File(outputFolder+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                                File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
+                                File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
                                 toProcess.renameTo(folderDestination);}
                             jSonTimer.stop();
                             System.out.println("Got it!");
