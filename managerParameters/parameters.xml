@@ -6,5 +6,6 @@
         <videoSource>input/</videoSource>
         <videoDestination>output/</videoDestination>
         <arguments>-process_real_time</arguments>
+        <openPose></openPose>
     </java.lang.Class>
 </object-stream>

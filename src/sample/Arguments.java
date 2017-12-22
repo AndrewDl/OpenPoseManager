@@ -6,8 +6,14 @@ import java.util.Scanner;
  * Created by Laimi on 07.12.2017.
  */
 public class Arguments {
+
+
         private String[] args;
         private String mode;
+    Arguments(String[] args){
+        this.args = args;
+        internalTask();
+    }
         public void setArgs(String[] args){
             this.args = args;
         }
@@ -37,22 +43,21 @@ public class Arguments {
                 System.out.println("Starting parallel mode...");
                 this.mode = "p";
             }else{
-                if(args[1].equals("OpenPose")&&args[1].equals("op")){
+                if(args[1].equals("OpenPose")||args[1].equals("op")){
                     System.out.println("Starting OpenPose only mode...");
                     this.mode = "op";
                 }else{
-                    if(args[1].equals("NewVision")&&args[1].equals("nv")){
+                    if(args[1].equals("NewVision")||args[1].equals("nv")){
                         System.out.println("Starting NewVision only mode...");
                         this.mode = "nv";
                     }else{
-                        if(args[1].equals("q")&&args[1].equals("exit")){
+                        if(args[1].equals("q")||args[1].equals("exit")){
                             System.exit(0);
                         }else{
                             System.out.println("No params found after -mode! Enter manually");
                             args[0]="";
                         }}}}}}}
         public String getMode(){
-            internalTask();
             return mode;
         }
 

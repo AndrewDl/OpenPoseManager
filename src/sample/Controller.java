@@ -11,7 +11,6 @@ public class Controller {
     private String mode;
     private String[] args;
     private ArrayList<String> jsonFoldersList;
-    Arguments arguments = new Arguments();
 
     Controller(String[] args){
         this.args = args;
@@ -28,7 +27,7 @@ public class Controller {
      NewVisionManager newVisionManager = new NewVisionManager(jsonFoldersList, parameters);
 
         //створюємо NewVision менеджер, передаєм туди список папок і стартуєм
-        arguments.setArgs(args);
+        Arguments arguments = new Arguments(args);
         mode = arguments.getMode();
         if(mode.equals("p")){
             newVisionManager.start();
