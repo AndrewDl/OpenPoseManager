@@ -1,9 +1,9 @@
 package sample.managers;
 
 import javafx.application.Platform;
-import sample.Data;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.parameters.Parameters;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,31 +24,80 @@ public class OpenPoseManager implements IManager{
     String param = "";
     String outputFolderForVideos = outputFolder+"/computedVideos/";
     String outputFolderForFails = outputFolder+"/failedVideos/";
+    String outputFolderForJsons = outputFolder+"/jsonFolders/";
     Integer index = 0;
     File currentVideoFolder;
     File tempVideoFolder;
     Boolean failed = false;
-    DirManager dirMan;
+    DirManager dirMan = new DirManager();
     Thread opm;
 
-    public OpenPoseManager(Data data){
+    public OpenPoseManager(Parameters param){
 
         /**
          * pathes and params
          */
 
-        this.inputFolder = data.getVideoSource();
-        this.outputFolder = data.getVideoDestination();
-        this.param = data.getParameters();
+        this.inputFolder = param.getVideoSource();
+        this.outputFolder = param.getVideoDestination();
+        this.param = param.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
+        this.processName = param.getOpenPose();
+        TasksClass task = new TasksClass();
 
-        Thread opm = new Thread (new Runnable() {
+        /**
+         * timer for errors
+         * it checks TASKLIST for WerFault.exe process. If it is there and video folder exists - openpose failed and WerFault should be killed
+         * if WerFault running and folder is not created - openpose couldnt start processing video, so WerFault should be killed
+         * As WerFault will be stopped OpenPoseManager will start new OpenPose prcees for anothe video
+         */
+        jSonTimer = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                    //jSonTimer.wait(10000);
+                    System.out.println("boop!");
+                    currentVideoFolder = getCurrentVideoFolder();
+                    Integer c1 = 0;
+                    c1 = getListOfFolderFiles(currentVideoFolder);
+                    Integer cTemp = 0;
+                try {
+                    if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()&&currentVideoFolder!=null)
+                        tempVideoFolder = getCurrentVideoFolder();
+
+                cTemp = getListOfFolderFiles(tempVideoFolder);
+
+                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&currentVideoFolder.exists()){
+                      //  if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
+                        if(c1==cTemp) {
+                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            System.out.println("WerFault closed");
+                            task.startTask(cmdLine);
+                            failed = true;
+                        }
+                    }
+
+
+                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
+                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                            System.out.println("WerFault closed");
+                            task.startTask(cmdLine);
+                            failed = true;
+                        }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
+/**
+ * New Thread for OPManager
+ */
+        opm = new Thread (new Runnable() {
             @Override
             public void run(){
 
-
-        TasksClass task = new TasksClass();
 
         File folder = new File(inputFolder);
 
@@ -68,51 +117,29 @@ public class OpenPoseManager implements IManager{
 
         dirMan.mkDir(outputFolderForVideos);
         dirMan.mkDir(outputFolderForFails);
-            /**
-             * timer for errors
-             */
-            jSonTimer = new Timer(10000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        System.out.println("boop!");
-                        currentVideoFolder = getCurrentVideoFolder();
-                        if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists())
-                        tempVideoFolder = getCurrentVideoFolder();
-                        if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()){
-                            if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
-                                String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                                System.out.println("WerFault closed");
-                                task.startTask(cmdLine);
-                                failed = true;
-                            }
-                        }
-                        if(task.isProcessRunning("WerFault.exe")&&!currentVideoFolder.exists()){
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
-                        }
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            });
+        dirMan.mkDir(outputFolderForJsons);
+
         jSonTimer.start();
         loop(task,fileList);
-        jSonTimer.stop();
-
             }});
     }
 
+    /**
+     * OPManager starting in new Thread
+     */
     @Override
     public void start() {
         opm.start();
+
     }
 
+    /**
+     * stops OPManager thread and Timer for errors
+     */
     @Override
     public void stop() {
         opm.interrupt();
+        jSonTimer.stop();
     }
 
     private void errorMessage(){
@@ -147,7 +174,8 @@ public class OpenPoseManager implements IManager{
                         System.out.println("sleep...");
                         Thread.sleep(10 * 1000);
                         System.out.println("awaken...");
-                        File folder = new File(outputFolder +fileList.get(i-1).getName().split("\\.")[0]);
+                        File folder = new File(outputFolderForJsons +fileList.get(i-1).getName().split("\\.")[0]);
+                        if(folder.exists())setCurrentVideoFolder(folder);
                         if(!folder.exists()){
                             setCurrentVideoFolder(folder);
                             System.out.println("failed!");
@@ -160,8 +188,8 @@ public class OpenPoseManager implements IManager{
                     System.out.println("No process found...");
                     System.out.println("Starting new process...");
                     System.out.println(new Date());
-                    cmdLine="bin\\OpenPoseDemo.exe -video "+inputFolder
-                            +fileList.get(i).getName()+" -write_keypoint_json "+outputFolder
+                    cmdLine="bin\\"+processName+" -video "+inputFolder
+                            +fileList.get(i).getName()+" -write_keypoint_json "+outputFolderForJsons
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
                     task.startTask(cmdLine);
                     System.out.println(inputFolder+fileList.get(i).getName());
@@ -172,6 +200,9 @@ public class OpenPoseManager implements IManager{
                             System.out.println(destination);
                         }else {
                             File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
+                            File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
+                            File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                            toProcess.renameTo(folderDestination);
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
                         }
@@ -193,10 +224,15 @@ public class OpenPoseManager implements IManager{
                         {
                             if(failed)
                             {File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
-                                fileList.get(i-1).renameTo(destination);}
+                                fileList.get(i-1).renameTo(destination);
+                                jSonTimer.stop();}
                             else
                             {File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
-                                fileList.get(i-1).renameTo(destination);}
+                                fileList.get(i-1).renameTo(destination);
+                                File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
+                                File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                                toProcess.renameTo(folderDestination);}
+                            jSonTimer.stop();
                             System.out.println("Got it!");
                             System.out.println(new Date());
                             break;
@@ -210,6 +246,7 @@ public class OpenPoseManager implements IManager{
         }
     }
     private File getCurrentVideoFolder(){
+        if(currentVideoFolder == null) System.out.println("NULL");
         return this.currentVideoFolder;
     }
     private void setCurrentVideoFolder(File file){
@@ -235,6 +272,21 @@ public class OpenPoseManager implements IManager{
                 return false;
         }
         return false;
+    }
+
+    /**
+     * @param folder
+     * @return amount of files in folder
+     */
+    private Integer getListOfFolderFiles(File folder){
+        Integer c = 0;
+        if(folder!=null&&folder.exists()){
+         File[] files = folder.listFiles();
+         List<File> jSonFiles = new ArrayList<>();
+         for(File f : files)c++;
+         return c;
+     }
+     else return c;
     }
 
 }

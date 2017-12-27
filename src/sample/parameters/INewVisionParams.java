@@ -16,4 +16,9 @@ public interface INewVisionParams {
     String getNewVisionPath();
     void setNewVisionPath(String newVisionPath);
 
+    String getVideoSource();
+
+    String getVideoDestination();
+
+    String getArguments();
 }

@@ -1,10 +1,14 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="OpenPoseManager:jar">
+  <artifact name="OpenPoseManager:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/OpenPoseManager_jar</output-path>
-    <root id="archive" name="OpenPoseManager.jar">
-      <element id="module-output" name="OpenPoseManager" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/xstream-1.4.9.jar" path-in-jar="/" />
+    <root id="root">
+      <element id="archive" name="OpenPoseManager.jar">
+        <element id="module-output" name="OpenPoseManager" />
+      </element>
       <element id="library" level="project" name="xstream-1.4.9" />
+      <element id="directory" name="managerParameters">
+        <element id="dir-copy" path="$PROJECT_DIR$/managerParameters" />
+      </element>
     </root>
   </artifact>
 </component>

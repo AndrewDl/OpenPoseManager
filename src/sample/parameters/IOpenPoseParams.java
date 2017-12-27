@@ -9,4 +9,6 @@ public interface IOpenPoseParams {
     String getVideoDestination();
 
     String getArguments();
+
+    String getOpenPose();
 }
