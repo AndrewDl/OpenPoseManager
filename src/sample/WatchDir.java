@@ -171,6 +171,7 @@ import java.util.*;
             Path dir = Paths.get(args[dirArg]);
             new WatchDir(dir, recursive).processEvents();
         }
+
     }
 
 
