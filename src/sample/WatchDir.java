@@ -26,6 +26,7 @@ import java.util.*;
         private final Map<WatchKey,Path> keys;
         private final boolean recursive;
         private boolean trace = false;
+        private Path Child;
 
         @SuppressWarnings("unchecked")
         static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -70,7 +71,7 @@ import java.util.*;
         /**
          * Creates a WatchService and registers the given directory
          */
-        WatchDir(Path dir, boolean recursive) throws IOException {
+        public WatchDir(Path dir, boolean recursive) throws IOException {
             this.watcher = FileSystems.getDefault().newWatchService();
             this.keys = new HashMap<WatchKey,Path>();
             this.recursive = recursive;
@@ -90,7 +91,7 @@ import java.util.*;
         /**
          * Process all events for keys queued to the watcher
          */
-        void processEvents() {
+      public  void processEvents() {
             for (;;) {
 
                 // wait for key to be signalled
@@ -122,6 +123,7 @@ import java.util.*;
 
                     // print out event
                     System.out.format("%s: %s\n", event.kind().name(), child);
+                    Child = child;
 
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
@@ -170,6 +172,9 @@ import java.util.*;
             // register directory and process its events
             Path dir = Paths.get(args[dirArg]);
             new WatchDir(dir, recursive).processEvents();
+        }
+        public String getChild(){
+            return this.Child.toString();
         }
 
     }

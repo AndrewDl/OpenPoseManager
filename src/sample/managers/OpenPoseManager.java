@@ -3,12 +3,16 @@ package sample.managers;
 import javafx.application.Platform;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.WatchDir;
 import sample.parameters.Parameters;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +35,8 @@ public class OpenPoseManager implements IManager{
     Boolean failed = false;
     DirManager dirMan = new DirManager();
     Thread opm;
+    Thread wd;
+    Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
 
     public OpenPoseManager(Parameters param){
 
@@ -91,6 +97,16 @@ public class OpenPoseManager implements IManager{
 
             }
         });
+        wd = new Thread (new Runnable(){
+            public void run(){
+                try {
+                 //   WatchDir watchDir = new WatchDir(outputFolderForJsonsPath,true);
+                    new WatchDir(outputFolderForJsonsPath, true).processEvents();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 /**
  * New Thread for OPManager
  */
@@ -130,6 +146,7 @@ public class OpenPoseManager implements IManager{
     @Override
     public void start() {
         opm.start();
+        wd.start();
 
     }
 
@@ -138,6 +155,7 @@ public class OpenPoseManager implements IManager{
      */
     @Override
     public void stop() {
+        wd.interrupt();
         opm.interrupt();
         jSonTimer.stop();
     }
@@ -235,6 +253,7 @@ public class OpenPoseManager implements IManager{
                             jSonTimer.stop();
                             System.out.println("Got it!");
                             System.out.println(new Date());
+                            this.stop();
                             break;
                         }
                     } catch (Exception e) {

@@ -32,6 +32,7 @@ public class Controller {
         }else{
             if(mode.equals("op")){
                 openPoseManager.start();
+
             }else{
                 if(mode.equals("nv")){
                     newVisionManager.start();
