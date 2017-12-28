@@ -36,7 +36,9 @@ public class OpenPoseManager implements IManager{
     DirManager dirMan = new DirManager();
     Thread opm;
     Thread wd;
+    WatchDir wdir;
     Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
+    String Child;
 
     public OpenPoseManager(Parameters param){
 
@@ -58,7 +60,7 @@ public class OpenPoseManager implements IManager{
          * if WerFault running and folder is not created - openpose couldnt start processing video, so WerFault should be killed
          * As WerFault will be stopped OpenPoseManager will start new OpenPose prcees for anothe video
          */
-        jSonTimer = new Timer(10000, new ActionListener() {
+        jSonTimer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -68,7 +70,13 @@ public class OpenPoseManager implements IManager{
                     Integer c1 = 0;
                     c1 = getListOfFolderFiles(currentVideoFolder);
                     Integer cTemp = 0;
+                String res = "";
+                if(currentVideoFolder.exists()&&wdir.getChild().split("\\.")[1]!=null)
+                    res=wdir.getChild().split("\\.")[1];
                 try {
+                    if(!task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
+                        System.out.println(res);
+                    }
                     if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()&&currentVideoFolder!=null)
                         tempVideoFolder = getCurrentVideoFolder();
 
@@ -94,19 +102,19 @@ public class OpenPoseManager implements IManager{
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-
             }
         });
         wd = new Thread (new Runnable(){
             public void run(){
                 try {
-                 //   WatchDir watchDir = new WatchDir(outputFolderForJsonsPath,true);
-                    new WatchDir(outputFolderForJsonsPath, true).processEvents();
+                   wdir = new WatchDir(outputFolderForJsonsPath, true);
+                   wdir.processEvents();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+
 /**
  * New Thread for OPManager
  */
