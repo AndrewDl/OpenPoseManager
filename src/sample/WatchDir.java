@@ -110,7 +110,7 @@ import java.util.*;
 
                 for (WatchEvent<?> event: key.pollEvents()) {
                     WatchEvent.Kind kind = event.kind();
-
+//
                     // TBD - provide example of how OVERFLOW event is handled
                     if (kind == OVERFLOW) {
                         continue;
