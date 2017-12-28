@@ -3,6 +3,7 @@ package sample.managers;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 
 import javax.swing.*;
@@ -13,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class NewVisionManager implements IManager{
@@ -21,6 +24,7 @@ public class NewVisionManager implements IManager{
     private String newVisionPath;
     private String profileName;
     private Timer timerNewVisionWorkManager;
+    private Timer timerDirManager;
     private final String NVpidPath = "NewVisionPID.txt";
     private int PID = 0;
     private final String TASKLIST = "tasklist";
@@ -29,6 +33,7 @@ public class NewVisionManager implements IManager{
     private static final String toProcessKey = "toProcess";
     private static final String completedKey = "completed";
     private DirManager dirManager = new DirManager();
+    private WatchDir watchDir;
 
 
     /**
@@ -40,9 +45,10 @@ public class NewVisionManager implements IManager{
         this.profileName = params.getProfileName();
 
 
-        timerNewVisionWorkManager = new Timer(4000, new ActionListener() {
+        timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(PID!=0)
                 if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
                     jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
                     jsonFolderPointer=0;
@@ -55,9 +61,12 @@ public class NewVisionManager implements IManager{
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
 
                         try {
+                            //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
+                            PID=0;
                             String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
+
                         } catch (Exception ee) {
                             System.out.println(ee);
                         }
@@ -70,19 +79,43 @@ public class NewVisionManager implements IManager{
                 }
             }
         });
+
+
     }
 
     @Override
-    public void start() {
+    public void start(){
         timerNewVisionWorkManager.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Path path = Paths.get("");
+                try {
+                    watchDir = new WatchDir(path,false);
+                    watchDir.addOnPIDChangeListener(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadPID();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                watchDir.processEvents();
+            }
+        }).start();
+
+
     }
 
     @Override
     public void stop() {
         timerNewVisionWorkManager.stop();
+        //:TODO зробити зупинку WatchDir
     }
 
-    private boolean checkNewVisionWork(){
+    private void loadPID(){
+        System.out.println("loadPid");
         String PIDstring="";
 
         try(FileReader reader = new FileReader(NVpidPath))
@@ -98,7 +131,12 @@ public class NewVisionManager implements IManager{
 
             System.out.println(ex.getMessage());
         }
+
         PID = Integer.parseInt(PIDstring);
+    }
+
+    private boolean checkNewVisionWork(){
+
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(TASKLIST);
@@ -112,7 +150,7 @@ public class NewVisionManager implements IManager{
         try {
             while ((line = reader.readLine())!=null){
                 // System.out.println(line); //
-                if(line.contains(String.valueOf(PID))) {
+                if(line.contains(String.valueOf(PID))&&line.contains("java.exe")) {
                     return true;
                 }
             }
