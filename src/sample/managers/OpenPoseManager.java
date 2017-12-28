@@ -39,6 +39,8 @@ public class OpenPoseManager implements IManager{
     WatchDir wdir;
     Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
     String Child;
+    Long Amount = 0L;
+    Long Max = 0L;
 
     public OpenPoseManager(Parameters param){
 
@@ -60,55 +62,47 @@ public class OpenPoseManager implements IManager{
          * if WerFault running and folder is not created - openpose couldnt start processing video, so WerFault should be killed
          * As WerFault will be stopped OpenPoseManager will start new OpenPose prcees for anothe video
          */
-        jSonTimer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                    //jSonTimer.wait(10000);
-                    System.out.println("boop!");
-                    currentVideoFolder = getCurrentVideoFolder();
-                    Integer c1 = 0;
-                    c1 = getListOfFolderFiles(currentVideoFolder);
-                    Integer cTemp = 0;
-                String res = "";
-                if(currentVideoFolder.exists()&&wdir.getChild().split("\\.")[1]!=null)
-                    res=wdir.getChild().split("\\.")[1];
-                try {
-                    if(!task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
-                        System.out.println(res);
-                    }
-                    if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()&&currentVideoFolder!=null)
-                        tempVideoFolder = getCurrentVideoFolder();
-
-                cTemp = getListOfFolderFiles(tempVideoFolder);
-
-                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&currentVideoFolder.exists()){
-                      //  if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
-                        if(c1==cTemp) {
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
-                        }
-                    }
-
-
-                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
-                        }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
         wd = new Thread (new Runnable(){
             public void run(){
                 try {
-                   wdir = new WatchDir(outputFolderForJsonsPath, true);
-                   wdir.processEvents();
+                    wdir = new WatchDir(outputFolderForJsonsPath, true);
+                    wdir.setCount();
+                    jSonTimer = new Timer(3000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("boop!");
+
+                            try{
+                                if(task.isProcessRunning(processName)&&!task.isProcessRunning("WerFault.exe")) {
+                                    Amount = wdir.getCount();
+                                    System.out.println("Amount ="+Amount);
+                                }
+                                if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
+                                    Max = Amount;
+                                    Thread.sleep(2000);
+                                    if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
+                                        if(Max==Amount){
+                                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                                            System.out.println("WerFault closed");
+                                            task.startTask(cmdLine);
+                                            failed = true;
+                                        }
+                                    }
+                                }
+                                if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
+                                    String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                                    System.out.println("WerFault closed");
+                                    task.startTask(cmdLine);
+                                    failed = true;
+                                }
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+                    jSonTimer.start();
+                    wdir.processEvents();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -143,7 +137,7 @@ public class OpenPoseManager implements IManager{
         dirMan.mkDir(outputFolderForFails);
         dirMan.mkDir(outputFolderForJsons);
 
-        jSonTimer.start();
+      //  jSonTimer.start();
         loop(task,fileList);
             }});
     }

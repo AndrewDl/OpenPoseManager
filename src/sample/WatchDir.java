@@ -27,6 +27,7 @@ public class WatchDir {
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
     private boolean trace = false;
+    private Long c = 0L;
 
     private String eventName = "";
     private String eventChild = "";
@@ -131,6 +132,9 @@ public class WatchDir {
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
+                String[] splitChild = child.toString().split("\\.");
+                if(splitChild.length>1)
+                    incCount();
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
@@ -233,6 +237,17 @@ public class WatchDir {
         return eventChild;
 
     }
+    public void setCount(){
+        this.c = 0L;
+    }
+
+    private void incCount(){
+        this.c++;
+    }
+
+    public Long getCount(){
+        return c;
+    }
 
     private class CreateAndModifyEventQueue{
         private ArrayList<String> queue = new ArrayList<>();
@@ -242,6 +257,7 @@ public class WatchDir {
             }
 
         }
+
 
         private void remove(){
 
