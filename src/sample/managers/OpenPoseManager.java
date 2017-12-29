@@ -57,10 +57,9 @@ public class OpenPoseManager implements IManager{
         TasksClass task = new TasksClass();
 
         /**
-         * timer for errors
-         * it checks TASKLIST for WerFault.exe process. If it is there and video folder exists - openpose failed and WerFault should be killed
-         * if WerFault running and folder is not created - openpose couldnt start processing video, so WerFault should be killed
-         * As WerFault will be stopped OpenPoseManager will start new OpenPose prcees for anothe video
+         * WatchDir thread. Contents Timer for errors
+         * WatchDir checks chosen folders for any changes, and its using for checking process for shooting errors
+         *
          */
 
         wd = new Thread (new Runnable(){
@@ -74,10 +73,14 @@ public class OpenPoseManager implements IManager{
                             System.out.println("boop!");
 
                             try{
+                                //if openpose processing without errors its getting amount of json changes
                                 if(task.isProcessRunning(processName)&&!task.isProcessRunning("WerFault.exe")) {
                                     Amount = wdir.getCount();
                                     System.out.println("Amount ="+Amount);
                                 }
+                                // if openpose processing and some errors shoots it saving current amount of json
+                                // then sleeps for 2 seconds and compare saved value with new one
+                                // if value is the same - openpose was failed
                                 if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
                                     Max = Amount;
                                     Thread.sleep(2000);
