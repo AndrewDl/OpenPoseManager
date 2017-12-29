@@ -49,6 +49,7 @@ public class NewVisionManager implements IManager{
         timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("NV PID is: "+PID);
                 if(PID!=0)
                 if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
                     jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
@@ -60,7 +61,6 @@ public class NewVisionManager implements IManager{
                         System.out.println(newName);
                     }
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
-
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
                             PID=0;
