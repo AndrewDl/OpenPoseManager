@@ -26,7 +26,7 @@ public class NewVisionManager implements IManager{
     private Timer timerNewVisionWorkManager;
     private Timer timerDirManager;
     private final String NVpidPath = "NewVisionPID.txt";
-    private int PID = 0;
+    private int PID = -1;
     private final String TASKLIST = "tasklist";
     private int jsonFolderPointer=0;
     private ArrayList<String> jsonFoldersList;
@@ -50,7 +50,7 @@ public class NewVisionManager implements IManager{
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: "+PID);
-                if(PID!=0)
+
                 if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
                     jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
                     jsonFolderPointer=0;
@@ -63,7 +63,7 @@ public class NewVisionManager implements IManager{
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
-                            PID=0;
+
                             String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);

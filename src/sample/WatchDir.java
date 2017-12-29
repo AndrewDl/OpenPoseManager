@@ -93,6 +93,8 @@ public class WatchDir {
 
         // enable trace after initial registration
         this.trace = true;
+
+        checkPIDChanging();
     }
 
     /**
