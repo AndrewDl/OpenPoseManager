@@ -32,6 +32,7 @@ public class WatchDir {
     private String eventChild = "";
 
     private List<Runnable> onFinishEventHandlers = new ArrayList<>();
+    private CreateAndModifyEventQueue createAndModifyEventQueue = new CreateAndModifyEventQueue();
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -80,6 +81,7 @@ public class WatchDir {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
         this.recursive = recursive;
+        //dir = Paths.get("E:\\GitHubStuff\\OpenPoseManager\\out\\artifacts\\OpenPoseManager_jar");
 
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
@@ -127,11 +129,11 @@ public class WatchDir {
                 Path child = dir.resolve(name);
                 eventName = event.kind().name();
                 eventChild = child.toString();
-                checkPIDChanging();
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
 
+                checkPIDChanging();
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
                 if (recursive && (kind == ENTRY_CREATE)) {
@@ -184,19 +186,16 @@ public class WatchDir {
     private void checkPIDChanging(){
         String separator = "\\";
         String nvPID;
-//        if(eventChild.contains(separator)) {
-//            String[] eC = eventChild.split(Pattern.quote(separator));
-//            nvPID = eC[eC.length-1];
-//        }else{
-//            System.out.println("standart pid");
-//            nvPID = eventChild;
-//        }
+
         String[] eC = eventChild.split(Pattern.quote(separator));
         nvPID = eC[eC.length-1];
-        System.out.println("1+"+ENTRY_MODIFY.name());
 
-        if(eventName.equals(ENTRY_MODIFY.name()) && nvPID.equals("NewVisionPID.txt")){
-            System.out.println("2");
+        if(nvPID.equals("NewVisionPID.txt")){
+            createAndModifyEventQueue.poll(eventName);
+        }
+
+        if(createAndModifyEventQueue.checkCreateAndModifyOrder()){
+            createAndModifyEventQueue.resetQueue();
             fireOnPIDChange();
         }
     }
@@ -235,16 +234,31 @@ public class WatchDir {
     }
 
     private class CreateAndModifyEventQueue{
+
+        public CreateAndModifyEventQueue() {
+            queue.add(ENTRY_MODIFY.name());
+            queue.add(ENTRY_CREATE.name());
+        }
+
         private ArrayList<String> queue = new ArrayList<>();
         public void poll(String eventName){
-            if(queue.size()==2){
-
-            }
+            queue.set(1,queue.get(0));
+            queue.set(0,eventName);
 
         }
 
-        private void remove(){
-
+        public boolean checkCreateAndModifyOrder(){
+            if(queue.get(1)==ENTRY_CREATE.name() && queue.get(0)==ENTRY_MODIFY.name())
+                return true;
+            else
+                return false;
+        }
+        public void resetQueue(){
+            queue.set(0,"");
+            queue.set(1,"");
+        }
+        public ArrayList<String> getQueue() {
+            return queue;
         }
     }
 }

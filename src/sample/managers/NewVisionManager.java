@@ -34,6 +34,7 @@ public class NewVisionManager implements IManager{
     private static final String completedKey = "completed";
     private DirManager dirManager = new DirManager();
     private WatchDir watchDir;
+    private Thread watchDirThread;
 
 
     /**
@@ -86,7 +87,7 @@ public class NewVisionManager implements IManager{
     @Override
     public void start(){
         timerNewVisionWorkManager.start();
-        new Thread(new Runnable() {
+        watchDirThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Path path = Paths.get("");
@@ -103,15 +104,16 @@ public class NewVisionManager implements IManager{
                 }
                 watchDir.processEvents();
             }
-        }).start();
-
+        });
+        watchDirThread.start();
 
     }
 
     @Override
     public void stop() {
         timerNewVisionWorkManager.stop();
-        //:TODO зробити зупинку WatchDir
+        watchDirThread.stop();
+        //:TODO зробити перевірку потока на null
     }
 
     private void loadPID(){
