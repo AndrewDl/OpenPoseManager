@@ -3,12 +3,16 @@ package sample.managers;
 import javafx.application.Platform;
 import sample.DirManager;
 import sample.TasksClass;
+import sample.WatchDir;
 import sample.parameters.Parameters;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +35,12 @@ public class OpenPoseManager implements IManager{
     Boolean failed = false;
     DirManager dirMan = new DirManager();
     Thread opm;
+    Thread wd;
+    WatchDir wdir;
+    Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
+    String Child;
+    Long Amount = 0L;
+    Long Max = 0L;
 
     public OpenPoseManager(Parameters param){
 
@@ -47,50 +57,61 @@ public class OpenPoseManager implements IManager{
         TasksClass task = new TasksClass();
 
         /**
-         * timer for errors
-         * it checks TASKLIST for WerFault.exe process. If it is there and video folder exists - openpose failed and WerFault should be killed
-         * if WerFault running and folder is not created - openpose couldnt start processing video, so WerFault should be killed
-         * As WerFault will be stopped OpenPoseManager will start new OpenPose prcees for anothe video
+         * WatchDir thread. Contents Timer for errors
+         * WatchDir checks chosen folders for any changes, and its using for checking process for shooting errors
+         *
          */
-        jSonTimer = new Timer(10000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                    //jSonTimer.wait(10000);
-                    System.out.println("boop!");
-                    currentVideoFolder = getCurrentVideoFolder();
-                    Integer c1 = 0;
-                    c1 = getListOfFolderFiles(currentVideoFolder);
-                    Integer cTemp = 0;
+        wd = new Thread (new Runnable(){
+            public void run(){
                 try {
-                    if(!task.isProcessRunning("WerFault.exe")&&currentVideoFolder.exists()&&currentVideoFolder!=null)
-                        tempVideoFolder = getCurrentVideoFolder();
+                    wdir = new WatchDir(outputFolderForJsonsPath, true);
+                    wdir.setCount();
+                    jSonTimer = new Timer(3000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("boop!");
 
-                cTemp = getListOfFolderFiles(tempVideoFolder);
-
-                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&currentVideoFolder.exists()){
-                      //  if(compareFolders(tempVideoFolder,getCurrentVideoFolder())) {
-                        if(c1==cTemp) {
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
+                            try{
+                                //if openpose processing without errors its getting amount of json changes
+                                if(task.isProcessRunning(processName)&&!task.isProcessRunning("WerFault.exe")) {
+                                    Amount = wdir.getCount();
+                                    System.out.println("Amount ="+Amount);
+                                }
+                                // if openpose processing and some errors shoots it saving current amount of json
+                                // then sleeps for 2 seconds and compare saved value with new one
+                                // if value is the same - openpose was failed
+                                if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
+                                    Max = Amount;
+                                    Thread.sleep(2000);
+                                    if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
+                                        if(Max==Amount){
+                                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                                            System.out.println("WerFault closed");
+                                            task.startTask(cmdLine);
+                                            failed = true;
+                                        }
+                                    }
+                                }
+                                if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
+                                    String cmdLine = "TASKKILL /f /IM WerFault.exe";
+                                    System.out.println("WerFault closed");
+                                    task.startTask(cmdLine);
+                                    failed = true;
+                                }
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
                         }
-                    }
-
-
-                    if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
-                            String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                            System.out.println("WerFault closed");
-                            task.startTask(cmdLine);
-                            failed = true;
-                        }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                    });
+                    jSonTimer.start();
+                    wdir.processEvents();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         });
+
 /**
  * New Thread for OPManager
  */
@@ -119,7 +140,7 @@ public class OpenPoseManager implements IManager{
         dirMan.mkDir(outputFolderForFails);
         dirMan.mkDir(outputFolderForJsons);
 
-        jSonTimer.start();
+      //  jSonTimer.start();
         loop(task,fileList);
             }});
     }
@@ -130,6 +151,7 @@ public class OpenPoseManager implements IManager{
     @Override
     public void start() {
         opm.start();
+        wd.start();
 
     }
 
@@ -138,6 +160,7 @@ public class OpenPoseManager implements IManager{
      */
     @Override
     public void stop() {
+        wd.interrupt();
         opm.interrupt();
         jSonTimer.stop();
     }
@@ -235,6 +258,7 @@ public class OpenPoseManager implements IManager{
                             jSonTimer.stop();
                             System.out.println("Got it!");
                             System.out.println(new Date());
+                            this.stop();
                             break;
                         }
                     } catch (Exception e) {

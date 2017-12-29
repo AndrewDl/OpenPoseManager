@@ -20,6 +20,7 @@ public class Arguments {
         private void internalTask(){
             if(args.length<1||!args[0].equals("-mode")) {
                 Scanner sc = new Scanner(System.in);
+                System.out.println("Arguments: p - parallel mode \n op - OpenPose only mode \n nv - Newvision only mode \n q - exit");
                 System.out.println("No arguments found! Please, choose mode:");
                 String s = sc.nextLine();
                 if (s.equals("parallel") || s.equals("p")) {

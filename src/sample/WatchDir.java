@@ -27,6 +27,7 @@ public class WatchDir {
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
     private boolean trace = false;
+    private Long c = 0L;
 
     private String eventName = "";
     private String eventChild = "";
@@ -81,7 +82,6 @@ public class WatchDir {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
         this.recursive = recursive;
-        //dir = Paths.get("E:\\GitHubStuff\\OpenPoseManager\\out\\artifacts\\OpenPoseManager_jar");
 
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
@@ -129,9 +129,13 @@ public class WatchDir {
                 Path child = dir.resolve(name);
                 eventName = event.kind().name();
                 eventChild = child.toString();
+                checkPIDChanging();
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
+                String[] splitChild = child.toString().split("\\.");
+                if(splitChild.length>1)
+                    incCount();
 
                 checkPIDChanging();
                 // if directory is created, and watching recursively, then
@@ -231,6 +235,17 @@ public class WatchDir {
     public String getEventChild() {
         return eventChild;
 
+    }
+    public void setCount(){
+        this.c = 0L;
+    }
+
+    private void incCount(){
+        this.c++;
+    }
+
+    public Long getCount(){
+        return c;
     }
 
     private class CreateAndModifyEventQueue{
