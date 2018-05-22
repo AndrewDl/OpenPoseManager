@@ -70,7 +70,7 @@ public class DirManager {
         getFileList(path);
         System.out.println("after");
         for(File f : files){
-            if(f.getName().endsWith(".mp4")){
+            if(f.getName().endsWith(".mp4")||f.getName().endsWith(".avi")){
                 fileList.add(f);
             }
         }

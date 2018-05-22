@@ -116,26 +116,26 @@ public class NewVisionManager implements IManager{
         //:TODO зробити перевірку потока на null
     }
 
-    private void loadPID(){
-        System.out.println("loadPid");
-        String PIDstring="";
+        private void loadPID(){
+            System.out.println("loadPid");
+            String PIDstring="";
 
-        try(FileReader reader = new FileReader(NVpidPath))
-        {
-            // читаем посимвольно
-            int c;
-            while((c=reader.read())!=-1){
-                //System.out.println((char)c);
-                PIDstring = PIDstring.concat(String.valueOf((char)c));
+            try(FileReader reader = new FileReader(NVpidPath))
+            {
+                // читаем посимвольно
+                int c;
+                while((c=reader.read())!=-1){
+                    //System.out.println((char)c);
+                    PIDstring = PIDstring.concat(String.valueOf((char)c));
+                }
             }
-        }
-        catch(IOException ex){
+            catch(IOException ex){
 
-            System.out.println(ex.getMessage());
-        }
+                System.out.println(ex.getMessage());
+            }
 
-        PID = Integer.parseInt(PIDstring);
-    }
+            PID = Integer.parseInt(PIDstring);
+        }
 
     private boolean checkNewVisionWork(){
 

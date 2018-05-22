@@ -80,7 +80,7 @@ public class OpenPoseManager implements IManager{
                                 }
                                 // if openpose processing and some errors shoots it saving current amount of json
                                 // then sleeps for 2 seconds and compare saved value with new one
-                                // if value is the same - openpose was failed
+                                // if value is the same - open
                                 if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
                                     Max = Amount;
                                     Thread.sleep(2000);
@@ -140,8 +140,21 @@ public class OpenPoseManager implements IManager{
         dirMan.mkDir(outputFolderForFails);
         dirMan.mkDir(outputFolderForJsons);
 
-      //  jSonTimer.start();
+      //  jSonTimer.start()
+      if(!fileList.isEmpty())
         loop(task,fileList);
+      else {
+          System.out.println("No Video File Found");
+          stop();
+          try {
+              this.wait(10000);
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
+          start();
+      }
+
+
             }});
     }
 
@@ -152,7 +165,10 @@ public class OpenPoseManager implements IManager{
     public void start() {
         opm.start();
         wd.start();
-
+    }
+    public void secondStart(List<File> fileList){
+        fileList.clear();
+        start();
     }
 
     /**
@@ -215,7 +231,7 @@ public class OpenPoseManager implements IManager{
                             +fileList.get(i).getName()+" -write_keypoint_json "+outputFolderForJsons
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
                     task.startTask(cmdLine);
-                    System.out.println(inputFolder+fileList.get(i).getName());
+                    //System.out.println(inputFolder+fileList.get(i).getName());
                     if(i>0){
                         if(failed){
                             File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
@@ -250,14 +266,18 @@ public class OpenPoseManager implements IManager{
                                 fileList.get(i-1).renameTo(destination);
                                 jSonTimer.stop();}
                             else
-                            {File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
+                            {
+                                System.out.println("filelist.size:"+fileList.size());
+                                File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
                                 fileList.get(i-1).renameTo(destination);
                                 File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
                                 File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
-                                toProcess.renameTo(folderDestination);}
+                                toProcess.renameTo(folderDestination);
+                            }
                             jSonTimer.stop();
                             System.out.println("Got it!");
                             System.out.println(new Date());
+                           // System.out.println("Checking folder for new videos");
                             this.stop();
                             break;
                         }
@@ -265,7 +285,7 @@ public class OpenPoseManager implements IManager{
                         e.printStackTrace();
                     }
                 }
-
+                //secondStart(fileList);
                 break;}
         }
     }
