@@ -145,7 +145,6 @@ public class OpenPoseManager implements IManager{
         loop(task,fileList);
       else {
           System.out.println("No Video File Found");
-          stop();
           try {
               this.wait(10000);
           } catch (InterruptedException e) {
