@@ -191,4 +191,10 @@ public class DirManager {
         }
         return name;
     }
+
+    public void dropFilelist(){
+        fileList.clear();
+        if(fileList.isEmpty()) System.out.println("cleared");
+        if(!fileList.isEmpty()) System.out.println("not cleared");
+    }
 }
