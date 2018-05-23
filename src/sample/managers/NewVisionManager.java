@@ -55,12 +55,13 @@ public class NewVisionManager implements IManager{
                     jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
                     jsonFolderPointer=0;
                 }else {
-                    if(jsonFolderPointer>0){
-                        String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
-                        dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
-                        System.out.println(newName);
-                    }
+
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
+                        if(jsonFolderPointer>0){
+                            String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
+                            dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
+                            System.out.println(newName);
+                        }
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
 
@@ -73,7 +74,10 @@ public class NewVisionManager implements IManager{
                         }
                         jsonFolderPointer++;
                     } else {
-                        if (jsonFolderPointer >= jsonFoldersList.size()) {
+                        if (jsonFolderPointer >= jsonFoldersList.size() && checkNewVisionWork() == false) {
+                            String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
+                            dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
+                            System.out.println(newName);
                             jsonFoldersList.clear();
                         }
                     }
