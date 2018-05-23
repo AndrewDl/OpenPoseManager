@@ -64,7 +64,7 @@ public class NewVisionManager implements IManager{
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
 
-                            String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                            String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "/" + jsonFoldersList.get(jsonFolderPointer) + "/";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
 
