@@ -132,20 +132,35 @@ public class OpenPoseManager implements IManager{
 
       //  File[] files = folder.listFiles();
 
-        List<File> fileList = new ArrayList<>();
-        if(fileList.isEmpty())
-            fileList = dirMan.getVideoNamesList(inputFolder);
-        else
-            fileList.clear();
+
+
         dirMan.mkDir(outputFolderForVideos);
         dirMan.mkDir(outputFolderForFails);
         dirMan.mkDir(outputFolderForJsons);
 
-      //  jSonTimer.start()
-      if(!fileList.isEmpty())
-        loop(task,fileList);
-      else {
-          System.out.println("No Video File Found");}
+                List<File> fileList = new ArrayList<>();
+                for(;;) {
+                    if (fileList.isEmpty()) {
+                        fileList = dirMan.getVideoNamesList(inputFolder);
+                    } else {
+                        dirMan.dropFilelist();
+                        fileList = dirMan.getVideoNamesList(inputFolder);
+                        loop(task, fileList);
+                    }
+                    try {
+                        Thread.sleep(10*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+//      //  jSonTimer.start()
+//      if(!fileList.isEmpty())
+//        loop(task,fileList);
+//      else {
+//          System.out.println("No Video File Found");
+//
+//      }
+
 //          try {
 //              Thread.sleep(10000);
 //          } catch (InterruptedException e) {
@@ -155,8 +170,8 @@ public class OpenPoseManager implements IManager{
 //          start();
 //      }
 
-
-            }});
+            }
+        });
     }
 
     /**
@@ -281,28 +296,28 @@ public class OpenPoseManager implements IManager{
                             System.out.println("Got it!");
                             System.out.println(new Date());
                             dirMan.dropFilelist();
-                            List<File> secondFileList = new ArrayList<>();
-                            if(secondFileList.size()==0){
-                                System.out.println("filling new list");
-                                secondFileList = dirMan.getVideoNamesList(inputFolder);}
-                            else
-                            {
-                                System.out.println("clear second list");
-                                secondFileList.clear();
-                                secondFileList = dirMan.getVideoNamesList(inputFolder);
-                            }
-                            if(!secondFileList.isEmpty())
-                                loop(task,secondFileList);
-                            else {
-                                System.out.println("No Video File Found");
-                                try {
-                                    Thread.sleep(10 * 1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                System.out.println("start again");
-                                start();
-                            }
+//                            List<File> secondFileList = new ArrayList<>();
+//                            if(secondFileList.size()==0){
+//                                System.out.println("filling new list");
+//                                secondFileList = dirMan.getVideoNamesList(inputFolder);}
+//                            else
+//                            {
+//                                System.out.println("clear second list");
+//                                secondFileList.clear();
+//                                secondFileList = dirMan.getVideoNamesList(inputFolder);
+//                            }
+//                            if(!secondFileList.isEmpty())
+//                                loop(task,secondFileList);
+//                            else {
+//                                System.out.println("No Video File Found");
+//                                try {
+//                                    Thread.sleep(10 * 1000);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                System.out.println("start again");
+//                                start();
+//                            }
                            // System.out.println("Checking folder for new videos");
                             this.stop();
                             break;
