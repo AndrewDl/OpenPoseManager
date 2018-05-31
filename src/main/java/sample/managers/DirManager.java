@@ -1,4 +1,4 @@
-package sample;
+package sample.managers;
 
 import java.io.File;
 import java.util.ArrayList;

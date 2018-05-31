@@ -1,10 +1,10 @@
 package sample.managers;
 
 import javafx.application.Platform;
-import sample.DirManager;
 import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.Parameters;
+
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Laimi on 15.11.2017.
  */
-public class OpenPoseManager implements IManager{
+public class OpenPoseManager implements IManager {
     private Timer jSonTimer;
     String processName = "OpenPoseDemo.exe";//"Telegram.exe";
     String inputFolder = ".";
@@ -33,7 +33,7 @@ public class OpenPoseManager implements IManager{
     File currentVideoFolder;
     File tempVideoFolder;
     Boolean failed = false;
-    DirManager dirMan = new DirManager();
+    DirManager dirMan;
     Thread opm;
     Thread wd;
     WatchDir wdir;
@@ -54,11 +54,11 @@ public class OpenPoseManager implements IManager{
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
         this.processName = param.getOpenPose();
-        TasksClass task = new TasksClass();
+        final TasksClass task = new TasksClass();
 
         /**
-         * WatchDir thread. Contents Timer for errors
-         * WatchDir checks chosen folders for any changes, and its using for checking process for shooting errors
+         * sample.WatchDir thread. Contents Timer for errors
+         * sample.WatchDir checks chosen folders for any changes, and its using for checking process for shooting errors
          *
          */
 
@@ -120,29 +120,30 @@ public class OpenPoseManager implements IManager{
             public void run(){
 
 
-        File folder = new File(inputFolder);
+                File folder = new File(inputFolder);
 
-        /**
-         * checking on availability of folder
-         */
-        if(!folder.exists()){
-            System.out.println("folder does not exist");
-            return;
-        }
+                /**
+                 * checking on availability of folder
+                 */
+                if(!folder.exists()){
+                    System.out.println("folder does not exist");
+                    return;
+                }
 
-      //  File[] files = folder.listFiles();
+              //  File[] files = folder.listFiles();
 
-        List<File> fileList = new ArrayList<>();
+                List<File> fileList = new ArrayList<>();
+                dirMan = new DirManager();
+                fileList = dirMan.getVideoNamesList(inputFolder);
 
-        fileList = dirMan.getVideoNamesList(inputFolder);
+                dirMan.mkDir(outputFolderForVideos);
+                dirMan.mkDir(outputFolderForFails);
+                dirMan.mkDir(outputFolderForJsons);
 
-        dirMan.mkDir(outputFolderForVideos);
-        dirMan.mkDir(outputFolderForFails);
-        dirMan.mkDir(outputFolderForJsons);
-
-      //  jSonTimer.start();
-        loop(task,fileList);
-            }});
+              //  jSonTimer.start();
+                loop(task,fileList);
+                    }
+        });
     }
 
     /**

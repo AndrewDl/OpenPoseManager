@@ -1,11 +1,8 @@
 package sample;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import sample.managers.NewVisionManager;
 import sample.managers.OpenPoseManager;
 import sample.parameters.Parameters;
-
-import java.util.ArrayList;
 
 public class Controller {
     private String mode;

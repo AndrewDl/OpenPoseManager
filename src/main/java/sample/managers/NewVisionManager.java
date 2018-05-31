@@ -1,12 +1,11 @@
 package sample.managers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import sample.DirManager;
+
+
 import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,11 +13,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class NewVisionManager implements IManager{
+public class NewVisionManager implements sample.managers.IManager {
 
     private String jsonFolderPath;
     private String newVisionPath;
@@ -61,6 +61,7 @@ public class NewVisionManager implements IManager{
                         System.out.println(newName);
                     }
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
+
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
 

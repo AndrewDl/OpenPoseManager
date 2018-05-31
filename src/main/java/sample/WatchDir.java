@@ -9,11 +9,7 @@ import java.util.Map;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import java.nio.file.*;
-import static java.nio.file.StandardWatchEventKinds.*;
-import static java.nio.file.LinkOption.*;
-import java.nio.file.attribute.*;
-import java.io.*;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -167,7 +163,7 @@ public class WatchDir {
     }
 
     static void usage() {
-        System.err.println("usage: java WatchDir [-r] dir");
+        System.err.println("usage: java sample.WatchDir [-r] dir");
         System.exit(-1);
     }
 

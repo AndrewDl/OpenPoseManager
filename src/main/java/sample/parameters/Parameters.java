@@ -1,6 +1,5 @@
 package sample.parameters;
 
-
 import sample.XMLwriterReader;
 
 import java.io.IOException;
@@ -22,10 +21,10 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
 
     /**
-     * This method is used to load parameters from a given file<br>
+     * This method is used to load sample.parameters from a given file<br>
      *     Method uses deserialization to load instance from an xml file
-     * @param file path to parameters xml file
-     * @return parameters from the file
+     * @param file path to sample.parameters xml file
+     * @return sample.parameters from the file
      */
     public static Parameters loadParameters(String file) {
 
