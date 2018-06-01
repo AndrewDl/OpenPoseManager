@@ -3,9 +3,10 @@ package sample;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public class DirManager {
-
+    private Logger logger = LogManager.getLogger("General");
     private File[] files;
     List<String> dirList = new ArrayList<>();
     List<String> namesFileList = new ArrayList<>();
@@ -78,6 +79,7 @@ public class DirManager {
             System.out.println("Files not found");
         }
         System.out.println("fileList.length:"+fileList.size());
+        logger.info("filelist.length:"+fileList.size());
         return fileList;
     }
 
@@ -88,6 +90,7 @@ public class DirManager {
 // if the directory does not exist, create it
         if (!theDir.exists()) {
             System.out.println("creating directory: " + theDir.getName());
+            logger.info("directory "+theDir.getName()+" gonna be created");
             boolean result = false;
 
             try {
@@ -98,6 +101,7 @@ public class DirManager {
             }
             if (result) {
                 System.out.println("DIR created");
+                logger.info("directory "+theDir.getName()+" was created!");
             }
         }
 

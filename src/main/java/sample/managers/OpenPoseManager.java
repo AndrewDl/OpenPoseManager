@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Created by Laimi on 15.11.2017.
  */
@@ -41,6 +45,7 @@ public class OpenPoseManager implements IManager{
     String Child;
     Long Amount = 0L;
     Long Max = 0L;
+    Logger logger = LogManager.getLogger("OPManager");
 
     public OpenPoseManager(Parameters param){
 
@@ -89,6 +94,7 @@ public class OpenPoseManager implements IManager{
                                             String cmdLine = "TASKKILL /f /IM WerFault.exe";
                                             System.out.println("WerFault closed");
                                             task.startTask(cmdLine);
+                                            logger.info("WerFaultTask was closed. OpenPoseFailure!");
                                             failed = true;
                                         }
                                     }
@@ -249,12 +255,14 @@ public class OpenPoseManager implements IManager{
                             +fileList.get(i).getName()+" -write_keypoint_json "+outputFolderForJsons
                             +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
                     task.startTask(cmdLine);
+                    logger.info(fileList.get(i).getName()+" in process");
                     //System.out.println(inputFolder+fileList.get(i).getName());
                     if(i>0){
                         if(failed){
                             File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
+                            logger.info(fileList.get(i).getName()+" failed ");
                         }else {
                             File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
                             File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
@@ -262,6 +270,7 @@ public class OpenPoseManager implements IManager{
                             toProcess.renameTo(folderDestination);
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
+                            logger.info(fileList.get(i).getName()+" completed");
                         }
                         }
                     failed = false;
@@ -282,6 +291,7 @@ public class OpenPoseManager implements IManager{
                             if(failed)
                             {File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
                                 fileList.get(i-1).renameTo(destination);
+                                logger.info(fileList.get(i-1).getName()+" failed");
                                 jSonTimer.stop();}
                             else
                             {
@@ -291,6 +301,7 @@ public class OpenPoseManager implements IManager{
                                 File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
                                 File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
                                 toProcess.renameTo(folderDestination);
+                                logger.info(fileList.get(i-1).getName()+" completed");
                             }
                             jSonTimer.stop();
                             System.out.println("Got it!");
