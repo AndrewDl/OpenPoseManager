@@ -26,26 +26,26 @@ import org.apache.logging.log4j.Logger;
  */
 public class OpenPoseManager implements IManager{
     private Timer jSonTimer;
-    String processName = "OpenPoseDemo.exe";//"Telegram.exe";
-    String inputFolder = ".";
-    String outputFolder = "output\\";
-    String param = "";
-    String outputFolderForVideos = outputFolder+"/computedVideos/";
-    String outputFolderForFails = outputFolder+"/failedVideos/";
-    String outputFolderForJsons = outputFolder+"/jsonFolders/";
-    Integer index = 0;
-    File currentVideoFolder;
-    File tempVideoFolder;
-    Boolean failed = false;
-    DirManager dirMan = new DirManager();
-    Thread opm;
-    Thread wd;
-    WatchDir wdir;
-    Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
-    String Child;
-    Long Amount = 0L;
-    Long Max = 0L;
-    Logger logger = LogManager.getLogger("OPManager");
+    private String processName = "OpenPoseDemo.exe";//"Telegram.exe";
+    private String inputFolder = ".";
+    private String outputFolder = "output\\";
+    private String param = "";
+    private String outputFolderForVideos = outputFolder+"/computedVideos/";
+    private String outputFolderForFails = outputFolder+"/failedVideos/";
+    private String outputFolderForJsons = outputFolder+"/jsonFolders/";
+    private Integer index = 0;
+    private File currentVideoFolder;
+    private File tempVideoFolder;
+    private Boolean failed = false;
+    private DirManager dirMan = new DirManager();
+    private Thread opm;
+    private Thread wd;
+    private WatchDir wdir;
+    private Path outputFolderForJsonsPath = Paths.get(outputFolderForJsons);
+    private String Child;
+    private Long Amount = 0L;
+    private Long Max = 0L;
+    private Logger logger = LogManager.getLogger("OPManager");
 
     public OpenPoseManager(Parameters param){
 
@@ -106,6 +106,7 @@ public class OpenPoseManager implements IManager{
                                     failed = true;
                                 }
                             } catch (Exception e1) {
+                                logger.error(e);
                                 e1.printStackTrace();
                             }
                         }
@@ -113,6 +114,7 @@ public class OpenPoseManager implements IManager{
                     jSonTimer.start();
                     wdir.processEvents();
                 } catch (IOException e) {
+                    logger.error(e);
                     e.printStackTrace();
                 }
             }
@@ -156,6 +158,7 @@ public class OpenPoseManager implements IManager{
                     try {
                         Thread.sleep(10*1000);
                     } catch (InterruptedException e) {
+                        logger.error(e);
                         e.printStackTrace();
                     }
                 }
@@ -278,6 +281,7 @@ public class OpenPoseManager implements IManager{
                 }
                 Thread.sleep(5 * 1000);
             } catch (Exception e) {
+                logger.error(e);
                 e.printStackTrace();
             }
             if(i>=fileList.size()){
@@ -334,6 +338,7 @@ public class OpenPoseManager implements IManager{
                             break;
                         }
                     } catch (Exception e) {
+                        logger.error(e);
                         e.printStackTrace();
                     }
                 }

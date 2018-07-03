@@ -1,16 +1,19 @@
 package sample.parameters;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sample.XMLwriterReader;
 
 import java.io.IOException;
+
 
 /**
  * Created by Andrew on 11/28/17.
  */
 public class Parameters implements IOpenPoseParams, INewVisionParams {
 
-
+    private Logger logger = LogManager.getLogger("OPManager");
     private String jsonSource = "";
     private String profileName = "";
     private String newVisionPath = "";
@@ -31,15 +34,19 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
         XMLwriterReader<Parameters> reader = new XMLwriterReader(file);
 
+        Logger logger = LogManager.getLogger("OPManager");
+
         Parameters parameters = null;
 
         try {
             parameters = reader.ReadFile(Parameters.class);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
             System.out.println("Can't read Parameters File");
             parameters = new Parameters();
         } catch (ClassNotFoundException e) {
+            logger.error(e);
             e.printStackTrace();
             System.out.println("Class Not Found");
         }

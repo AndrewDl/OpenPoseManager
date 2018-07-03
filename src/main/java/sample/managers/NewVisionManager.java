@@ -17,6 +17,9 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class NewVisionManager implements IManager{
 
@@ -35,7 +38,7 @@ public class NewVisionManager implements IManager{
     private DirManager dirManager = new DirManager();
     private WatchDir watchDir;
     private Thread watchDirThread;
-
+    private Logger logger = LogManager.getLogger("NVManager");
 
     /**
      * @param params
@@ -67,8 +70,8 @@ public class NewVisionManager implements IManager{
                             String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "/" + jsonFoldersList.get(jsonFolderPointer) + "/";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
-
                         } catch (Exception ee) {
+                            logger.error(ee);
                             System.out.println(ee);
                         }
                         jsonFolderPointer++;
@@ -100,6 +103,7 @@ public class NewVisionManager implements IManager{
                         }
                     });
                 } catch (IOException e) {
+                    logger.error(e);
                     e.printStackTrace();
                 }
                 watchDir.processEvents();
@@ -130,7 +134,7 @@ public class NewVisionManager implements IManager{
                 }
             }
             catch(IOException ex){
-
+                logger.error(ex);
                 System.out.println(ex.getMessage());
             }
 
@@ -143,6 +147,7 @@ public class NewVisionManager implements IManager{
         try {
             p = Runtime.getRuntime().exec(TASKLIST);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
 
@@ -157,6 +162,7 @@ public class NewVisionManager implements IManager{
                 }
             }
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         return false;

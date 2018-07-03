@@ -43,6 +43,11 @@
             <AppenderRef ref="RollingFile-Appender-info" level="info"/>
             <AppenderRef ref="Console-Appender" level="fatal"/>
         </Logger>
+        <Logger name="NVManager" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
         <Root level="fatal">
             <AppenderRef ref="Console-Appender"/>
         </Root>

@@ -97,6 +97,7 @@ public class DirManager {
                 theDir.mkdir();
                 result = true;
             } catch (SecurityException se) {
+                logger.error(se);
                 //handle it
             }
             if (result) {
