@@ -16,5 +16,7 @@
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
+        <!--path to parameters of New Vision-->
+        <parametersPath>"\somepath"</parametersPath>
     </java.lang.Class>
 </object-stream>

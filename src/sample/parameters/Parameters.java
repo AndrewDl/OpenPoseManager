@@ -18,6 +18,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
+    private String parametersPath = "";
 
 
 
@@ -110,5 +111,13 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
 
+    @Override
+    public String getParametersPath(){
+        return parametersPath;
+    }
+
+    public void setParametersPath(String path){
+        parametersPath = path;
+    }
 
 }

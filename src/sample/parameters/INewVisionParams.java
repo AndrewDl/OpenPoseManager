@@ -21,4 +21,7 @@ public interface INewVisionParams {
     String getVideoDestination();
 
     String getArguments();
+
+    String getParametersPath();
+    void setParametersPath(String path);
 }
