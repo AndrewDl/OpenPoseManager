@@ -1,13 +1,5 @@
 package sample.managers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import sample.DirManager;
-import sample.TasksClass;
-import sample.WatchDir;
-import sample.parameters.INewVisionParams;
-
-import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -17,9 +9,13 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.swing.Timer;
+import sample.DirManager;
+import sample.TasksClass;
+import sample.WatchDir;
+import sample.parameters.INewVisionParams;
 
-public class NewVisionManager implements IManager{
-
+public class NewVisionManager implements IManager {
     private String jsonFolderPath;
     private String newVisionPath;
     private String profileName;
@@ -28,7 +24,7 @@ public class NewVisionManager implements IManager{
     private final String NVpidPath = "NewVisionPID.txt";
     private int PID = -1;
     private final String TASKLIST = "tasklist";
-    private int jsonFolderPointer=0;
+    private int jsonFolderPointer = 0;
     private ArrayList<String> jsonFoldersList;
     private static final String toProcessKey = "toProcess";
     private static final String completedKey = "completed";
@@ -36,129 +32,135 @@ public class NewVisionManager implements IManager{
     private WatchDir watchDir;
     private Thread watchDirThread;
 
-
-    /**
-     * @param params
-     */
-    public NewVisionManager(INewVisionParams params){
+    public NewVisionManager(INewVisionParams params) {
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
-
-
-        timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
-            @Override
+        this.timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("NV PID is: "+PID);
+                System.out.println("NV PID is: " + PID);
+                if (jsonFoldersList != null && jsonFoldersList.size() != 0) {
+                    String str;
+                    if (!checkNewVisionWork() && jsonFolderPointer < jsonFoldersList.size()) {
+                        if (jsonFolderPointer > 0) {
+                            str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
+                            dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
+                            System.out.println(str);
+                        }
 
-                if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
-                    jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
-                    jsonFolderPointer=0;
-                }else {
-                    if(jsonFolderPointer>0){
-                        String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
-                        dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
-                        System.out.println(newName);
-                    }
-                    if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
-                            //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
-
-                            String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                            str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "/" + (String)jsonFoldersList.get(jsonFolderPointer) + "/";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
+                        } catch (Exception var3) {
+                            System.out.println(var3);
+                        }
 
-                        } catch (Exception ee) {
-                            System.out.println(ee);
-                        }
                         jsonFolderPointer++;
-                    } else {
-                        if (jsonFolderPointer >= jsonFoldersList.size()) {
-                            jsonFoldersList.clear();
-                        }
+                    } else if (jsonFolderPointer >= jsonFoldersList.size() && !checkNewVisionWork()) {
+                        str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
+                        dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
+                        System.out.println(str);
+                        jsonFoldersList.clear();
                     }
+                } else {
+                    jsonFoldersList = (ArrayList)dirManager.getJsonFoldersList(jsonFolderPath, "toProcess");
+                    jsonFolderPointer = 0;
                 }
+
             }
         });
-
-
     }
 
-    @Override
-    public void start(){
-        timerNewVisionWorkManager.start();
-        watchDirThread = new Thread(new Runnable() {
-            @Override
+    public void start() {
+        this.timerNewVisionWorkManager.start();
+        this.watchDirThread = new Thread(new Runnable() {
             public void run() {
                 Path path = Paths.get("");
+
                 try {
-                    watchDir = new WatchDir(path,false);
+                    watchDir = new WatchDir(path, false);
                     watchDir.addOnPIDChangeListener(new Runnable() {
-                        @Override
                         public void run() {
                             loadPID();
                         }
                     });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException var3) {
+                    var3.printStackTrace();
                 }
+
                 watchDir.processEvents();
             }
         });
-        watchDirThread.start();
-
+        this.watchDirThread.start();
     }
 
-    @Override
     public void stop() {
-        timerNewVisionWorkManager.stop();
-        watchDirThread.stop();
-        //:TODO зробити перевірку потока на null
+        this.timerNewVisionWorkManager.stop();
+        this.watchDirThread.stop();
     }
 
-    private void loadPID(){
+    private void loadPID() {
         System.out.println("loadPid");
-        String PIDstring="";
+        String PIDstring = "";
 
-        try(FileReader reader = new FileReader(NVpidPath))
-        {
-            // читаем посимвольно
-            int c;
-            while((c=reader.read())!=-1){
-                //System.out.println((char)c);
-                PIDstring = PIDstring.concat(String.valueOf((char)c));
+        try {
+            FileReader reader = new FileReader("NewVisionPID.txt");
+            Throwable var3 = null;
+
+            try {
+                int c;
+                try {
+                    while((c = reader.read()) != -1) {
+                        PIDstring = PIDstring.concat(String.valueOf((char)c));
+                    }
+                } catch (Throwable var13) {
+                    var3 = var13;
+                    throw var13;
+                }
+            } finally {
+                if (reader != null) {
+                    if (var3 != null) {
+                        try {
+                            reader.close();
+                        } catch (Throwable var12) {
+                            var3.addSuppressed(var12);
+                        }
+                    } else {
+                        reader.close();
+                    }
+                }
+
             }
-        }
-        catch(IOException ex){
-
-            System.out.println(ex.getMessage());
+        } catch (IOException var15) {
+            System.out.println(var15.getMessage());
         }
 
-        PID = Integer.parseInt(PIDstring);
+        this.PID = Integer.parseInt(PIDstring);
     }
 
-    private boolean checkNewVisionWork(){
-
+    private boolean checkNewVisionWork() {
         Process p = null;
+
         try {
-            p = Runtime.getRuntime().exec(TASKLIST);
-        } catch (IOException e) {
-            e.printStackTrace();
+            p = Runtime.getRuntime().exec("tasklist");
+        } catch (IOException var5) {
+            var5.printStackTrace();
         }
 
-        BufferedReader reader = new BufferedReader( new InputStreamReader(
-                p.getInputStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
         String line;
         try {
-            while ((line = reader.readLine())!=null){
-                // System.out.println(line); //
-                if(line.contains(String.valueOf(PID))&&line.contains("java.exe")) {
+            while((line = reader.readLine()) != null) {
+                if (line.contains(String.valueOf(this.PID)) && line.contains("java.exe")) {
                     return true;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException var6) {
+            var6.printStackTrace();
         }
+
         return false;
     }
 }
