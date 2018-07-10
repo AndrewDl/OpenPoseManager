@@ -14,6 +14,9 @@ import sample.DirManager;
 import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.INewVisionParams;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class NewVisionManager implements IManager {
     private String jsonFolderPath;
@@ -31,8 +34,12 @@ public class NewVisionManager implements IManager {
     private DirManager dirManager = new DirManager();
     private WatchDir watchDir;
     private Thread watchDirThread;
+    private Logger logger = LogManager.getLogger("NVManager");
 
-    public NewVisionManager(INewVisionParams params) {
+    /**
+     * @param params
+     */
+    public NewVisionManager(INewVisionParams params){
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
@@ -52,8 +59,9 @@ public class NewVisionManager implements IManager {
                             str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "/" + (String)jsonFoldersList.get(jsonFolderPointer) + "/";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
-                        } catch (Exception var3) {
-                            System.out.println(var3);
+                        } catch (Exception ee) {
+                            logger.error(ee);
+                            System.out.println(ee);
                         }
 
                         jsonFolderPointer++;
@@ -85,8 +93,9 @@ public class NewVisionManager implements IManager {
                             loadPID();
                         }
                     });
-                } catch (IOException var3) {
-                    var3.printStackTrace();
+                } catch (IOException e) {
+                    logger.error(e);
+                    e.printStackTrace();
                 }
 
                 watchDir.processEvents();
@@ -104,48 +113,31 @@ public class NewVisionManager implements IManager {
         System.out.println("loadPid");
         String PIDstring = "";
 
-        try {
-            FileReader reader = new FileReader("NewVisionPID.txt");
-            Throwable var3 = null;
-
-            try {
+            try(FileReader reader = new FileReader(NVpidPath))
+            {
+                // читаем посимвольно
                 int c;
-                try {
-                    while((c = reader.read()) != -1) {
-                        PIDstring = PIDstring.concat(String.valueOf((char)c));
-                    }
-                } catch (Throwable var13) {
-                    var3 = var13;
-                    throw var13;
+                while((c=reader.read())!=-1){
+                    //System.out.println((char)c);
+                    PIDstring = PIDstring.concat(String.valueOf((char)c));
                 }
-            } finally {
-                if (reader != null) {
-                    if (var3 != null) {
-                        try {
-                            reader.close();
-                        } catch (Throwable var12) {
-                            var3.addSuppressed(var12);
-                        }
-                    } else {
-                        reader.close();
-                    }
-                }
-
             }
-        } catch (IOException var15) {
-            System.out.println(var15.getMessage());
-        }
+            catch(IOException ex){
+                logger.error(ex);
+                System.out.println(ex.getMessage());
+            }
 
-        this.PID = Integer.parseInt(PIDstring);
-    }
+            PID = Integer.parseInt(PIDstring);
+        }
 
     private boolean checkNewVisionWork() {
         Process p = null;
 
         try {
-            p = Runtime.getRuntime().exec("tasklist");
-        } catch (IOException var5) {
-            var5.printStackTrace();
+            p = Runtime.getRuntime().exec(TASKLIST);
+        } catch (IOException e) {
+            logger.error(e);
+            e.printStackTrace();
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -157,8 +149,9 @@ public class NewVisionManager implements IManager {
                     return true;
                 }
             }
-        } catch (IOException var6) {
-            var6.printStackTrace();
+        } catch (IOException e) {
+            logger.error(e);
+            e.printStackTrace();
         }
 
         return false;

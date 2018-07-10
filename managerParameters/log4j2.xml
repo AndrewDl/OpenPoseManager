@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="log-path">log4j_logs</Property>
+        <Property name="archive">${log-path}/archive</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n
+                </pattern>>
+            </PatternLayout>
+        </Console>
+        <RollingFile name="RollingFile-Appender-error"
+                     fileName="${log-path}/rollingfile_error.log"
+                     filePattern="${archive}/$${date:yyyy-MM}/rollingfile_error-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} class:%C line:%L [%t] %c{1} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 KB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="RollingFile-Appender-info"
+                     fileName="${log-path}/rollingfile_info.log"
+                     filePattern="${archive}/$${date:yyyy-MM}/rollingfile_info-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 KB"/>
+        </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="General" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Logger name="OPManager" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Logger name="NVManager" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Root level="fatal">
+            <AppenderRef ref="Console-Appender"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
