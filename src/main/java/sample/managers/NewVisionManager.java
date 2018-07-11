@@ -38,6 +38,7 @@ public class NewVisionManager implements IManager {
     private Thread watchDirThread;
     private Logger logger = LogManager.getLogger("NVManager");
     private Archiver archiver = new Archiver();
+    private Thread z;
 
     /**
      * @param params
@@ -58,7 +59,17 @@ public class NewVisionManager implements IManager {
                             System.out.println(str);
                             try {
                                 System.out.println(jsonFolderPath+ "/" +str);
-                                archiver.Zip(jsonFolderPath+ "/" +str,jsonFolderPath+ "/" +str+"Zipped.zip");
+
+                                String finalStr = str;
+                                z = new Thread (new Runnable(){
+                                    public void run(){
+                                        try {
+                                            archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + "Zipped.zip");
+                                        } catch (Exception e1) {
+                                            e1.printStackTrace();
+                                        }}});
+                                z.run();
+                                //archiver.Zip(jsonFolderPath + "/" + str, jsonFolderPath + "/" + str + "Zipped.zip");
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -80,8 +91,18 @@ public class NewVisionManager implements IManager {
                         dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
                         System.out.println(str);
 
+
+                        String finalStr = str;
+                        z = new Thread (new Runnable(){
+                                public void run(){
+                                    try {
+                                        archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + "Zipped.zip");
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
+                                    }}});
+                        z.run();
                         try {
-                            archiver.Zip(jsonFolderPath+ "/" +str,jsonFolderPath+ "/" +str+"Zipped.zip");
+                           // archiver.Zip(jsonFolderPath + "/" + str, jsonFolderPath + "/" + str + "Zipped.zip");
                         } catch (Exception e1) {
                             e1.printStackTrace();
                         }
