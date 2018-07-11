@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.Timer;
+
+import sample.Archiver;
 import sample.DirManager;
 import sample.TasksClass;
 import sample.WatchDir;
@@ -35,6 +37,7 @@ public class NewVisionManager implements IManager {
     private WatchDir watchDir;
     private Thread watchDirThread;
     private Logger logger = LogManager.getLogger("NVManager");
+    private Archiver archiver = new Archiver();
 
     /**
      * @param params
@@ -53,6 +56,13 @@ public class NewVisionManager implements IManager {
                             str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
                             dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
                             System.out.println(str);
+                            try {
+                                System.out.println(jsonFolderPath+ "/" +str);
+                                archiver.Zip(jsonFolderPath+ "/" +str,jsonFolderPath+ "/" +str+"Zipped.zip");
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+
                         }
 
                         try {
@@ -69,6 +79,12 @@ public class NewVisionManager implements IManager {
                         str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
                         dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
                         System.out.println(str);
+
+                        try {
+                            archiver.Zip(jsonFolderPath+ "/" +str,jsonFolderPath+ "/" +str+"Zipped.zip");
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                         jsonFoldersList.clear();
                     }
                 } else {
