@@ -1,5 +1,8 @@
 package sample;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -8,7 +11,11 @@ import java.util.zip.ZipOutputStream;
 /**
  * Created by Laimi on 09.07.2018.
  */
+
 public class Archiver {
+
+    private Logger logger = LogManager.getLogger("NVManager");
+
     public void Zip(String source_dir, String zip_file) throws Exception
     {
         long start = System.currentTimeMillis();
@@ -25,43 +32,44 @@ public class Archiver {
 
         System.out.println("Zip file was created!");
         System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
+        logger.info(source_dir+"was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
     }
     private void addDirectory(ZipOutputStream zout, File fileSource)
-            throws Exception
     {
         File[] files = fileSource.listFiles();
-        //System.out.println(fileSource.listFiles().toString());
-        Integer count=0;
+
         System.out.println("Adding directory:" + fileSource.getName() + ">");
+
         for(int i = 0; i < files.length; i++) {
-            // Если file является директорией, то рекурсивно вызываем
-            // метод addDirectory
-//            if(files[i].isDirectory()) {
-//                addDirectory(zout, files[i]);
-//                continue;
-//            }
-     //       System.out.println("Adding file <" + files[i].getName() + ">");
-            //count++;
 
-            FileInputStream fis = new FileInputStream(files[i]);
-           // System.out.println(String.valueOf(files[i].getPath().split("output/jsonFolders/")));
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(files[i]);
+            } catch (FileNotFoundException e) {
+                logger.error(e);
+                e.printStackTrace();
+            }
             String[] str = files[i].getPath().split("\\\\",3);
-           // System.out.println(str[2]+"\\\\"+str[3]);
-            System.out.println(str[2]);
             String out = str[2];
-
-           // zout.putNextEntry(new ZipEntry(String.valueOf(files[i].getPath().split("output/jsonFolders/"))));
-           // zout.putNextEntry(new ZipEntry(files[i].getPath()));
-            zout.putNextEntry(new ZipEntry(out));
+            try {
+                zout.putNextEntry(new ZipEntry(out));
+            } catch (IOException e) {
+                logger.error(e);
+                e.printStackTrace();
+            }
 
             byte[] buffer = new byte[4048];
             int length;
+            try {
             while((length = fis.read(buffer)) > 0)
                 zout.write(buffer, 0, length);
             zout.closeEntry();
             fis.close();
-       //     System.out.println("Number of files: "+count);
+            } catch (IOException e) {
+                logger.error(e);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -115,8 +123,10 @@ public class Archiver {
 
             System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
             System.out.println("Done");
+            logger.info(zipFile+"was unzipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
         }catch(IOException ex){
+            logger.error(ex);
             ex.printStackTrace();
         }
     }
