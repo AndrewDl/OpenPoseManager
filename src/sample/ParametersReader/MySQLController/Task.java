@@ -8,15 +8,19 @@ public class Task {
     private int id;
     private int video_id;
     private int task_id;
-    private boolean complitted;
+    private boolean completed;
     private Timestamp date_add;
 
+    /**
+     * create Task object by rs
+     * @param rs result of query
+     */
     public Task(ResultSet rs) {
         try {
             this.id = rs.getInt(1);
             this.video_id = rs.getInt(2);
             this.task_id = rs.getInt(3);
-            this.complitted = rs.getBoolean(4);
+            this.completed = rs.getBoolean(4);
             this.date_add = rs.getTimestamp(5);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,12 +39,12 @@ public class Task {
         return task_id;
     }
 
-    public boolean isComplitted() {
-        return complitted;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setComplitted(boolean complitted) {
-        this.complitted = complitted;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public Timestamp getDate_add() {
@@ -53,7 +57,7 @@ public class Task {
                 "id=" + id +
                 ", video_id=" + video_id +
                 ", task_id=" + task_id +
-                ", complitted=" + complitted +
+                ", completed=" + completed +
                 ", date_add=" + date_add +
                 '}';
     }

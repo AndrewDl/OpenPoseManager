@@ -36,7 +36,7 @@ public class XMLwriterReader<T> {
         out.close();
     }
 
-    public T ReadFile(Class c) throws IOException, ClassNotFoundException {
+    public T ReadFile(Class c){
         xstream.alias(c.getClass().getName(), c);
         ObjectInputStream in = null;
         try {
@@ -45,7 +45,16 @@ public class XMLwriterReader<T> {
             e.printStackTrace();
         }
 
-        T newObject = (T) in.readObject();
+        T newObject = null;
+        try {
+            newObject = (T) in.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Can't read Parameters File");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Class Not Found");
+        }
 
         return newObject;
     }

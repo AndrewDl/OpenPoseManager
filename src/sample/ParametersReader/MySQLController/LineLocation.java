@@ -14,6 +14,10 @@ public class LineLocation {
     private int y2;
     private Timestamp date_add;
 
+    /**
+     * create LineLocation object by rs
+     * @param rs result of query
+     */
     public LineLocation(ResultSet rs) {
         try {
             this.id = rs.getInt(1);

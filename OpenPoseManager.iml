@@ -10,5 +10,6 @@
     <orderEntry type="library" name="xstream-1.4.91" level="project" />
     <orderEntry type="library" name="xstream-1.4.9" level="project" />
     <orderEntry type="library" name="apache-log4j-2.8" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.44-bin" level="project" />
   </component>
 </module>

@@ -14,6 +14,10 @@ public class VideoParameters {
     private Timestamp video_date;
     private Timestamp date_add;
 
+    /**
+     * create VideoParameters object by rs
+     * @param rs result of query
+     */
     public VideoParameters(ResultSet rs){
         try {
             this.id = rs.getInt(1);

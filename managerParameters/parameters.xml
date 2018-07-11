@@ -2,7 +2,7 @@
 <object-stream>
     <java.lang.Class>
         <!--path to the folder with json folders-->
-        <jsonSource>D:\Program Files (x86)\CifrusMark\output\jsonFolders</jsonSource>
+        <jsonSource>F:\CIF\pistobribitka\JSONs</jsonSource>
         <!--profile that will start-->
         <profileName>3_06</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен
@@ -16,5 +16,9 @@
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
+
+        <DB__URL>jdbc:mysql://localhost:3306/newvision</DB__URL>
+        <DB__USER>root</DB__USER>
+        <DB__PASSWORD>root</DB__PASSWORD>
     </java.lang.Class>
 </object-stream>

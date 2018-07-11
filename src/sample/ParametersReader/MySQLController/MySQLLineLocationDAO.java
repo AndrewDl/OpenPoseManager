@@ -27,41 +27,6 @@ public class MySQLLineLocationDAO extends AbstractJDBCDao<LineLocation, Integer>
     }
 
     @Override
-    public String getConditionOfQuery() {
-        return null;
-    }
-
-    @Override
-    public String getCreateQuery() {
-        return null;
-    }
-
-    @Override
-    public String getUpdateQuery() {
-        return null;
-    }
-
-    @Override
-    public String getUpdateTransmittedQuery() {
-        return null;
-    }
-
-    @Override
-    public String getDeleteQuery() {
-        return "DELETE FROM "+ tableName +" WHERE id = ?;";
-    }
-
-    @Override
-    public String getCountQuery() {
-        return null;
-    }
-
-    @Override
-    public String createNewTableQuery() {
-        return null;
-    }
-
-    @Override
     protected List<LineLocation> parseResultSet(ResultSet rs) {
         LinkedList<LineLocation> result = new LinkedList<LineLocation>();
         try{
@@ -75,28 +40,4 @@ public class MySQLLineLocationDAO extends AbstractJDBCDao<LineLocation, Integer>
         return result;
     }
 
-    @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, LineLocation object) throws Exception {
-
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, LineLocation object) throws Exception {
-
-    }
-
-    @Override
-    public LineLocation create(LineLocation object) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public String createNewTable(Class cl) {
-        return null;
-    }
-
-    @Override
-    public void setTableName(Class cl) {
-
-    }
 }

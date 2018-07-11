@@ -29,18 +29,19 @@ public class ProfileParameters implements ISubtractorParameters {
 
         ProfileParameters profile = null;
 
-        try {
+        //TODO: where we must try catch exception
+//        try {
             profile = reader.ReadFile(ProfileParameters.class);
-        } catch (IOException e) {
-            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "; \n path to the file = " + file);
-            e.printStackTrace();
-            System.out.println("Can't read Parameters File");
-            profile = new ProfileParameters();
-        } catch (ClassNotFoundException e) {
-            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "variable 'ProfileParameters.class' = " + ProfileParameters.class);
-            e.printStackTrace();
-            System.out.println("Class Not Found");
-        }
+//        } catch (IOException e) {
+//            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "; \n path to the file = " + file);
+//            e.printStackTrace();
+//            System.out.println("Can't read Parameters File");
+//            profile = new ProfileParameters();
+//        } catch (ClassNotFoundException e) {
+//            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "variable 'ProfileParameters.class' = " + ProfileParameters.class);
+//            e.printStackTrace();
+//            System.out.println("Class Not Found");
+//        }
 
         return profile;
     }
@@ -59,9 +60,9 @@ public class ProfileParameters implements ISubtractorParameters {
         }
     }
 
-//    private ArrayList<SceneLineParams> sceneLineParams = new ArrayList<>();
-//    //TODO: це треба буде прибрати коли вдасться підігнати всі регіони під один інтерфейс
-//    private ArrayList<ScenePolygonParams> scenePolygons = new ArrayList<>();
+    private ArrayList<SceneLineParams> sceneLineParams = new ArrayList<>();
+    //TODO: це треба буде прибрати коли вдасться підігнати всі регіони під один інтерфейс
+    private ArrayList<ScenePolygonParams> scenePolygons = new ArrayList<>();
 
     private String SceneLocation;
 
@@ -184,24 +185,24 @@ public class ProfileParameters implements ISubtractorParameters {
         this.neuralLimit = neuralLimit;
     }
 
-//    public void addLineParams(SceneLineParams params){
-//        sceneLineParams.add(params);
-//    }
-//
-//    public ArrayList<SceneLineParams> getSceneLineParams(){
-//        return sceneLineParams;
-//    }
-//
-//    //TODO: це треба буде прибрати коли вдасться підігнати всі регіони під один інтерфейс
-//    public ArrayList<ScenePolygonParams> getScenePolygons(){
-//        return scenePolygons;
-//    }
-//    public void setScenePolygons(ArrayList<ScenePolygonParams> scenePolygons){
-//        this.scenePolygons = scenePolygons;
-//    }
-//    public void addZones(ScenePolygonParams polygonParams){
-//        scenePolygons.add(polygonParams);
-//    }
+    public void addLineParams(SceneLineParams params){
+        sceneLineParams.add(params);
+    }
+
+    public ArrayList<SceneLineParams> getSceneLineParams(){
+        return sceneLineParams;
+    }
+
+    //TODO: це треба буде прибрати коли вдасться підігнати всі регіони під один інтерфейс
+    public ArrayList<ScenePolygonParams> getScenePolygons(){
+        return scenePolygons;
+    }
+    public void setScenePolygons(ArrayList<ScenePolygonParams> scenePolygons){
+        this.scenePolygons = scenePolygons;
+    }
+    public void addZones(ScenePolygonParams polygonParams){
+        scenePolygons.add(polygonParams);
+    }
 
     public void setEnableProcessing(boolean enableProcessing){
         EnableProcessing = enableProcessing;

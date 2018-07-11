@@ -18,6 +18,10 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
+    private String DB_URL = "";
+    private String DB_USER = "";
+    private String DB_PASSWORD = "";
+
 
 
 
@@ -31,18 +35,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
         XMLwriterReader<Parameters> reader = new XMLwriterReader(file);
 
-        Parameters parameters = null;
-
-        try {
-            parameters = reader.ReadFile(Parameters.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Can't read Parameters File");
-            parameters = new Parameters();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Class Not Found");
-        }
+        Parameters parameters = reader.ReadFile(Parameters.class);
 
         return parameters;
     }
@@ -110,5 +103,27 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
 
+    public String getDB_URL() {
+        return DB_URL;
+    }
 
+    public void setDB_URL(String DB_URL) {
+        this.DB_URL = DB_URL;
+    }
+
+    public String getDB_USER() {
+        return DB_USER;
+    }
+
+    public void setDB_USER(String DB_USER) {
+        this.DB_USER = DB_USER;
+    }
+
+    public String getDB_PASSWORD() {
+        return DB_PASSWORD;
+    }
+
+    public void setDB_PASSWORD(String DB_PASSWORD) {
+        this.DB_PASSWORD = DB_PASSWORD;
+    }
 }
