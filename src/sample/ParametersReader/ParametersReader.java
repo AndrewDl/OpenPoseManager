@@ -15,6 +15,21 @@ import java.util.List;
 
 /**
  * class that realize getting prepared task parameters from DB
+ * EXAMPLE
+ *  try {
+ *            ParametersReader parametersNV = new ParametersReader();
+ *            for (int i = 0; i < 5; i++) {
+ *                System.out.println(parametersNV.getVideoParameters().toString());
+ *                ArrayList<SceneLineParams> sceneLineParams = new ArrayList<>(parametersNV.getSceneLineParams());
+ *                for (SceneLineParams lineParam :
+ *                        sceneLineParams) {
+ *                    System.out.println("- " + lineParam.toString());
+ *                }
+ *                parametersNV.nextAfterThis();
+ *            }
+ *        }catch (Exception e){
+ *            e.printStackTrace();
+ *        }
  */
 public class ParametersReader {
     private Task task = null;
