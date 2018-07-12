@@ -19,6 +19,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String newVisionPath = "";
     private String videoSource= "";
     private String videoDestination = "";
+    private boolean isDeleteVideo = false;
     private String arguments = "";
     private String openPose = "";
 
@@ -97,6 +98,11 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     @Override
     public String getVideoDestination() {
         return videoDestination;
+    }
+
+    @Override
+    public boolean getIsDeleteVideo() {
+        return isDeleteVideo;
     }
 
     public void setVideoDestination(String videoDestination) {

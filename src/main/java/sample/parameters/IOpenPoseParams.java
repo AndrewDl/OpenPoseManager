@@ -8,6 +8,8 @@ public interface IOpenPoseParams {
 
     String getVideoDestination();
 
+    boolean getIsDeleteVideo();
+
     String getArguments();
 
     String getOpenPose();
