@@ -198,13 +198,22 @@ public class ParametersReader {
         for (Task t :
                 tasks) {
             String videoName = getVideoParametersByTaskId(t.getId()).getName();
-            String path = param.getJsonSource()+"\\"+videoName+"_toProcess";
-            File f = new File(path);
+            String path = param.getJsonSource()+"\\"+videoName;
+            File f = new File(path+"_toProcess");
             if(f.exists()){
                 task = t;
-            }//TODO: check server
+            }
             else{
-                System.out.println("Not found JSON by "+videoName+" video");
+                f = new File(path);
+                if (f.exists()) {
+                    System.out.println("JSON by "+videoName+" video, in processing");
+                }else {
+                    //TODO: check server
+//                    if(isJSONonServer){
+//                        //start load and create folder
+//                    }else
+                        System.out.println("Not found JSON by "+videoName+" video");
+                }
             }
         }
         if(task==null){
