@@ -9,8 +9,15 @@ import java.nio.channels.ReadableByteChannel;
 
 /**
  * Created by July on 12.07.2018.
+ * Class contains methods for downloading file from the internet
  */
 public class FileDownloader {
+    /**
+     *
+     * @param urlStr - address to download file
+     * @param output - where file should be placed. IMPORTANT! Extension must be defined in output!
+     * @throws IOException
+     */
     public void downloadFile(String urlStr,String output) throws IOException {
         long start = System.currentTimeMillis();
         URL url = new URL(urlStr);

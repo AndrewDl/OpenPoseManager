@@ -18,6 +18,8 @@ import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sample.requests.GetRequester;
+import sample.requests.PostRequester;
 
 
 public class NewVisionManager implements IManager {
@@ -39,6 +41,10 @@ public class NewVisionManager implements IManager {
     private Logger logger = LogManager.getLogger("NVManager");
     private Archiver archiver = new Archiver();
     private Thread z;
+    private PostRequester httpPOST = new PostRequester();
+    private GetRequester httpGET = new GetRequester();
+    private String postURL = "";
+    private String getURL = "";
 
     /**
      * @param params
@@ -47,6 +53,8 @@ public class NewVisionManager implements IManager {
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
+        this.postURL = params.getPostURL();
+        this.getURL = params.getGetURL();
         this.timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: " + PID);
@@ -67,6 +75,8 @@ public class NewVisionManager implements IManager {
                                         try {
                                             archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                             dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
+                                            httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                            //httpGET.getRequest(getURL,finalStr);
                                         } catch (Exception e1) {
                                             e1.printStackTrace();
                                         }}});
@@ -99,6 +109,8 @@ public class NewVisionManager implements IManager {
                                     try {
                                         archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                         dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
+                                        httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                       // httpGET.getRequest(getURL,finalStr);
                                     } catch (Exception e1) {
                                         e1.printStackTrace();
                                     }}});

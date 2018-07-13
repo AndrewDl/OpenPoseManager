@@ -21,4 +21,8 @@ public interface INewVisionParams {
     String getVideoDestination();
 
     String getArguments();
+
+    String getPostURL();
+
+    String getGetURL();
 }

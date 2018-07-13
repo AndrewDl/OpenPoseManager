@@ -20,6 +20,12 @@ public class Archiver {
 
     private Logger logger = LogManager.getLogger("NVManager");
 
+    /**
+     * Method to Zip json folders
+     * @param source_dir - address of folder, which should be zipped
+     * @param zip_file - address where .zip file should be placed. IMPORTANT! Should contain extension(.zip)
+     * @throws Exception
+     */
     public void Zip(String source_dir, String zip_file) throws Exception
     {
         long start = System.currentTimeMillis(); // when zip starts
@@ -77,7 +83,11 @@ public class Archiver {
         }
     }
 
-
+    /**
+     * Method for Unzipping archives
+     * @param zipFile - address to file, which should be unzipped. IMPORTANT - should contain extension(.zip)
+     * @param outputFolder - address, where unzipped files should be placed.
+     */
     public void unZip(String zipFile, String outputFolder){
         long start = System.currentTimeMillis();
         byte[] buffer = new byte[1024];

@@ -17,11 +17,11 @@ import java.io.IOException;
  * Created by Laimi on 12.07.2018.
  */
 public class PostRequester implements IPostRequester {
-    public void postRequest(String url, String name, String filename) {
+    public void postRequest(String url, String name, String filepath) {
         long start = System.currentTimeMillis();
         HttpClient httpclient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url); //destination for file
-        File file = new File(filename);
+        File file = new File(filepath);
         FileBody uploadFilePart = new FileBody(file);
         StringBody str = new StringBody(name, ContentType.TEXT_PLAIN);
         HttpEntity reqEntity = MultipartEntityBuilder.create()
