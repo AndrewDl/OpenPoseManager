@@ -27,7 +27,6 @@
             <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 KB"/>
         </Policies>
         </RollingFile>
     </Appenders>
@@ -44,6 +43,16 @@
             <AppenderRef ref="Console-Appender" level="fatal"/>
         </Logger>
         <Logger name="NVManager" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Logger name="HTTPLogger" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Logger name="Archiver" level="info" additivity="false">
             <AppenderRef ref="RollingFile-Appender-error" level="error"/>
             <AppenderRef ref="RollingFile-Appender-info" level="info"/>
             <AppenderRef ref="Console-Appender" level="fatal"/>

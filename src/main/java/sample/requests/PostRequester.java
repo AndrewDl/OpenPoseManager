@@ -13,11 +13,15 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Created by Laimi on 12.07.2018.
  */
 public class PostRequester implements IPostRequester {
     public void postRequest(String url, String name, String filepath) {
+        Logger logger = LogManager.getLogger("HTTPLogger");
         long start = System.currentTimeMillis();
         HttpClient httpclient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url); //destination for file
@@ -33,6 +37,7 @@ public class PostRequester implements IPostRequester {
         try {
             response = httpclient.execute(httpPost);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         HttpEntity responseEntity = response.getEntity();
@@ -40,12 +45,14 @@ public class PostRequester implements IPostRequester {
         try {
             responseString = EntityUtils.toString(responseEntity,"UTF-8");
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         System.out.println(responseString);
         long finish = System.currentTimeMillis();
         long timeConsumedMillis = finish - start;
         System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
+        logger.info("File: "+name+" was sent to server. Server response: "+responseString);
     }
 }
 

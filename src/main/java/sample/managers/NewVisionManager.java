@@ -78,6 +78,7 @@ public class NewVisionManager implements IManager {
                                             httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
                                             //httpGET.getRequest(getURL,finalStr);
                                         } catch (Exception e1) {
+                                            logger.error(e1);
                                             e1.printStackTrace();
                                         }}});
                                 z.run();
@@ -112,6 +113,7 @@ public class NewVisionManager implements IManager {
                                         httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
                                        // httpGET.getRequest(getURL,finalStr);
                                     } catch (Exception e1) {
+                                        logger.error(e1);
                                         e1.printStackTrace();
                                     }}});
                         z.run();

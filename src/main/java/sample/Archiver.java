@@ -18,7 +18,7 @@ public class Archiver {
 
     private final String CHARSET_CP866  = "CP866";
 
-    private Logger logger = LogManager.getLogger("NVManager");
+    private Logger logger = LogManager.getLogger("Archiver");
 
     /**
      * Method to Zip json folders
@@ -42,7 +42,7 @@ public class Archiver {
 
         System.out.println("Zip file was created!");
         System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
-        logger.info(source_dir+"was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
+        logger.info(source_dir+" was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
     }
     private void addDirectory(ZipOutputStream zout, File fileSource)

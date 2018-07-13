@@ -6,12 +6,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
 /**
  * Created by July on 12.07.2018.
  */
 public class GetRequester implements IGetRequester {
+    Logger logger = LogManager.getLogger("HTTPLogger");
     @Override
     public void getRequest(String url, String name) {
         HttpClient httpclient = HttpClientBuilder.create().build();
@@ -21,6 +25,7 @@ public class GetRequester implements IGetRequester {
         try {
             response = httpclient.execute(request);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         HttpEntity responseEntity = response.getEntity();
@@ -28,9 +33,11 @@ public class GetRequester implements IGetRequester {
         try {
             responseString = EntityUtils.toString(responseEntity,"UTF-8");
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         System.out.println(responseString);
+        logger.info("GET Request: "+url+" Server response: "+responseString);
     }
 
     @Override
@@ -52,6 +59,7 @@ public class GetRequester implements IGetRequester {
             e.printStackTrace();
         }
         System.out.println(responseString);
+        logger.info("GET Request: "+url+" Server response: "+responseString);
     }
 }
 
