@@ -16,13 +16,8 @@ import java.io.IOException;
 /**
  * Created by Laimi on 12.07.2018.
  */
-public class Post implements IHttpRequester{
-    private String filename = "";
-    public Post(String filename){
-        this.filename = filename;
-    }
-
-    public void httpRequest(String url, String name) {
+public class PostRequester implements IPostRequester {
+    public void postRequest(String url, String name, String filename) {
         long start = System.currentTimeMillis();
         HttpClient httpclient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url); //destination for file
