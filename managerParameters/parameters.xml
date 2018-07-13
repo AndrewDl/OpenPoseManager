@@ -16,5 +16,9 @@
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
+        <deleteProcessedJsonFolder>False</deleteProcessedJsonFolder>
+        <!--If True every json folder after zipping will be deleted-->
+        <deleteUploadedZippedJsons>False</deleteUploadedZippedJsons>
+        <!--If True every zip archive will be deleted after upload to server-->
     </java.lang.Class>
 </object-stream>
