@@ -18,6 +18,8 @@ import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sample.requests.IHttpRequester;
+import sample.requests.Post;
 
 
 public class NewVisionManager implements IManager {
