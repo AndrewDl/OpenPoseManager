@@ -16,5 +16,9 @@
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
+        <!--URL to send POST request-->
+        <postURL>https://vision.ecsv.org.ua/json-store/upload</postURL>
+        <!--URL to send GET request-->
+        <getURL>https://vision.ecsv.org.ua/json-store/get</getURL>
     </java.lang.Class>
 </object-stream>

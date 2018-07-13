@@ -21,8 +21,8 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
-
-
+    private String postURL = "";
+    private String getURL = "";
 
     /**
      * This method is used to load parameters from a given file<br>
@@ -116,6 +116,16 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     public String getOpenPose(){return openPose; }
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
+
+    @Override
+    public String getPostURL(){return postURL; }
+
+    public void setPostURL(String postURL){ this.postURL = postURL;}
+
+    @Override
+    public String getGetURL(){return getURL; }
+
+    public void setGetURL(String getURL){ this.getURL = getURL;}
 
 
 }
