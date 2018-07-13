@@ -54,7 +54,8 @@ public class NewVisionManager implements IManager {
                     String str;
                     if (!checkNewVisionWork() && jsonFolderPointer < jsonFoldersList.size()) {
                         if (jsonFolderPointer > 0) {
-                            str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
+                            str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "_toProcess", "");
+                            System.out.println((String)jsonFoldersList.get(jsonFolderPointer-1)+" <-afterCut");
                             dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
                             System.out.println(str);
                             try {
@@ -64,12 +65,12 @@ public class NewVisionManager implements IManager {
                                 z = new Thread (new Runnable(){
                                     public void run(){
                                         try {
-                                            archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + "Zipped.zip");
+                                            archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
+                                            dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
                                         } catch (Exception e1) {
                                             e1.printStackTrace();
                                         }}});
                                 z.run();
-                                //archiver.Zip(jsonFolderPath + "/" + str, jsonFolderPath + "/" + str + "Zipped.zip");
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -87,7 +88,7 @@ public class NewVisionManager implements IManager {
 
                         jsonFolderPointer++;
                     } else if (jsonFolderPointer >= jsonFoldersList.size() && !checkNewVisionWork()) {
-                        str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "toProcess", "completed");
+                        str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "_toProcess", "");
                         dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
                         System.out.println(str);
 
@@ -96,11 +97,13 @@ public class NewVisionManager implements IManager {
                         z = new Thread (new Runnable(){
                                 public void run(){
                                     try {
-                                        archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + "Zipped.zip");
+                                        archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
+                                        dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
                                     } catch (Exception e1) {
                                         e1.printStackTrace();
                                     }}});
                         z.run();
+
                         try {
                            // archiver.Zip(jsonFolderPath + "/" + str, jsonFolderPath + "/" + str + "Zipped.zip");
                         } catch (Exception e1) {
