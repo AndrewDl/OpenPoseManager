@@ -11,4 +11,8 @@ public interface IOpenPoseParams {
     String getArguments();
 
     String getOpenPose();
+
+    String getPostURL();
+
+    String getGetURL();
 }
