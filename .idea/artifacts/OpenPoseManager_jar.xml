@@ -6,9 +6,6 @@
         <element id="module-output" name="OpenPoseManager" />
       </element>
       <element id="library" level="project" name="xstream-1.4.9" />
-      <element id="directory" name="managerParameters">
-        <element id="dir-copy" path="$PROJECT_DIR$/managerParameters" />
-      </element>
     </root>
   </artifact>
 </component>

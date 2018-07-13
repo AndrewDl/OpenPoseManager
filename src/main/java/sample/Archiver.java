@@ -10,21 +10,25 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Created by Laimi on 09.07.2018.
+ * Class contains methods for zip and unzip directories.
  */
 
 public class Archiver {
+
+
+    private final String CHARSET_CP866  = "CP866";
 
     private Logger logger = LogManager.getLogger("NVManager");
 
     public void Zip(String source_dir, String zip_file) throws Exception
     {
-        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis(); // when zip starts
         FileOutputStream fout = new FileOutputStream(zip_file);
         ZipOutputStream zout = new ZipOutputStream(fout);
-        zout.setLevel(0);
-        File fileSource = new File(source_dir);
+        zout.setLevel(9); //compressing level. From 0 to 9. Ninth level have better performance than zero level
+        File fileSource = new File(source_dir); //what exactly it should zip
 
-        addDirectory(zout, fileSource);
+        addDirectory(zout, fileSource); // zipping here
 
         zout.close();
         long finish = System.currentTimeMillis();
@@ -73,7 +77,6 @@ public class Archiver {
         }
     }
 
-    private final String CHARSET_CP866  = "CP866";
 
     public void unZip(String zipFile, String outputFolder){
         long start = System.currentTimeMillis();
