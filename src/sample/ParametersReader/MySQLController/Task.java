@@ -35,7 +35,7 @@ public class Task {
         return video_id;
     }
 
-    public int getTask_id() {
+    public int getOutsideTask_id() {
         return task_id;
     }
 

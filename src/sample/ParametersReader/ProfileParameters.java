@@ -1,7 +1,8 @@
 package sample.ParametersReader;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import imageProcessing.SceneLineParams;
+import imageProcessing.ScenePolygonParams;
 import sample.XMLwriterReader;
 
 import java.io.IOException;
@@ -12,9 +13,9 @@ import java.util.ArrayList;
  */
 public class ProfileParameters implements ISubtractorParameters {
 
-//    public ProfileParameters(){
-//        addLineParams(new SceneLineParams(0,0,0,0));
-//    }
+    public ProfileParameters(){
+        addLineParams(new SceneLineParams(0,0,0,0));
+    }
 
     /**
      * This method is used to load parameters from a given file<br>
@@ -23,25 +24,14 @@ public class ProfileParameters implements ISubtractorParameters {
      * @return parameters from the file
      */
     public static ProfileParameters loadProfileParameters(String file) {
-        final Logger userLogger = LogManager.getLogger("MainLogger");
+        //final Logger userLogger = LogManager.getLogger("MainLogger");
 
         XMLwriterReader<ProfileParameters> reader = new XMLwriterReader(file);
 
         ProfileParameters profile = null;
 
-        //TODO: where we must try catch exception
-//        try {
-            profile = reader.ReadFile(ProfileParameters.class);
-//        } catch (IOException e) {
-//            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "; \n path to the file = " + file);
-//            e.printStackTrace();
-//            System.out.println("Can't read Parameters File");
-//            profile = new ProfileParameters();
-//        } catch (ClassNotFoundException e) {
-//            userLogger.error("Something is wrong: "+e.getMessage() + "\n" + "variable 'ProfileParameters.class' = " + ProfileParameters.class);
-//            e.printStackTrace();
-//            System.out.println("Class Not Found");
-//        }
+        profile = reader.ReadFile(ProfileParameters.class);
+
 
         return profile;
     }
@@ -77,6 +67,7 @@ public class ProfileParameters implements ISubtractorParameters {
     private String db_name;
     private String db_user;
     private String db_password;
+    private String videoDate;
 
     private boolean EnableAutoconnect;
     private boolean EnableProcessing = false;
@@ -95,6 +86,8 @@ public class ProfileParameters implements ISubtractorParameters {
     private int maxValueColorAdd;
     private int colorAdd;
     private int neuralLimit;
+    private int videoDateSource;
+    private int taskID;
 
 
     public int getFrameRate() {
@@ -631,4 +624,25 @@ public class ProfileParameters implements ISubtractorParameters {
     public void setTrackingType(int trackingType) {
         TrackingType = trackingType;
     }
+
+    public String getVideoDate(){return videoDate;}
+
+    public void setVideoDate(String videoDate){this.videoDate = videoDate;}
+
+    public Integer getVideoDateSource(){return videoDateSource;}
+
+    public void setVideoDateSource(Integer videoDateSource){this.videoDateSource = videoDateSource;}
+
+    public void setTaskID(int taskid){
+        this.taskID = taskid;
+    }
+
+    public int getTaskID(){
+        return taskID;
+    }
+
+    public void setSceneLineParams(ArrayList<SceneLineParams> sceneLineParams) {
+        this.sceneLineParams = sceneLineParams;
+    }
+
 }
