@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
  * Created by Laimi on 12.07.2018.
  */
 public class PostRequester implements IPostRequester {
+    @Override
     public void postRequest(String url, String name, String filepath) {
         Logger logger = LogManager.getLogger("HTTPLogger");
         long start = System.currentTimeMillis();
@@ -48,10 +49,6 @@ public class PostRequester implements IPostRequester {
             logger.error(e);
             e.printStackTrace();
         }
-        System.out.println(responseString);
-        long finish = System.currentTimeMillis();
-        long timeConsumedMillis = finish - start;
-        System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
         logger.info("File: "+name+" was sent to server. Server response: "+responseString);
     }
 }

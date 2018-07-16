@@ -7,11 +7,16 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+
 /**
  * Created by July on 12.07.2018.
  * Class contains methods for downloading file from the internet
  */
 public class FileDownloader {
+
+    private void parsing(){
+        //JSONParser parser = new JSONParser();
+    }
     /**
      *
      * @param urlStr - address to download file

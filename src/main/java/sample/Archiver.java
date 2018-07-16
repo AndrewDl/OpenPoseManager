@@ -45,6 +45,7 @@ public class Archiver {
         logger.info(source_dir+" was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
     }
+    //TODO: comment
     private void addDirectory(ZipOutputStream zout, File fileSource)
     {
         File[] files = fileSource.listFiles();

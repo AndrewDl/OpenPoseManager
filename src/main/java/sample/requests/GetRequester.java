@@ -16,8 +16,9 @@ import java.io.IOException;
  */
 public class GetRequester implements IGetRequester {
     Logger logger = LogManager.getLogger("HTTPLogger");
+
     @Override
-    public void getRequest(String url, String name) {
+    public String getRequest(String url, String name) {
         HttpClient httpclient = HttpClientBuilder.create().build();
         url = url + "?name=" + name;
         HttpGet request = new HttpGet(url);
@@ -36,8 +37,8 @@ public class GetRequester implements IGetRequester {
             logger.error(e);
             e.printStackTrace();
         }
-        System.out.println(responseString);
         logger.info("GET Request: "+url+" Server response: "+responseString);
+        return responseString;
     }
 
     @Override
@@ -49,6 +50,7 @@ public class GetRequester implements IGetRequester {
         try {
             response = httpclient.execute(request);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         HttpEntity responseEntity = response.getEntity();
@@ -56,9 +58,9 @@ public class GetRequester implements IGetRequester {
         try {
             responseString = EntityUtils.toString(responseEntity,"UTF-8");
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
-        System.out.println(responseString);
         logger.info("GET Request: "+url+" Server response: "+responseString);
     }
 }
