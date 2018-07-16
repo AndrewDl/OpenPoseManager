@@ -2,7 +2,7 @@
 <object-stream>
     <java.lang.Class>
         <!--path to the folder with json folders-->
-        <jsonSource>output\jsonFolders</jsonSource>
+        <jsonSource>D:\Program Files (x86)\CifrusMark\output\jsonFolders</jsonSource>
         <!--profile that will start-->
         <profileName>3_06</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен
@@ -16,6 +16,10 @@
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
+        <deleteProcessedJsonFolder>False</deleteProcessedJsonFolder>
+        <!--If True every json folder after zipping will be deleted-->
+        <deleteUploadedZippedJsons>False</deleteUploadedZippedJsons>
+        <!--If True every zip archive will be deleted after upload to server-->
         <!--URL to send POST request-->
         <postURL>https://vision.ecsv.org.ua/json-store/upload</postURL>
         <!--URL to send GET request-->

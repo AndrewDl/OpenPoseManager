@@ -23,6 +23,10 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String openPose = "";
     private String postURL = "";
     private String getURL = "";
+    private Boolean deleteProcessedJsonFolder = Boolean.FALSE;
+    private Boolean deleteUploadedZippedJsons = Boolean.FALSE;
+
+
 
     /**
      * This method is used to load parameters from a given file<br>
@@ -34,7 +38,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
         XMLwriterReader<Parameters> reader = new XMLwriterReader(file);
 
-        Logger logger = LogManager.getLogger("OPManager");
+        Logger logger = LogManager.getLogger("General");
 
         Parameters parameters = null;
 
@@ -116,6 +120,14 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     public String getOpenPose(){return openPose; }
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
+
+    public Boolean getDeleteProcessedJsonFolder(){return  deleteProcessedJsonFolder;}
+
+    public void setDeleteProcessedJsonFolder(){this.deleteProcessedJsonFolder = deleteProcessedJsonFolder;}
+
+    public Boolean getDeleteUploadedZippedJsons(){return  deleteUploadedZippedJsons;}
+
+    public void setDeleteUploadedZippedJsons(){this.deleteUploadedZippedJsons = deleteUploadedZippedJsons;}
 
     @Override
     public String getPostURL(){return postURL; }
