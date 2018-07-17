@@ -41,6 +41,7 @@ public class NewVisionManager implements IManager{
     private final int RECEIVE_JSONFOLDER_FROM_LIST = 0;
     private final int RECEIVE_JSONFOLDER_FROM_DB = 1;
     private int typeOfTaskReceiver = 0;
+    private String nvParameterspath="";
 
 
 
@@ -52,6 +53,7 @@ public class NewVisionManager implements IManager{
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
         this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
+        this.nvParameterspath = params.getNvParametersPath();
 
 
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
@@ -110,7 +112,7 @@ public class NewVisionManager implements IManager{
                          int taskID = parametersNV.getTask().getOutsideTask_id();
 
                          //Load profileParameters.xml to profileParameters.java
-                         String path = params.getNvParametersPath();
+                         String path = nvParameterspath;
                          ProfileParameters profileParameters = ProfileParameters.loadProfileParameters(path);
 
                          //Set new parameters to profileParameters.java
