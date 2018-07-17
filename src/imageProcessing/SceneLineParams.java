@@ -1,6 +1,4 @@
-package sample.ParametersReader;
-
-import sample.ParametersReader.MySQLController.LineLocation;
+package imageProcessing;
 
 import java.awt.*;
 import java.util.Random;
@@ -40,14 +38,6 @@ public class SceneLineParams {
         this.x2 = p2.x;
         this.y1 = p1.y;
         this.y2 = p2.y;
-    }
-
-    public SceneLineParams(LineLocation lineLocation){
-        this.location = lineLocation.getLocation();
-        this.x1 = lineLocation.getX1();
-        this.x2 = lineLocation.getY1();
-        this.y1 = lineLocation.getX2();
-        this.y2 = lineLocation.getY2();
     }
 
     public int X1(){
@@ -113,6 +103,6 @@ public class SceneLineParams {
 
     @Override
     public String toString(){
-        return location;
+        return Name;
     }
 }

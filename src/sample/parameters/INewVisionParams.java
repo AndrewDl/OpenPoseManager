@@ -21,4 +21,11 @@ public interface INewVisionParams {
     String getVideoDestination();
 
     String getArguments();
+
+    int getTypeOfJsonFolderReceiving();
+
+    public String getNvParametersPath();
+    public void setNvParametersPath(String path);
+
+
 }

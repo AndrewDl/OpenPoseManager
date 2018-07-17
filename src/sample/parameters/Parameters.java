@@ -3,8 +3,6 @@ package sample.parameters;
 
 import sample.XMLwriterReader;
 
-import java.io.IOException;
-
 /**
  * Created by Andrew on 11/28/17.
  */
@@ -18,11 +16,11 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
+    private String nvParametersPath = "";
     private String DB_URL = "";
     private String DB_USER = "";
     private String DB_PASSWORD = "";
-
-
+    private int typeOfJsonFolderReceiving = 0;
 
 
     /**
@@ -94,6 +92,11 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
         return arguments;
     }
 
+    @Override
+    public int getTypeOfJsonFolderReceiving() {
+        return typeOfJsonFolderReceiving;
+    }
+
     public void setArguments(String arguments) {
         this.arguments = arguments;
     }
@@ -103,6 +106,16 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
 
+    public String getNvParametersPath(){
+        return nvParametersPath;
+    }
+
+    public void setNvParametersPath(String path){
+        nvParametersPath = path;
+    }
+
+
+    //TODO: сделать для параметров ниже интерфейс
     public String getDB_URL() {
         return DB_URL;
     }

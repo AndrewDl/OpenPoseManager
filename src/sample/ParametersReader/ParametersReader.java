@@ -1,9 +1,10 @@
 package sample.ParametersReader;
 
 import sample.ParametersReader.MySQLController.*;
+import imageProcessing.SceneLineParams;
+import imageProcessing.ScenePolygonParams;
 import sample.XMLwriterReader;
 import sample.parameters.Parameters;
-import sun.font.EAttribute;
 
 import java.awt.*;
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.List;
  *        }
  */
 public class ParametersReader {
+    private static ParametersReader instance;
     private Task task = null;
     private VideoParameters videoParameters = null;
     private ArrayList<SceneLineParams> sceneLineParams = new ArrayList<SceneLineParams>();
@@ -41,37 +43,49 @@ public class ParametersReader {
      * create parameters by early created task from DB where completed = 0
      * @throws Exception not completed task with JSONs not found
      */
-    public ParametersReader() throws Exception {
-        this.task = getEarlyTask();
-        this.videoParameters = getVideoParametersByTaskId(task.getId());
-        List<LineLocation> lineLocation = getLineLocationByTaskID(task.getId());
-        if(lineLocation != null)
-            for (LineLocation loc: lineLocation) {
-                SceneLineParams sceneLineParam = new SceneLineParams(loc);
-                this.sceneLineParams.add(sceneLineParam);
-            }
-        this.scenePolygonParams = new ArrayList<>(getPolygonParamsByTaskId(task.getId()));
+    private ParametersReader(){
+
+//        this.task = getEarlyTask();
+//        this.videoParameters = getVideoParametersByTaskId(task.getId());
+//        List<LineLocation> lineLocation = getLineLocationByTaskID(task.getId());
+//        if(lineLocation != null)
+//            for (LineLocation loc: lineLocation) {
+//                SceneLineParams sceneLineParam = new SceneLineParams(loc);
+//                this.sceneLineParams.add(sceneLineParam);
+//            }
+//        this.scenePolygonParams = new ArrayList<>(getPolygonParamsByTaskId(task.getId()));
 //        System.out.println(videoParameters.toString());
 //        System.out.println(task.toString());
 //        System.out.println(lineLocation.toString());
 
     }
+    public static synchronized ParametersReader getInstance(){
+        if(instance==null){
+            instance = new ParametersReader();
+        }
 
-    public ParametersReader next()throws Exception{
-        return new ParametersReader();
+        return instance;
     }
+
 
     /**
      * set this task complete
      * @return parameters by next early not completed task
      */
     public ParametersReader nextAfterThis()throws Exception{
-        makeTaskComplete(this.task.getId());
-        ParametersReader pR = new ParametersReader();
-        this.task = pR.task;
-        this.videoParameters = pR.videoParameters;
-        this.sceneLineParams = new ArrayList<>(pR.sceneLineParams);
-        this.scenePolygonParams = new ArrayList<>(pR.scenePolygonParams);
+        if(task!=null)
+            makeTaskComplete(this.task.getId());
+        this.task = getEarlyTask();
+        this.videoParameters = getVideoParametersByTaskId(task.getId());
+        List<LineLocation> lineLocation = getLineLocationByTaskID(task.getId());
+        if(lineLocation != null)
+            for (LineLocation loc: lineLocation) {
+                SceneLineParams sceneLineParam = new SceneLineParams(loc.getX1(),loc.getY1(),loc.getX2(),loc.getY2());
+                sceneLineParam.setLocation(loc.getLocation());
+                sceneLineParam.setName(loc.getLocation());
+                this.sceneLineParams.add(sceneLineParam);
+            }
+        this.scenePolygonParams = new ArrayList<>(getPolygonParamsByTaskId(task.getId()));
         return  this;
     }
 
@@ -97,6 +111,7 @@ public class ParametersReader {
      * @return list of LineLocation object
      */
     private LinkedList<LineLocation> getLineLocationByTaskID(int id){
+        //TODO: зробити параметри глобільні, щоб в кожному методі не звертатися до файлу
         XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
         Parameters param = reader.ReadFile(Parameters.class);
         LinkedList<LineLocation> lineLocations = null;
@@ -202,7 +217,8 @@ public class ParametersReader {
             File f = new File(path+"_toProcess");
             if(f.exists()){
                 task = t;
-            }
+                return task;
+            }//TODO: check server
             else{
                 f = new File(path);
                 if (f.exists()) {
@@ -234,6 +250,7 @@ public class ParametersReader {
         while(zoneLocation != null && zoneLocation.size()>0){
             ScenePolygonParams polygon = new ScenePolygonParams();
             polygon.location = (zoneLocation).get(0).getLocation();
+            polygon.name = (zoneLocation).get(0).getLocation();
             ArrayList<Point> points = new ArrayList<>();
             List<ZoneLocation> zl = new LinkedList<ZoneLocation>(zoneLocation);
             for (ZoneLocation loc: zl) {

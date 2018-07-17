@@ -3,6 +3,9 @@ package sample.ParametersReader.MySQLController;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class VideoParameters {
     private int id;
@@ -60,7 +63,17 @@ public class VideoParameters {
 
     public Timestamp getVideo_date() {
         return video_date;
+
     }
+
+    public String getVideoDateInFormat(String format) {
+
+        Date date = new Date(video_date.getTime());
+        DateFormat formatter = new SimpleDateFormat(format);
+        String dateFormatted = formatter.format(date);
+        return dateFormatted;
+    }
+
 
     public Timestamp getDate_add() {
         return date_add;

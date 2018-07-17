@@ -1,12 +1,14 @@
 package sample.managers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import sample.DirManager;
+import sample.ParametersReader.ParametersReader;
+import imageProcessing.SceneLineParams;
+import imageProcessing.ScenePolygonParams;
+import sample.ParametersReader.ProfileParameters;
 import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +25,8 @@ public class NewVisionManager implements IManager{
     private String jsonFolderPath;
     private String newVisionPath;
     private String profileName;
-    private Timer timerNewVisionWorkManager;
+    private Timer receiveJsonFolderFromList_Timer;
+    private Timer receiveJsonFolderFromDB_Timer;
     private Timer timerDirManager;
     private final String NVpidPath = "NewVisionPID.txt";
     private int PID = -1;
@@ -35,6 +38,10 @@ public class NewVisionManager implements IManager{
     private DirManager dirManager = new DirManager();
     private WatchDir watchDir;
     private Thread watchDirThread;
+    private final int RECEIVE_JSONFOLDER_FROM_LIST = 0;
+    private final int RECEIVE_JSONFOLDER_FROM_DB = 1;
+    private int typeOfTaskReceiver = 0;
+
 
 
     /**
@@ -44,9 +51,10 @@ public class NewVisionManager implements IManager{
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
+        this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
 
 
-        timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
+        receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: "+PID);
@@ -82,11 +90,70 @@ public class NewVisionManager implements IManager{
         });
 
 
+        receiveJsonFolderFromDB_Timer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("NV PID is: "+PID);
+
+                if(checkNewVisionWork()==false){
+                     try {
+                         //Read parameters from DB
+                         ParametersReader parametersNV = ParametersReader.getInstance();
+                         parametersNV.nextAfterThis();
+                         System.out.println(parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss"));
+
+                         //Set needed parameters to necessary classes
+                         System.out.println(parametersNV.getVideoParameters().toString());
+                         ArrayList<SceneLineParams> sceneLineParams = new ArrayList<>(parametersNV.getSceneLineParams());
+                         ArrayList<ScenePolygonParams> scenePolygonParams = new ArrayList<>(parametersNV.getScenePolygonParams());
+                         String videoDate = parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss");
+                         int taskID = parametersNV.getTask().getOutsideTask_id();
+
+                         //Load profileParameters.xml to profileParameters.java
+                         String path = params.getNvParametersPath();
+                         ProfileParameters profileParameters = ProfileParameters.loadProfileParameters(path);
+
+                         //Set new parameters to profileParameters.java
+                         profileParameters.setSceneLineParams(sceneLineParams);
+                         profileParameters.setScenePolygons(scenePolygonParams);
+                         profileParameters.setVideoDate(videoDate);
+                         profileParameters.setTaskID(taskID);
+
+                         //Save new profileParameters.java to the profileParameters.xml
+                         profileParameters.writeProfileParameters(profileParameters,path);
+
+                         //start OffNewVision with new profileParameters
+                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName() + "\\";
+                         System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
+                         TasksClass.startTask(str);
+                         for (;;) {
+                             if(checkNewVisionWork()==true)
+                                 break;
+                         }
+                     }catch (Exception ee){
+                         ee.printStackTrace();
+                     }
+
+                }
+            }
+        });
     }
 
     @Override
     public void start(){
-        timerNewVisionWorkManager.start();
+        if(typeOfTaskReceiver==RECEIVE_JSONFOLDER_FROM_LIST) {
+            receiveJsonFolderFromList_Timer.start();
+        }else
+            if(typeOfTaskReceiver==RECEIVE_JSONFOLDER_FROM_DB){
+                receiveJsonFolderFromDB_Timer.start();
+            }else
+            {
+                try {
+                    throw new Exception("Wrong parameters value (int typeOfJsonFolderReceiving)");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         watchDirThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +178,7 @@ public class NewVisionManager implements IManager{
 
     @Override
     public void stop() {
-        timerNewVisionWorkManager.stop();
+        receiveJsonFolderFromList_Timer.stop();
         watchDirThread.stop();
         //:TODO зробити перевірку потока на null
     }
