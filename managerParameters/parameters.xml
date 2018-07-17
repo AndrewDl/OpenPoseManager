@@ -2,7 +2,7 @@
 <object-stream>
     <java.lang.Class>
         <!--path to the folder with json folders-->
-        <jsonSource>D:\Program Files (x86)\CifrusMark\output\jsonFolders</jsonSource>
+        <jsonSource>output/jsonFolders</jsonSource>
         <!--profile that will start-->
         <profileName>3_06</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен

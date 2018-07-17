@@ -139,5 +139,4 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setGetURL(String getURL){ this.getURL = getURL;}
 
-
 }

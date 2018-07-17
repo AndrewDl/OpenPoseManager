@@ -45,6 +45,12 @@ public class Archiver {
         logger.info(source_dir+" was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
     }
+
+    /**
+     * part of zip method.
+     * @param zout zipOutputStream. output stream filter for writing zip format files
+     * @param fileSource what exactly it will add to zip
+     */
     private void addDirectory(ZipOutputStream zout, File fileSource)
     {
         File[] files = fileSource.listFiles();
@@ -60,10 +66,10 @@ public class Archiver {
                 logger.error(e);
                 e.printStackTrace();
             }
-            String[] str = files[i].getPath().split("\\\\",3);
+            String[] str = files[i].getPath().split("\\\\",3); //parsing entry's name
             String out = str[2];
             try {
-                zout.putNextEntry(new ZipEntry(out));
+                zout.putNextEntry(new ZipEntry(out)); // placing entry in zip
             } catch (IOException e) {
                 logger.error(e);
                 e.printStackTrace();

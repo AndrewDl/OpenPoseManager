@@ -25,4 +25,8 @@ public interface INewVisionParams {
     String getPostURL();
 
     String getGetURL();
+
+    Boolean getDeleteProcessedJsonFolder();
+
+    Boolean getDeleteUploadedZippedJsons();
 }

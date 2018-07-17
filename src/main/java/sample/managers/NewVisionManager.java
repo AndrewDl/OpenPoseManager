@@ -2,14 +2,14 @@ package sample.managers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.Timer;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import sample.Archiver;
 import sample.DirManager;
@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.requests.GetRequester;
 import sample.requests.PostRequester;
+import org.apache.commons.io.FileUtils;
 
 
 public class NewVisionManager implements IManager {
@@ -45,6 +46,8 @@ public class NewVisionManager implements IManager {
     private GetRequester httpGET = new GetRequester();
     private String postURL = "";
     private String getURL = "";
+    private Boolean deleteJsonFolderFlag = false;
+    private Boolean deleteJsonZipFlag = false;
 
     /**
      * @param params
@@ -55,6 +58,9 @@ public class NewVisionManager implements IManager {
         this.profileName = params.getProfileName();
         this.postURL = params.getPostURL();
         this.getURL = params.getGetURL();
+        this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
+        this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
+
         this.timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: " + PID);
@@ -70,18 +76,39 @@ public class NewVisionManager implements IManager {
                                 System.out.println(jsonFolderPath+ "/" +str);
 
                                 String finalStr = str;
+                                String finalName = finalStr+"_delete";
                                 z = new Thread (new Runnable(){
                                     public void run(){
                                         try {
                                             archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
-                                            dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
+                                            //zip jsonFolder
+                                            dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
+                                            //rename folder to "_delete" condition, to not allow
                                             httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                            //uploading zip file on server
                                             //httpGET.getRequest(getURL,finalStr);
+                                            if(deleteJsonFolderFlag){
+                                                File folderToDelete = new File(jsonFolderPath+"/"+finalName);
+                                                long start = System.currentTimeMillis();
+                                                FileUtils.forceDelete(folderToDelete);
+                                                //deleting folder
+                                                long finish = System.currentTimeMillis();
+                                                long timeConsumedMillis = finish - start;
+                                                System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
+                                                System.out.println("Folder "+finalStr+" was deleted!");
+                                                logger.info("Folder "+finalStr+" was deleted!");
+                                            }
+                                            if(deleteJsonZipFlag){
+                                                File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
+                                                zipToDelete.delete();
+                                                System.out.println("Zip "+finalStr+" was deleted!");
+                                                logger.info("Zip "+finalStr+" was deleted!");
+                                            }
                                         } catch (Exception e1) {
                                             logger.error(e1);
                                             e1.printStackTrace();
                                         }}});
-                                z.run();
+                                z.start();
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -105,24 +132,36 @@ public class NewVisionManager implements IManager {
 
 
                         String finalStr = str;
+                        String finalName = finalStr+"_delete";
+                        //comments for code above are actual for code under this line
                         z = new Thread (new Runnable(){
                                 public void run(){
                                     try {
                                         archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
-                                        dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
+                                        dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
                                         httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
                                        // httpGET.getRequest(getURL,finalStr);
+                                        if(deleteJsonFolderFlag){
+                                            File folderToDelete = new File(jsonFolderPath+"/"+finalName);
+                                            long start = System.currentTimeMillis();
+                                            FileUtils.forceDelete(folderToDelete);
+                                            long finish = System.currentTimeMillis();
+                                            long timeConsumedMillis = finish - start;
+                                            System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
+                                            System.out.println("Folder "+finalStr+" was deleted!");
+                                            logger.info("Folder "+finalStr+" was deleted!");
+                                        }
+                                        if(deleteJsonZipFlag){
+                                            File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
+                                            zipToDelete.delete();
+                                            System.out.println("Zip "+finalStr+" was deleted!");
+                                            logger.info("Zip "+finalStr+" was deleted!");
+                                        }
                                     } catch (Exception e1) {
                                         logger.error(e1);
                                         e1.printStackTrace();
                                     }}});
-                        z.run();
-
-                        try {
-                           // archiver.Zip(jsonFolderPath + "/" + str, jsonFolderPath + "/" + str + "Zipped.zip");
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
+                        z.start();
                         jsonFoldersList.clear();
                     }
                 } else {
@@ -210,4 +249,9 @@ public class NewVisionManager implements IManager {
 
         return false;
     }
+
+    private void jSonfilesEndlifeProcess(){
+
+    }
+
 }
