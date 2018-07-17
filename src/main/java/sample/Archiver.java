@@ -21,12 +21,12 @@ public class Archiver {
     private Logger logger = LogManager.getLogger("Archiver");
 
     /**
-     * Method to Zip json folders
+     * Method to zip json folders
      * @param source_dir - address of folder, which should be zipped
      * @param zip_file - address where .zip file should be placed. IMPORTANT! Should contain extension(.zip)
      * @throws Exception
      */
-    public void Zip(String source_dir, String zip_file) throws Exception
+    public void zip(String source_dir, String zip_file) throws Exception
     {
         long start = System.currentTimeMillis(); // when zip starts
         FileOutputStream fout = new FileOutputStream(zip_file);
@@ -40,7 +40,7 @@ public class Archiver {
         long finish = System.currentTimeMillis();
         long timeConsumedMillis = finish - start;
 
-        System.out.println("Zip file was created!");
+        System.out.println("zip file was created!");
         System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
         logger.info(source_dir+" was zipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
@@ -141,7 +141,6 @@ public class Archiver {
             long timeConsumedMillis = finish - start;
 
             System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
-            System.out.println("Done");
             logger.info(zipFile+"was unzipped, Time was taken: "+timeConsumedMillis/1000+"s");
 
         }catch(IOException ex){

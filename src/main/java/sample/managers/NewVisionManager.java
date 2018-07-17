@@ -3,13 +3,10 @@ package sample.managers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.Timer;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import sample.Archiver;
 import sample.DirManager;
@@ -41,7 +38,7 @@ public class NewVisionManager implements IManager {
     private Thread watchDirThread;
     private Logger logger = LogManager.getLogger("NVManager");
     private Archiver archiver = new Archiver();
-    private Thread z;
+    private Thread endLifeProcessThread;
     private PostRequester httpPOST = new PostRequester();
     private GetRequester httpGET = new GetRequester();
     private String postURL = "";
@@ -69,18 +66,14 @@ public class NewVisionManager implements IManager {
                     if (!checkNewVisionWork() && jsonFolderPointer < jsonFoldersList.size()) {
                         if (jsonFolderPointer > 0) {
                             str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "_toProcess", "");
-                            System.out.println((String)jsonFoldersList.get(jsonFolderPointer-1)+" <-afterCut");
                             dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
-                            System.out.println(str);
                             try {
-                                System.out.println(jsonFolderPath+ "/" +str);
-
                                 String finalStr = str;
                                 String finalName = finalStr+"_delete";
-                                z = new Thread (new Runnable(){
+                                endLifeProcessThread = new Thread (new Runnable(){
                                     public void run(){
                                         try {
-                                            archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
+                                            archiver.zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                             //zip jsonFolder
                                             dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
                                             //rename folder to "_delete" condition, to not allow
@@ -101,14 +94,14 @@ public class NewVisionManager implements IManager {
                                             if(deleteJsonZipFlag){
                                                 File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
                                                 zipToDelete.delete();
-                                                System.out.println("Zip "+finalStr+" was deleted!");
-                                                logger.info("Zip "+finalStr+" was deleted!");
+                                                System.out.println("zip "+finalStr+" was deleted!");
+                                                logger.info("zip "+finalStr+" was deleted!");
                                             }
                                         } catch (Exception e1) {
                                             logger.error(e1);
                                             e1.printStackTrace();
                                         }}});
-                                z.start();
+                                endLifeProcessThread.start();
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -128,16 +121,15 @@ public class NewVisionManager implements IManager {
                     } else if (jsonFolderPointer >= jsonFoldersList.size() && !checkNewVisionWork()) {
                         str = dirManager.replaceNamePart((String)jsonFoldersList.get(jsonFolderPointer - 1), "_toProcess", "");
                         dirManager.renameFolder(jsonFolderPath, (String)jsonFoldersList.get(jsonFolderPointer - 1), str);
-                        System.out.println(str);
 
 
                         String finalStr = str;
                         String finalName = finalStr+"_delete";
                         //comments for code above are actual for code under this line
-                        z = new Thread (new Runnable(){
+                        endLifeProcessThread = new Thread (new Runnable(){
                                 public void run(){
                                     try {
-                                        archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
+                                        archiver.zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                         dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
                                         httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
                                        // httpGET.getRequest(getURL,finalStr);
@@ -154,14 +146,14 @@ public class NewVisionManager implements IManager {
                                         if(deleteJsonZipFlag){
                                             File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
                                             zipToDelete.delete();
-                                            System.out.println("Zip "+finalStr+" was deleted!");
-                                            logger.info("Zip "+finalStr+" was deleted!");
+                                            System.out.println("zip "+finalStr+" was deleted!");
+                                            logger.info("zip "+finalStr+" was deleted!");
                                         }
                                     } catch (Exception e1) {
                                         logger.error(e1);
                                         e1.printStackTrace();
                                     }}});
-                        z.start();
+                        endLifeProcessThread.start();
                         jsonFoldersList.clear();
                     }
                 } else {
