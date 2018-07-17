@@ -16,11 +16,20 @@ import java.io.IOException;
  */
 public class GetRequester implements IGetRequester {
     Logger logger = LogManager.getLogger("HTTPLogger");
+    private String archiveURL = "";
+
+    public String getArchiveURL(String requestURL, String name){
+        requestURL = requestURL + "?name=" + name;
+        if(sendGETRequest(requestURL)){
+            return getResponse();
+        }
+        else return null;
+    }
 
     @Override
-    public String getRequest(String url, String name) {
+    public boolean sendGETRequest(String url) {
+        boolean success = false;
         HttpClient httpclient = HttpClientBuilder.create().build();
-        url = url + "?name=" + name;
         HttpGet request = new HttpGet(url);
         HttpResponse response = null;
         try {
@@ -33,35 +42,42 @@ public class GetRequester implements IGetRequester {
         String responseString = null;
         try {
             responseString = EntityUtils.toString(responseEntity,"UTF-8");
+            success = true;
         } catch (IOException e) {
             logger.error(e);
             e.printStackTrace();
         }
         logger.info("GET Request: "+url+" Server response: "+responseString);
-        return responseString;
+        return success;
     }
 
     @Override
-    public void getRequest(String mainURL, String message, String keyURL) {
-        HttpClient httpclient = HttpClientBuilder.create().build();
-        String url = mainURL + message + keyURL;
-        HttpGet request = new HttpGet(url);
-        HttpResponse response = null;
-        try {
-            response = httpclient.execute(request);
-        } catch (IOException e) {
-            logger.error(e);
-            e.printStackTrace();
-        }
-        HttpEntity responseEntity = response.getEntity();
-        String responseString = null;
-        try {
-            responseString = EntityUtils.toString(responseEntity,"UTF-8");
-        } catch (IOException e) {
-            logger.error(e);
-            e.printStackTrace();
-        }
-        logger.info("GET Request: "+url+" Server response: "+responseString);
+    public String getResponse(){
+        return archiveURL;
     }
+
+
+
+//    public void getRequest(String mainURL, String message, String keyURL) {
+//        HttpClient httpclient = HttpClientBuilder.create().build();
+//        String url = mainURL + message + keyURL;
+//        HttpGet request = new HttpGet(url);
+//        HttpResponse response = null;
+//        try {
+//            response = httpclient.execute(request);
+//        } catch (IOException e) {
+//            logger.error(e);
+//            e.printStackTrace();
+//        }
+//        HttpEntity responseEntity = response.getEntity();
+//        String responseString = null;
+//        try {
+//            responseString = EntityUtils.toString(responseEntity,"UTF-8");
+//        } catch (IOException e) {
+//            logger.error(e);
+//            e.printStackTrace();
+//        }
+//        logger.info("GET Request: "+url+" Server response: "+responseString);
+//    }
 }
 

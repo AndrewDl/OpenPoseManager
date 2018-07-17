@@ -5,10 +5,8 @@ package sample.requests;
  */
 public interface IPostRequester {
     /**
-     * Method sends to server POST request that contains archive
+     * Method sends to server POST request
      * @param url - url for request
-     * @param name - name of task
-     * @param filepath - path to archive
      */
-    void postRequest(String url, String name, String filepath);
+    void sendPOSTRequest(String url);
 }

@@ -20,8 +20,17 @@ import org.apache.logging.log4j.Logger;
  * Created by Laimi on 12.07.2018.
  */
 public class PostRequester implements IPostRequester {
+    String name = "";
+    String filepath = "";
+
+    public void sendArchiveToServer(String url, String name, String filepath){
+        this.name = name;
+        this.filepath = filepath;
+        sendPOSTRequest(url);
+    }
+
     @Override
-    public void postRequest(String url, String name, String filepath) {
+    public void sendPOSTRequest(String url) {
         Logger logger = LogManager.getLogger("HTTPLogger");
         long start = System.currentTimeMillis();
         HttpClient httpclient = HttpClientBuilder.create().build();
