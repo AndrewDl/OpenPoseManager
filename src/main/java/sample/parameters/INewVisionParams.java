@@ -22,7 +22,7 @@ public interface INewVisionParams {
 
     String getArguments();
 
-    String getPostURL();
+    String getURLforGET();
 
-    String getGetURL();
+    String getURLforPOST();
 }

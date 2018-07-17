@@ -53,8 +53,8 @@ public class NewVisionManager implements IManager {
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
-        this.postURL = params.getPostURL();
-        this.getURL = params.getGetURL();
+        this.postURL = params.getURLforGET();
+        this.getURL = params.getURLforPOST();
         this.timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: " + PID);

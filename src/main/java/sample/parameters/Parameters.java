@@ -21,8 +21,8 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
-    private String postURL = "";
-    private String getURL = "";
+    private String URLforGET = "";
+    private String URLforPOST = "";
     private String telegramURL = "";
     private String keyURL = "";
 
@@ -119,15 +119,13 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setOpenPose(String openPose){ this.openPose = openPose;}
 
-    @Override
-    public String getPostURL(){return postURL; }
+    public String getURLforGET(){return URLforGET; }
 
-    public void setPostURL(String postURL){ this.postURL = postURL;}
+    public void setURLforGET(String URLforGET){ this.URLforGET = URLforGET;}
 
-    @Override
-    public String getGetURL(){return getURL; }
+    public String getURLforPOST(){return URLforPOST; }
 
-    public void setGetURL(String getURL){ this.getURL = getURL;}
+    public void setURLforPOST(String URLforPOST){ this.URLforPOST = URLforPOST;}
 
     @Override
     public  String getTelegramURL(){

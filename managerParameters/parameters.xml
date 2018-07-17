@@ -17,9 +17,9 @@
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
         <!--URL to send POST request-->
-        <postURL>https://vision.ecsv.org.ua/json-store/upload</postURL>
+        <URLforGET>https://vision.ecsv.org.ua/json-store/upload</URLforGET>
         <!--URL to send GET request-->
-        <getURL>https://vision.ecsv.org.ua/json-store/get</getURL>
+        <URLforPOST>https://vision.ecsv.org.ua/json-store/get</URLforPOST>
         <!--main part of URL to send GET request to notify Telegram bot-->
         <telegramURL>https://notify.ecsv.org.ua/callback/send?message=</telegramURL>
         <!--part of URL with key to send GET request to notify Telegram bot-->
