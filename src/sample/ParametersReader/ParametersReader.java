@@ -213,11 +213,6 @@ public class ParametersReader {
         for (Task t :
                 tasks) {
             String videoName = getVideoParametersByTaskId(t.getId()).getName();
-            String[] tempForSplit = videoName.split("\\.");
-            videoName = "";
-            for (int i = 0; i < tempForSplit.length-1; i++) {
-                videoName+=tempForSplit[i];
-            }
             String path = param.getJsonSource()+"\\"+videoName+"_toProcess";
             File f = new File(path);
             if(f.exists()){

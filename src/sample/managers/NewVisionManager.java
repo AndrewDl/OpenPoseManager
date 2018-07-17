@@ -123,7 +123,7 @@ public class NewVisionManager implements IManager{
                          profileParameters.writeProfileParameters(profileParameters,path);
 
                          //start OffNewVision with new profileParameters
-                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName().split("\\.")[0] + "\\";
+                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName() + "\\";
                          System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                          TasksClass.startTask(str);
                          for (;;) {
