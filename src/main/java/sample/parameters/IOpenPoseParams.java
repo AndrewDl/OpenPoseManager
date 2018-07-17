@@ -15,4 +15,8 @@ public interface IOpenPoseParams {
     String getPostURL();
 
     String getGetURL();
+
+    String getTelegramURL();
+
+    String getKeyURL();
 }

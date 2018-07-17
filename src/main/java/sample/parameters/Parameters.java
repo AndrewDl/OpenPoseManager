@@ -23,6 +23,8 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String openPose = "";
     private String postURL = "";
     private String getURL = "";
+    private String telegramURL = "";
+    private String keyURL = "";
 
     /**
      * This method is used to load parameters from a given file<br>
@@ -127,5 +129,21 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setGetURL(String getURL){ this.getURL = getURL;}
 
+    @Override
+    public  String getTelegramURL(){
+        return telegramURL;
+    }
 
+    public void setTelegramURL(String telegramURL){
+        this.telegramURL = telegramURL;
+    }
+
+    @Override
+    public String getKeyURL() {
+        return keyURL;
+    }
+
+    public void setKeyURL(String keyURL) {
+        this.keyURL = keyURL;
+    }
 }

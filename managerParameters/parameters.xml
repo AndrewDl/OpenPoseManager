@@ -20,5 +20,9 @@
         <postURL>https://vision.ecsv.org.ua/json-store/upload</postURL>
         <!--URL to send GET request-->
         <getURL>https://vision.ecsv.org.ua/json-store/get</getURL>
+        <!--main part of URL to send GET request to notify Telegram bot-->
+        <telegramURL>https://notify.ecsv.org.ua/callback/send?message=</telegramURL>
+        <!--part of URL with key to send GET request to notify Telegram bot-->
+        <keyURL>&amp;key=5b4892663974d</keyURL>
     </java.lang.Class>
 </object-stream>
