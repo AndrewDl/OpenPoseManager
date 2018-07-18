@@ -41,7 +41,6 @@ public class NewVisionManager implements IManager {
     private Archiver archiver = new Archiver();
     private Thread endLifeProcessThread;
     private PostRequester httpPOST = new PostRequester();
-    private GetRequester httpGET = new GetRequester();
     private String postURL = "";
     private String getURL = "";
     private Boolean deleteJsonFolderFlag = false;
