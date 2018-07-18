@@ -59,6 +59,8 @@ public class NewVisionManager implements IManager {
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 
+        //TODO:PUSH IT TO THE LIMIT
+
         this.timerNewVisionWorkManager = new Timer(5000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NV PID is: " + PID);
