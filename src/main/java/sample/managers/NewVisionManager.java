@@ -1,5 +1,8 @@
 package sample.managers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import sample.Archiver;
 import sample.DirManager;
 import sample.EventsProcessing.ArchiveLoader;
 import sample.ParametersReader.ParametersReader;
@@ -9,6 +12,8 @@ import sample.ParametersReader.ProfileParameters;
 import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.INewVisionParams;
+import sample.requests.DataForPostArchive;
+import sample.requests.PostRequester;
 
 
 import javax.swing.Timer;
@@ -45,8 +50,15 @@ public class NewVisionManager implements IManager{
     private int typeOfTaskReceiver = 0;
     private String jsonArchiveSource = "";
     private String nvParametersPath = "";
-
-
+    private Logger logger = LogManager.getLogger("NVManager");
+    private Archiver archiver = new Archiver();
+    private Thread endLifeProcessThread;
+    private PostRequester httpPOST = new PostRequester();
+    private String postURL = "";
+    private String getURL = "";
+    private Boolean deleteJsonFolderFlag = false;
+    private Boolean deleteJsonZipFlag = false;
+    private DataForPostArchive requestData = new DataForPostArchive();
 
     /**
      * @param params
@@ -58,7 +70,10 @@ public class NewVisionManager implements IManager{
         this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
         this.jsonArchiveSource=params.getJsonArchiveSource();
         this.nvParametersPath = params.getNvParametersPath();
-
+        this.postURL = params.getURLforGET();
+        this.getURL = params.getURLforPOST();
+        this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
+        this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 
 
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
