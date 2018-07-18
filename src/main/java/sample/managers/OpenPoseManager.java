@@ -52,6 +52,8 @@ public class OpenPoseManager implements IManager{
     private Logger logger = LogManager.getLogger("OPManager");
     private IGetRequester getRequester = new GetRequesterTelegram();
     private DataForGetTelegram requestData = new DataForGetTelegram();
+    private String telegramURL = "";
+    private String keyURL = "";
 
     public OpenPoseManager(Parameters param){
 
@@ -59,6 +61,8 @@ public class OpenPoseManager implements IManager{
          * paths and params
          */
 
+        this.telegramURL = param.getTelegramURL();
+        this.keyURL = param.getKeyURL();
         this.inputFolder = param.getVideoSource();
         this.outputFolder = param.getVideoDestination();
         this.param = param.getArguments();
@@ -102,9 +106,9 @@ public class OpenPoseManager implements IManager{
                                             task.startTask(cmdLine);
                                             logger.info("WerFaultTask was closed. OpenPoseFailure!");
                                             failed = true;
-                                            requestData.setMainURL(param.getTelegramURL());
+                                            requestData.setMainURL(telegramURL);
                                             requestData.setMessage("WerFaultTask was closed. OpenPoseFailure!");
-                                            requestData.setKeyURL(param.getKeyURL());
+                                            requestData.setKeyURL(keyURL);
                                             getRequester.sendGETRequest(requestData);
                                         }
                                     }
@@ -114,9 +118,9 @@ public class OpenPoseManager implements IManager{
                                     System.out.println("WerFault closed");
                                     task.startTask(cmdLine);
                                     failed = true;
-                                    requestData.setMainURL(param.getTelegramURL());
+                                    requestData.setMainURL(telegramURL);
                                     requestData.setMessage("WerFaultTask was closed.");
-                                    requestData.setKeyURL(param.getKeyURL());
+                                    requestData.setKeyURL(keyURL);
                                     getRequester.sendGETRequest(requestData);
                                 }
                             } catch (Exception e1) {

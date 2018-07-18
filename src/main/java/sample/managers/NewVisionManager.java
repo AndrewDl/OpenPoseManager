@@ -10,6 +10,7 @@ import sample.TasksClass;
 import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 
+
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
