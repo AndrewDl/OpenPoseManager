@@ -54,7 +54,7 @@ public class OpenPoseManager implements IManager{
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
         this.processName = param.getOpenPose();
-        TasksClass task = new TasksClass();
+        final TasksClass task = new TasksClass();
 
         /**
          * WatchDir thread. Contents Timer for errors

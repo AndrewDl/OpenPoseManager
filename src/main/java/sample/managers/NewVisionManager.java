@@ -1,6 +1,7 @@
 package sample.managers;
 
 import sample.DirManager;
+import sample.EventsProcessing.ArchiveLoader;
 import sample.ParametersReader.ParametersReader;
 import imageProcessing.SceneLineParams;
 import imageProcessing.ScenePolygonParams;
@@ -41,6 +42,8 @@ public class NewVisionManager implements IManager{
     private final int RECEIVE_JSONFOLDER_FROM_LIST = 0;
     private final int RECEIVE_JSONFOLDER_FROM_DB = 1;
     private int typeOfTaskReceiver = 0;
+    private String jsonArchiveSource = "";
+    private String nvParametersPath = "";
 
 
 
@@ -52,6 +55,9 @@ public class NewVisionManager implements IManager{
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
         this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
+        this.jsonArchiveSource=params.getJsonArchiveSource();
+        this.nvParametersPath = params.getNvParametersPath();
+
 
 
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
@@ -99,6 +105,7 @@ public class NewVisionManager implements IManager{
                      try {
                          //Read parameters from DB
                          ParametersReader parametersNV = ParametersReader.getInstance();
+                         parametersNV.setArchiveListener(new ArchiveLoader());
                          parametersNV.nextAfterThis();
                          System.out.println(parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss"));
 
@@ -110,7 +117,7 @@ public class NewVisionManager implements IManager{
                          int taskID = parametersNV.getTask().getOutsideTask_id();
 
                          //Load profileParameters.xml to profileParameters.java
-                         String path = params.getNvParametersPath();
+                         String path = nvParametersPath;
                          ProfileParameters profileParameters = ProfileParameters.loadProfileParameters(path);
 
                          //Set new parameters to profileParameters.java

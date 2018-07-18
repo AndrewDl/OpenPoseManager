@@ -10,6 +10,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
 
     private String jsonSource = "";
+    private String jsonArchiveSource = "";
     private String profileName = "";
     private String newVisionPath = "";
     private String videoSource= "";
@@ -47,6 +48,14 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     @Override
     public void setJsonSource(String jsonSource) {
         this.jsonSource = jsonSource;
+    }
+
+    public String getJsonArchiveSource() {
+        return jsonArchiveSource;
+    }
+
+    public void setJsonArchiveSource(String jsonArchiveSource) {
+        this.jsonArchiveSource = jsonArchiveSource;
     }
 
     @Override

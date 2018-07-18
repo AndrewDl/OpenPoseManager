@@ -1,5 +1,6 @@
 package sample.ParametersReader;
 
+import sample.EventsProcessing.ArchiveListener;
 import sample.ParametersReader.MySQLController.*;
 import imageProcessing.SceneLineParams;
 import imageProcessing.ScenePolygonParams;
@@ -34,10 +35,12 @@ import java.util.List;
  */
 public class ParametersReader {
     private static ParametersReader instance;
+    private ArchiveListener requestJSONList;
     private Task task = null;
     private VideoParameters videoParameters = null;
     private ArrayList<SceneLineParams> sceneLineParams = new ArrayList<SceneLineParams>();
     private ArrayList<ScenePolygonParams> scenePolygonParams = new ArrayList<ScenePolygonParams>();
+
 
     /**
      * create parameters by early created task from DB where completed = 0
@@ -225,9 +228,7 @@ public class ParametersReader {
                     System.out.println("JSON by "+videoName+" video, in processing");
                 }else {
                     //TODO: check server
-//                    if(isJSONonServer){
-//                        //start load and create folder
-//                    }else
+                    fireOnAchiveRequestEvent(videoName);
                         System.out.println("Not found JSON by "+videoName+" video");
                 }
             }
@@ -290,6 +291,14 @@ public class ParametersReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setArchiveListener(ArchiveListener archiveListener){
+        this.requestJSONList = archiveListener;
+    }
+
+    public void fireOnAchiveRequestEvent(String videoName){
+        this.requestJSONList.onJsonRequest(videoName);
     }
 
 }
