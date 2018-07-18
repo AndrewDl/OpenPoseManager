@@ -20,14 +20,17 @@ import org.apache.logging.log4j.Logger;
  * Created by Laimi on 12.07.2018.
  */
 public class PostRequester implements IPostRequester {
-    public void postRequest(String url, String name, String filepath) {
+
+    @Override
+    public void sendPOSTRequest(IRequestData data) {
+        DataForPostArchive obtainedData = (DataForPostArchive) data;
         Logger logger = LogManager.getLogger("HTTPLogger");
-        long start = System.currentTimeMillis();
+
         HttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(url); //destination for file
-        File file = new File(filepath);
+        HttpPost httpPost = new HttpPost(obtainedData.getUrl()); //destination for file
+        File file = new File(obtainedData.getFilepath());
         FileBody uploadFilePart = new FileBody(file);
-        StringBody str = new StringBody(name, ContentType.TEXT_PLAIN);
+        StringBody str = new StringBody(obtainedData.getName(), ContentType.TEXT_PLAIN);
         HttpEntity reqEntity = MultipartEntityBuilder.create()
                 .addPart("name", str)
                 .addPart("file", uploadFilePart)
@@ -48,11 +51,7 @@ public class PostRequester implements IPostRequester {
             logger.error(e);
             e.printStackTrace();
         }
-        System.out.println(responseString);
-        long finish = System.currentTimeMillis();
-        long timeConsumedMillis = finish - start;
-        System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
-        logger.info("File: "+name+" was sent to server. Server response: "+responseString);
+        logger.info("File: "+obtainedData.getName()+" was sent to server. Server response: "+responseString);
     }
 }
 

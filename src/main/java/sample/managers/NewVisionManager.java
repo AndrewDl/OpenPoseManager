@@ -15,7 +15,8 @@ import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sample.requests.GetRequester;
+import sample.requests.DataForPostArchive;
+import sample.requests.IRequestData;
 import sample.requests.PostRequester;
 import org.apache.commons.io.FileUtils;
 
@@ -45,6 +46,7 @@ public class NewVisionManager implements IManager {
     private String getURL = "";
     private Boolean deleteJsonFolderFlag = false;
     private Boolean deleteJsonZipFlag = false;
+    private DataForPostArchive requestData = new DataForPostArchive();
 
     /**
      * @param params
@@ -53,8 +55,8 @@ public class NewVisionManager implements IManager {
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
-        this.postURL = params.getPostURL();
-        this.getURL = params.getGetURL();
+        this.postURL = params.getURLforGET();
+        this.getURL = params.getURLforPOST();
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 
@@ -77,7 +79,10 @@ public class NewVisionManager implements IManager {
                                             //zip jsonFolder
                                             dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
                                             //rename folder to "_delete" condition, to not allow
-                                            httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                            requestData.setUrl(postURL);
+                                            requestData.setName(finalStr);
+                                            requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                                            httpPOST.sendPOSTRequest(requestData);
                                             //uploading zip file on server
                                             //httpGET.getRequest(getURL,finalStr);
                                             if(deleteJsonFolderFlag){
@@ -131,8 +136,11 @@ public class NewVisionManager implements IManager {
                                     try {
                                         archiver.zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                         dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
-                                        httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
-                                       // httpGET.getRequest(getURL,finalStr);
+                                        requestData.setUrl(postURL);
+                                        requestData.setName(finalStr);
+                                        requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                                        httpPOST.sendPOSTRequest(requestData);
+                                        // httpGET.getRequest(getURL,finalStr);
                                         if(deleteJsonFolderFlag){
                                             File folderToDelete = new File(jsonFolderPath+"/"+finalName);
                                             long start = System.currentTimeMillis();
@@ -241,9 +249,4 @@ public class NewVisionManager implements IManager {
 
         return false;
     }
-
-    private void jSonfilesEndlifeProcess(){
-
-    }
-
 }

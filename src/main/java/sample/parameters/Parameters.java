@@ -21,8 +21,10 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String videoDestination = "";
     private String arguments = "";
     private String openPose = "";
-    private String postURL = "";
-    private String getURL = "";
+    private String URLforGET = "";
+    private String URLforPOST = "";
+    private String telegramURL = "";
+    private String keyURL = "";
     private Boolean deleteProcessedJsonFolder = Boolean.FALSE;
     private Boolean deleteUploadedZippedJsons = Boolean.FALSE;
 
@@ -129,14 +131,29 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setDeleteUploadedZippedJsons(){this.deleteUploadedZippedJsons = deleteUploadedZippedJsons;}
 
+    public String getURLforGET(){return URLforGET; }
+
+    public void setURLforGET(String URLforGET){ this.URLforGET = URLforGET;}
+
+    public String getURLforPOST(){return URLforPOST; }
+
+    public void setURLforPOST(String URLforPOST){ this.URLforPOST = URLforPOST;}
+
     @Override
-    public String getPostURL(){return postURL; }
+    public  String getTelegramURL(){
+        return telegramURL;
+    }
 
-    public void setPostURL(String postURL){ this.postURL = postURL;}
+    public void setTelegramURL(String telegramURL){
+        this.telegramURL = telegramURL;
+    }
 
     @Override
-    public String getGetURL(){return getURL; }
+    public String getKeyURL() {
+        return keyURL;
+    }
 
-    public void setGetURL(String getURL){ this.getURL = getURL;}
-
+    public void setKeyURL(String keyURL) {
+        this.keyURL = keyURL;
+    }
 }

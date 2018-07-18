@@ -20,6 +20,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sample.requests.DataForGetTelegram;
+import sample.requests.GetRequesterArchive;
+import sample.requests.GetRequesterTelegram;
+import sample.requests.IGetRequester;
 
 /**
  * Created by Laimi on 15.11.2017.
@@ -46,11 +50,13 @@ public class OpenPoseManager implements IManager{
     private Long Amount = 0L;
     private Long Max = 0L;
     private Logger logger = LogManager.getLogger("OPManager");
+    private IGetRequester getRequester = new GetRequesterTelegram();
+    private DataForGetTelegram requestData = new DataForGetTelegram();
 
     public OpenPoseManager(Parameters param){
 
         /**
-         * pathes and params
+         * paths and params
          */
 
         this.inputFolder = param.getVideoSource();
@@ -96,6 +102,10 @@ public class OpenPoseManager implements IManager{
                                             task.startTask(cmdLine);
                                             logger.info("WerFaultTask was closed. OpenPoseFailure!");
                                             failed = true;
+                                            requestData.setMainURL(param.getTelegramURL());
+                                            requestData.setMessage("WerFaultTask was closed. OpenPoseFailure!");
+                                            requestData.setKeyURL(param.getKeyURL());
+                                            getRequester.sendGETRequest(requestData);
                                         }
                                     }
                                 }
@@ -104,6 +114,10 @@ public class OpenPoseManager implements IManager{
                                     System.out.println("WerFault closed");
                                     task.startTask(cmdLine);
                                     failed = true;
+                                    requestData.setMainURL(param.getTelegramURL());
+                                    requestData.setMessage("WerFaultTask was closed.");
+                                    requestData.setKeyURL(param.getKeyURL());
+                                    getRequester.sendGETRequest(requestData);
                                 }
                             } catch (Exception e1) {
                                 logger.error(e);
