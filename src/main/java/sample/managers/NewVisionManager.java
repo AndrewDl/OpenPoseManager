@@ -18,7 +18,8 @@ import sample.WatchDir;
 import sample.parameters.INewVisionParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sample.requests.GetRequester;
+import sample.requests.DataForPostArchive;
+import sample.requests.IRequestData;
 import sample.requests.PostRequester;
 
 
@@ -42,9 +43,9 @@ public class NewVisionManager implements IManager {
     private Archiver archiver = new Archiver();
     private Thread z;
     private PostRequester httpPOST = new PostRequester();
-    private GetRequester httpGET = new GetRequester();
     private String postURL = "";
     private String getURL = "";
+    private DataForPostArchive requestData = new DataForPostArchive();
 
     /**
      * @param params
@@ -75,7 +76,10 @@ public class NewVisionManager implements IManager {
                                         try {
                                             archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                             dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
-                                            httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                            requestData.setUrl(postURL);
+                                            requestData.setName(finalStr);
+                                            requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                                            httpPOST.sendPOSTRequest(requestData);
                                             //httpGET.getRequest(getURL,finalStr);
                                         } catch (Exception e1) {
                                             logger.error(e1);
@@ -110,7 +114,10 @@ public class NewVisionManager implements IManager {
                                     try {
                                         archiver.Zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                                         dirManager.renameFolder(jsonFolderPath,finalStr,(String)jsonFoldersList.get(jsonFolderPointer - 1));
-                                        httpPOST.postRequest(postURL,finalStr,jsonFolderPath+"/"+finalStr+".zip");
+                                        requestData.setUrl(postURL);
+                                        requestData.setName(finalStr);
+                                        requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                                        httpPOST.sendPOSTRequest(requestData);
                                        // httpGET.getRequest(getURL,finalStr);
                                     } catch (Exception e1) {
                                         logger.error(e1);

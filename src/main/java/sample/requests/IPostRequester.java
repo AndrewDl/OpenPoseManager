@@ -6,7 +6,6 @@ package sample.requests;
 public interface IPostRequester {
     /**
      * Method sends to server POST request
-     * @param url - url for request
      */
-    void sendPOSTRequest(String url);
+    void sendPOSTRequest(IRequestData data);
 }

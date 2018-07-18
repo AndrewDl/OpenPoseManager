@@ -4,10 +4,9 @@ package sample.requests;
  */
 public interface IGetRequester {
     /**
-     * Method sends GET request that obtains from server JSON with information for downloading archive
-     * @param url - url to server to which we send GET request
+     * Method sends GET request to the server
      */
-    boolean sendGETRequest(String url);
+    boolean sendGETRequest(IRequestData data);
 
     /**
      * Method gets resonse from GET request
