@@ -10,6 +10,8 @@ public interface INewVisionParams {
     String getJsonSource();
     void setJsonSource(String jsonSource);
 
+    String getJsonArchiveSource();
+
     String getProfileName();
     void setProfileName(String profileName);
 
