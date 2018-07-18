@@ -11,4 +11,12 @@ public interface IOpenPoseParams {
     String getArguments();
 
     String getOpenPose();
+
+    String getURLforGET();
+
+    String getURLforPOST();
+
+    String getTelegramURL();
+
+    String getKeyURL();
 }

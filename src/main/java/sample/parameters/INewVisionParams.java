@@ -30,4 +30,12 @@ public interface INewVisionParams {
     public void setNvParametersPath(String path);
 
 
+
+    String getURLforGET();
+
+    String getURLforPOST();
+
+    Boolean getDeleteProcessedJsonFolder();
+
+    Boolean getDeleteUploadedZippedJsons();
 }

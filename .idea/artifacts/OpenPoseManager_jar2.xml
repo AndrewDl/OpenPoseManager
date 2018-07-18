@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact name="OpenPoseManager:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/OpenPoseManager_jar2</output-path>
+    <root id="root">
+      <element id="archive" name="OpenPoseManager.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="OpenPoseManager" />
+      </element>
+      <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.11.0" />
+      <element id="library" level="project" name="xstream-1.4.9" />
+      <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.11.0" />
+      <element id="directory" name="managerParameters">
+        <element id="dir-copy" path="$PROJECT_DIR$/managerParameters" />
+      </element>
+    </root>
+  </artifact>
+</component>

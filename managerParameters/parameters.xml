@@ -27,5 +27,17 @@
         <DB__URL>jdbc:mysql://localhost:3306/newvision?autoReconnect=true&amp;useSSL=false</DB__URL>
         <DB__USER>root</DB__USER>
         <DB__PASSWORD>root</DB__PASSWORD>
+        <deleteProcessedJsonFolder>False</deleteProcessedJsonFolder>
+        <!--If True every json folder after zipping will be deleted-->
+        <deleteUploadedZippedJsons>False</deleteUploadedZippedJsons>
+        <!--If True every zip archive will be deleted after upload to server-->
+        <!--URL to send POST request-->
+        <URLforGET>https://vision.ecsv.org.ua/json-store/upload</URLforGET>
+        <!--URL to send GET request-->
+        <URLforPOST>https://vision.ecsv.org.ua/json-store/get</URLforPOST>
+        <!--main part of URL to send GET request to notify Telegram bot-->
+        <telegramURL>https://notify.ecsv.org.ua/callback/send?message=</telegramURL>
+        <!--part of URL with key to send GET request to notify Telegram bot-->
+        <keyURL>&amp;key=5b4892663974d</keyURL>
     </java.lang.Class>
 </object-stream>

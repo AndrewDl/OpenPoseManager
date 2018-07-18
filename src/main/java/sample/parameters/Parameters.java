@@ -1,14 +1,19 @@
 package sample.parameters;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sample.XMLwriterReader;
+
+import java.io.IOException;
+
 
 /**
  * Created by Andrew on 11/28/17.
  */
 public class Parameters implements IOpenPoseParams, INewVisionParams {
 
-
+    private Logger logger = LogManager.getLogger("OPManager");
     private String jsonSource = "";
     private String jsonArchiveSource = "";
     private String profileName = "";
@@ -22,6 +27,13 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     private String DB_USER = "";
     private String DB_PASSWORD = "";
     private int typeOfJsonFolderReceiving = 0;
+    private String URLforGET = "";
+    private String URLforPOST = "";
+    private String telegramURL = "";
+    private String keyURL = "";
+    private Boolean deleteProcessedJsonFolder = Boolean.FALSE;
+    private Boolean deleteUploadedZippedJsons = Boolean.FALSE;
+
 
 
     /**
@@ -33,7 +45,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     public static Parameters loadParameters(String file) {
 
         XMLwriterReader<Parameters> reader = new XMLwriterReader(file);
-
+        Logger logger = LogManager.getLogger("General");
         Parameters parameters = reader.ReadFile(Parameters.class);
 
         return parameters;
@@ -128,6 +140,19 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
     public String getDB_URL() {
         return DB_URL;
     }
+    public Boolean getDeleteProcessedJsonFolder(){return  deleteProcessedJsonFolder;}
+
+    public void setDeleteProcessedJsonFolder(){this.deleteProcessedJsonFolder = deleteProcessedJsonFolder;}
+
+    public Boolean getDeleteUploadedZippedJsons(){return  deleteUploadedZippedJsons;}
+
+    public void setDeleteUploadedZippedJsons(){this.deleteUploadedZippedJsons = deleteUploadedZippedJsons;}
+
+    public String getURLforGET(){return URLforGET; }
+
+    public void setURLforGET(String URLforGET){ this.URLforGET = URLforGET;}
+
+    public String getURLforPOST(){return URLforPOST; }
 
     public void setDB_URL(String DB_URL) {
         this.DB_URL = DB_URL;
@@ -147,5 +172,24 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public void setDB_PASSWORD(String DB_PASSWORD) {
         this.DB_PASSWORD = DB_PASSWORD;
+    }
+    public void setURLforPOST(String URLforPOST){ this.URLforPOST = URLforPOST;}
+
+    @Override
+    public  String getTelegramURL(){
+        return telegramURL;
+    }
+
+    public void setTelegramURL(String telegramURL){
+        this.telegramURL = telegramURL;
+    }
+
+    @Override
+    public String getKeyURL() {
+        return keyURL;
+    }
+
+    public void setKeyURL(String keyURL) {
+        this.keyURL = keyURL;
     }
 }

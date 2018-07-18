@@ -1,5 +1,8 @@
 package sample;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -34,6 +37,9 @@ public class WatchDir {
 
     private List<Runnable> onFinishEventHandlers = new ArrayList<>();
     private CreateAndModifyEventQueue createAndModifyEventQueue = new CreateAndModifyEventQueue();
+
+
+    private Logger logger = LogManager.getLogger("General");
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -108,11 +114,13 @@ public class WatchDir {
             try {
                 key = watcher.take();
             } catch (InterruptedException x) {
+                logger.error(x);
                 return;
             }
 
             Path dir = keys.get(key);
             if (dir == null) {
+
                 System.err.println("WatchKey not recognized!!");
                 continue;
             }
@@ -148,6 +156,7 @@ public class WatchDir {
                             registerAll(child);
                         }
                     } catch (IOException x) {
+                        logger.error(x);
                         // ignore to keep sample readbale
                     }
                 }
