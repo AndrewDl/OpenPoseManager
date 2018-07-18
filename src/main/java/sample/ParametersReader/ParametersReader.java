@@ -293,10 +293,18 @@ public class ParametersReader {
         }
     }
 
+    /**
+     * set listener is activated when necessary to download the archive
+     * @param archiveListener
+     */
     public void setArchiveListener(ArchiveListener archiveListener){
         this.requestJSONList = archiveListener;
     }
 
+    /**
+     * activation of the "onJsonRequest" event
+     * @param videoName
+     */
     public void fireOnAchiveRequestEvent(String videoName){
         this.requestJSONList.onJsonRequest(videoName);
     }
