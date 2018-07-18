@@ -75,7 +75,6 @@ public class NewVisionManager implements IManager{
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 
-
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
