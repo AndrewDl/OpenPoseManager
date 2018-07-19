@@ -1,5 +1,6 @@
 package sample.managers;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.Archiver;
@@ -19,10 +20,7 @@ import sample.requests.PostRequester;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -52,7 +50,6 @@ public class NewVisionManager implements IManager{
     private String nvParametersPath = "";
     private Logger logger = LogManager.getLogger("NVManager");
     private Archiver archiver = new Archiver();
-    private Thread endLifeProcessThread;
     private PostRequester httpPOST = new PostRequester();
     private String postURL = "";
     private String getURL = "";
@@ -145,13 +142,22 @@ public class NewVisionManager implements IManager{
                          profileParameters.writeProfileParameters(profileParameters,path);
 
                          //start OffNewVision with new profileParameters
-                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName() + "\\";
+                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName()+ "_toProcess" + "\\";
                          System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                          TasksClass.startTask(str);
                          for (;;) {
                              if(checkNewVisionWork()==true)
                                  break;
                          }
+                         for (;;) {
+                             if(checkNewVisionWork()==false) {
+                                 final String finalStr = parametersNV.getVideoParameters().getName();
+                                 final String finalName = finalStr+"_delete";
+                                 endLifeProcessing(finalStr,finalName);
+
+                             }
+                         }
+
                      }catch (Exception ee){
                          ee.printStackTrace();
                      }
@@ -249,5 +255,48 @@ public class NewVisionManager implements IManager{
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     *
+     */
+    private void endLifeProcessing(final String finalStr, final String finalName){
+        Thread endLifeProcessThread = new Thread (new Runnable(){
+        public void run(){
+            try {
+                archiver.zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
+                //zip jsonFolder
+                dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
+                //rename folder to "_delete" condition, to not allow
+                requestData.setUrl(postURL);
+                requestData.setName(finalStr);
+                requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                httpPOST.sendPOSTRequest(requestData);
+                //uploading zip file on server
+                //httpGET.getRequest(getURL,finalStr);
+                if(deleteJsonFolderFlag){
+                    File folderToDelete = new File(jsonFolderPath+"/"+finalName);
+                    long start = System.currentTimeMillis();
+                    FileUtils.forceDelete(folderToDelete);
+                    //deleting folder
+                    long finish = System.currentTimeMillis();
+                    long timeConsumedMillis = finish - start;
+                    System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
+                    System.out.println("Folder "+finalStr+" was deleted!");
+                    logger.info("Folder "+finalStr+" was deleted!");
+                }
+                if(deleteJsonZipFlag){
+                    File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
+                    zipToDelete.delete();
+                    System.out.println("zip "+finalStr+" was deleted!");
+                    logger.info("zip "+finalStr+" was deleted!");
+                }
+            } catch (Exception e1) {
+                logger.error(e1);
+                e1.printStackTrace();
+            }
+        }
+        });
+            endLifeProcessThread.start();
     }
 }

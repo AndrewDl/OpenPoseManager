@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MySQLLineLocationDAO extends AbstractJDBCDao<LineLocation, Integer> {
 
-    private String tableName = "LineLocation";
+    private String tableName = "linelocation";
 
     public MySQLLineLocationDAO(Connection connection) {
         super(connection);

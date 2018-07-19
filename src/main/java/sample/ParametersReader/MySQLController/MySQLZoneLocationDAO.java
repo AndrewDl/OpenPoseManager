@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MySQLZoneLocationDAO extends AbstractJDBCDao<ZoneLocation, Integer>{
 
-    private String tableName = "ZoneLocation";
+    private String tableName = "zonelocation";
 
     public MySQLZoneLocationDAO(Connection connection) {
         super(connection);
