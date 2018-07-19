@@ -36,6 +36,7 @@ public class GetRequesterArchive implements IGetRequester {
         HttpEntity responseEntity = response.getEntity();
         try {
             serverResponse = EntityUtils.toString(responseEntity,"UTF-8");
+            //TODO: check answer from the server
             success = true;
         } catch (IOException e) {
             logger.error(e);

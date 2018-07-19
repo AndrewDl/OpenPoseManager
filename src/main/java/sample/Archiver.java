@@ -118,7 +118,7 @@ public class Archiver {
                 File newFile = new File(outputFolder + File.separator + fileName);
                 //+ File.separator +
 
-                System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+                //System.out.println("file unzip : "+ newFile.getAbsoluteFile());
 
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder

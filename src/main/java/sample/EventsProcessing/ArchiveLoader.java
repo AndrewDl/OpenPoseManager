@@ -1,19 +1,27 @@
 package sample.EventsProcessing;
 
+import sample.Archiver;
+import sample.FileDownloader;
+import sample.PathJSONParser;
 import sample.parameters.INewVisionParams;
 import sample.parameters.Parameters;
+import sample.requests.DataForGetArchive;
+import sample.requests.GetRequesterArchive;
+import sample.requests.IGetRequester;
+import sample.requests.IRequestData;
 
 import java.io.File;
+import java.io.IOException;
 
 public class ArchiveLoader implements ArchiveListener {
     private Thread downloadJSONArchive;
-    String arhivesDirURL;
-    String jsonsLocalDir;
+    String jsonArchiveSource;
+    String jsonSource;
     public ArchiveLoader(){
         //TODO: read json archive directory url parameters,
         INewVisionParams param =Parameters.loadParameters("managerParameters\\parameters.xml");
-        this.jsonsLocalDir = param.getJsonSource();
-        this.arhivesDirURL = param.getJsonArchiveSource();
+        this.jsonSource = param.getJsonSource();
+        this.jsonArchiveSource = param.getJsonArchiveSource();
 
     }
 
@@ -22,32 +30,50 @@ public class ArchiveLoader implements ArchiveListener {
      * if archive is found {create folder for JSONs, run new tread to download JSONs archive}
      */
     @Override
-    public void onJsonRequest(String jsonArchiveName) {
-        String jsonARchiveURL = arhivesDirURL+jsonArchiveName;
+    public void onJsonRequest(final String jsonArchiveName) {
+        final String jsonARchiveURL = jsonArchiveSource +jsonArchiveName;
         System.out.println("download archive.........." + jsonARchiveURL);
         //get JsonFrom Srver
         //............
         //  **************
 
+        //get json with link on file
+        DataForGetArchive data = new DataForGetArchive();
+        data.setName(jsonArchiveName);
+        data.setRequestURL(jsonArchiveSource);
 
+        GetRequesterArchive getRequester = new GetRequesterArchive();
         //check link
-        if(true){
+
+        if(getRequester.sendGETRequest(data)){
+
+            final String pathToArchive = PathJSONParser.getPathToArchive(getRequester.getResponse());
             //createFolder
-            File folder = new File(jsonsLocalDir+"\\"+jsonArchiveName);
+            File folder = new File(jsonSource +jsonArchiveName);
             if (!folder.exists()){
                 folder.mkdir();
             }
-
-
-
-
             downloadJSONArchive = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     //download archive
+                    FileDownloader fileDownloader = new FileDownloader();
+                    try {
+                        fileDownloader.downloadFile(pathToArchive, jsonSource+jsonArchiveName+".zip");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //unZip archive
+                    Archiver archiver = new Archiver();
+                    archiver.unZip(jsonSource+jsonArchiveName+".zip",jsonSource);
+
+
                 }
             });
             downloadJSONArchive.start();
+
+
 
         }
 
