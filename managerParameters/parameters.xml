@@ -2,9 +2,9 @@
 <object-stream>
     <java.lang.Class>
         <!--path to the folder with json folders-->
-        <jsonSource>C:\Users\p0keT\OneDrive\Desktop\jsonSource</jsonSource>
-        <!--path to the archives whith JSONs-->
-        <jsonArchiveSource>https://vision.ecsv.org.ua/json-store/get?name=</jsonArchiveSource>
+        <jsonSource>F:\CIF\pistobribitka\JSONs\</jsonSource>
+        <!--path to the JSON with linc on archive with JSONs-->
+        <jsonArchiveSource>https://vision.ecsv.org.ua/json-store/get</jsonArchiveSource>
         <!--profile that will start-->
         <profileName>profile 1</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен

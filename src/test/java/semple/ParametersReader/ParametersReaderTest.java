@@ -10,14 +10,30 @@ import java.io.File;
 
 public class ParametersReaderTest {
     @Test
-    public void fireOnAchiveRequestEvent_sendingRequestAndDownloadinArchive_downloadArcive(){
+    public void fireOnArchiveRequestEvent_sendingRequestAndDownloadinArchive_downloadArchive(){
         ParametersReader paramReader = ParametersReader.getInstance();
         paramReader.setArchiveListener(new ArchiveLoader());
-        String videoName = "lollybomb";
-        paramReader.fireOnAchiveRequestEvent(videoName);
-        INewVisionParams param = Parameters.loadParameters("managerParameters/parameters.xml");
-        File f = new File(param.getJsonSource()+"\\"+videoName);
-        boolean actual = f.exists();
-        Assert.assertEquals("Check folder exists: ",true,actual);
+        String videoName = "1531490638.0144732";
+//        paramReader.fireOnAchiveRequestEvent(videoName);
+
+        for (int i =0; i <3;i++) {
+            try {
+                paramReader.nextAfterThis();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //check
+            videoName = paramReader.getVideoParameters().getName();
+            INewVisionParams param = Parameters.loadParameters("managerParameters/parameters.xml");
+            File f = new File(param.getJsonSource() + videoName);
+            boolean actual = f.exists();
+            Assert.assertEquals("Check folder exists: ", true, actual);
+        }
     }
 }

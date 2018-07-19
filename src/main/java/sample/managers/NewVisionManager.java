@@ -67,8 +67,8 @@ public class NewVisionManager implements IManager{
         this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
         this.jsonArchiveSource=params.getJsonArchiveSource();
         this.nvParametersPath = params.getNvParametersPath();
-        this.postURL = params.getURLforGET();
-        this.getURL = params.getURLforPOST();
+        this.postURL = params.getURLforPOST();
+        this.getURL = params.getURLforGET();
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 

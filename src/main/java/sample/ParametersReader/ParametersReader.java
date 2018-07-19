@@ -213,8 +213,7 @@ public class ParametersReader {
             e.printStackTrace();
         }
 
-        for (Task t :
-                tasks) {
+        for (Task t : tasks) {
             String videoName = getVideoParametersByTaskId(t.getId()).getName();
             String path = param.getJsonSource()+"\\"+videoName;
             File f = new File(path+"_toProcess");
