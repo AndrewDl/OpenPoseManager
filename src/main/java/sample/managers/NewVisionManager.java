@@ -67,8 +67,8 @@ public class NewVisionManager implements IManager{
         this.typeOfTaskReceiver = params.getTypeOfJsonFolderReceiving();
         this.jsonArchiveSource=params.getJsonArchiveSource();
         this.nvParametersPath = params.getNvParametersPath();
-        this.postURL = params.getURLforGET();
-        this.getURL = params.getURLforPOST();
+        this.getURL = params.getURLforGET();
+        this.postURL = params.getURLforPOST();
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
 
@@ -143,18 +143,19 @@ public class NewVisionManager implements IManager{
 
                          //start OffNewVision with new profileParameters
                          String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName()+ "_toProcess" + "\\";
-                         System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                          TasksClass.startTask(str);
-                         for (;;) {
-                             if(checkNewVisionWork()==true)
-                                 break;
-                         }
+//                         for (;;) {
+//                             if(checkNewVisionWork()==true)
+//                                 break;
+//                         }
                          for (;;) {
                              if(checkNewVisionWork()==false) {
-                                 final String finalStr = parametersNV.getVideoParameters().getName();
-                                 final String finalName = finalStr+"_delete";
-                                 endLifeProcessing(finalStr,finalName);
-
+                                 final String videoName = parametersNV.getVideoParameters().getName();
+                                 final String toProcessName = videoName+"_toProcess";
+                                 final String toDeleteName = videoName+"_delete";
+                                 dirManager.renameFolder(jsonFolderPath,toProcessName,videoName);
+                                 endLifeProcessing(videoName,toDeleteName, toProcessName);
+                                 break;
                              }
                          }
 
@@ -260,36 +261,43 @@ public class NewVisionManager implements IManager{
     /**
      *
      */
-    private void endLifeProcessing(final String finalStr, final String finalName){
+    private void endLifeProcessing(final String videoName, final String toDeleteName, final String toProcessName){
         Thread endLifeProcessThread = new Thread (new Runnable(){
         public void run(){
             try {
-                archiver.zip(jsonFolderPath + "/" + finalStr, jsonFolderPath + "/" + finalStr + ".zip");
                 //zip jsonFolder
-                dirManager.renameFolder(jsonFolderPath,finalStr,finalName);
-                //rename folder to "_delete" condition, to not allow
+                archiver.zip(jsonFolderPath + "/" + videoName, jsonFolderPath + "/" + videoName + ".zip");
+
+
                 requestData.setUrl(postURL);
-                requestData.setName(finalStr);
-                requestData.setFilepath(jsonFolderPath+"/"+finalStr+".zip");
+                requestData.setName(videoName);
+                requestData.setFilepath(jsonFolderPath+"/"+videoName+".zip");
                 httpPOST.sendPOSTRequest(requestData);
                 //uploading zip file on server
-                //httpGET.getRequest(getURL,finalStr);
+                //httpGET.getRequest(getURL,videoName);
                 if(deleteJsonFolderFlag){
-                    File folderToDelete = new File(jsonFolderPath+"/"+finalName);
+                    //rename folder to "_delete" condition, to not allow
+                    dirManager.renameFolder(jsonFolderPath,videoName,toDeleteName);
+                    File folderToDelete = new File(jsonFolderPath+"/"+toDeleteName);
                     long start = System.currentTimeMillis();
-                    FileUtils.forceDelete(folderToDelete);
                     //deleting folder
+                    FileUtils.forceDelete(folderToDelete);
+
                     long finish = System.currentTimeMillis();
                     long timeConsumedMillis = finish - start;
                     System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
-                    System.out.println("Folder "+finalStr+" was deleted!");
-                    logger.info("Folder "+finalStr+" was deleted!");
+                    System.out.println("Folder "+videoName+" was deleted!");
+                    logger.info("Folder "+videoName+" was deleted!");
+                }else
+                {
+                    //rename folder to "_delete" condition, to not allow
+                    dirManager.renameFolder(jsonFolderPath,videoName,toProcessName);
                 }
                 if(deleteJsonZipFlag){
-                    File zipToDelete = new File(jsonFolderPath+"/"+finalStr+".zip");
+                    File zipToDelete = new File(jsonFolderPath+"/"+videoName+".zip");
                     zipToDelete.delete();
-                    System.out.println("zip "+finalStr+" was deleted!");
-                    logger.info("zip "+finalStr+" was deleted!");
+                    System.out.println("zip "+videoName+" was deleted!");
+                    logger.info("zip "+videoName+" was deleted!");
                 }
             } catch (Exception e1) {
                 logger.error(e1);
@@ -297,6 +305,6 @@ public class NewVisionManager implements IManager{
             }
         }
         });
-            endLifeProcessThread.start();
+            endLifeProcessThread.run();
     }
 }

@@ -9,7 +9,7 @@
         <profileName>profile 1</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен
             лежати в одній папці з менеджером-->
-        <newVisionPath>E:\BitBucketStuff\NewVision\out\artifacts\NewVision_0_4_4_1_060618\NewVision.jar</newVisionPath>
+        <newVisionPath>E:\BitBucketStuff\NewVision\out\artifacts\offNewVision_0_4_4_18_07_18\NewVision_0_4_4_18_07_18\NewVision.jar</newVisionPath>
         <!--path to the video that OpenPose will process-->
         <videoSource>input/</videoSource>
         <!--destination of the output of the OpenPose & OpenPoseManager-->
@@ -19,7 +19,7 @@
         <!--name of current OpenPose executable file-->
         <openPose>OpenPoseDemo.exe</openPose>
         <!--path to parameters of New Vision-->
-        <nvParametersPath>E:\BitBucketStuff\NewVision\out\artifacts\NewVision_0_4_4_1_060618\resources\profiles\profile 1\config\parameters.xml</nvParametersPath>
+        <nvParametersPath>E:\BitBucketStuff\NewVision\out\artifacts\offNewVision_0_4_4_18_07_18\NewVision_0_4_4_18_07_18\resources\profiles\profile 1\config\parameters.xml</nvParametersPath>
         <!--defines method of task receiver. If 0 - we obtain json folder from the
         list of json folders on the disk, if 1 - we obtain json folder by the name from db-->
         <typeOfJsonFolderReceiving>1</typeOfJsonFolderReceiving>
@@ -28,9 +28,9 @@
         <DB__USER>newvision</DB__USER>
         <DB__PASSWORD>whaPxklHakMx3juP</DB__PASSWORD>
         <!--If True every json folder after zipping will be deleted-->
-        <deleteProcessedJsonFolder>False</deleteProcessedJsonFolder>
+        <deleteProcessedJsonFolder>True</deleteProcessedJsonFolder>
         <!--If True every zip archive will be deleted after upload to server-->
-        <deleteUploadedZippedJsons>False</deleteUploadedZippedJsons>
+        <deleteUploadedZippedJsons>True</deleteUploadedZippedJsons>
 
 
         <!--URL to send GET request-->

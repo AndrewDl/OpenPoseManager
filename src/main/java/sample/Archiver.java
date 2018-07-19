@@ -66,8 +66,8 @@ public class Archiver {
                 logger.error(e);
                 e.printStackTrace();
             }
-            String[] str = files[i].getPath().split("\\\\",3); //parsing entry's name
-            String out = str[2];
+            String[] str = files[i].getPath().split("\\\\"); //parsing entry's name
+            String out = str[str.length-2]+"\\"+str[str.length-1];
             try {
                 zout.putNextEntry(new ZipEntry(out)); // placing entry in zip
             } catch (IOException e) {
