@@ -11,7 +11,8 @@ import java.io.File;
 public class ParametersReaderTest {
     @Test
     public void fireOnArchiveRequestEvent_sendingRequestAndDownloadinArchive_downloadArchive(){
-        ParametersReader paramReader = ParametersReader.getInstance();
+        Parameters param = Parameters.loadParameters("managerParameters\\parameters.xml");
+        ParametersReader paramReader = ParametersReader.getInstance(param);
         paramReader.setArchiveListener(new ArchiveLoader());
         String videoName = "1531490638.0144732";
 //        paramReader.fireOnAchiveRequestEvent(videoName);
@@ -30,7 +31,6 @@ public class ParametersReaderTest {
             }
             //check
             videoName = paramReader.getVideoParameters().getName();
-            INewVisionParams param = Parameters.loadParameters("managerParameters/parameters.xml");
             File f = new File(param.getJsonSource() + videoName);
             boolean actual = f.exists();
             Assert.assertEquals("Check folder exists: ", true, actual);

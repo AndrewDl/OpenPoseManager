@@ -6,6 +6,7 @@ import sample.Archiver;
 import sample.FileDownloader;
 import sample.PathJSONParser;
 import sample.parameters.INewVisionParams;
+import sample.parameters.IParametersReader;
 import sample.parameters.Parameters;
 import sample.requests.DataForGetArchive;
 import sample.requests.GetRequesterArchive;
@@ -23,8 +24,7 @@ public class ArchiveLoader implements ArchiveListener {
     private Logger logger = LogManager.getLogger("General");
 
     public ArchiveLoader(){
-        //TODO: read json archive directory url parameters,
-        INewVisionParams param =Parameters.loadParameters("managerParameters\\parameters.xml");
+        IParametersReader param =Parameters.loadParameters("managerParameters\\parameters.xml");
         this.jsonSource = param.getJsonSource();
         this.jsonArchiveSource = param.getJsonArchiveSource();
 
@@ -50,11 +50,11 @@ public class ArchiveLoader implements ArchiveListener {
         GetRequesterArchive getRequester = new GetRequesterArchive();
         //check link
 
-        if(getRequester.sendGETRequest(data)){
+        if(getRequester.sendGETRequest(data) && !getRequester.getResponse().equals("")){
 
             final String pathToArchive = PathJSONParser.getPathToArchive(getRequester.getResponse());
             //createFolder
-            File folder = new File(jsonSource +jsonArchiveName);
+            final File folder = new File(jsonSource +jsonArchiveName);
             if (!folder.exists()){
                 folder.mkdir();
             }
@@ -73,6 +73,9 @@ public class ArchiveLoader implements ArchiveListener {
                     //unZip archive
                     Archiver archiver = new Archiver();
                     archiver.unZip(jsonSource+jsonArchiveName+".zip",jsonSource);
+                    if(folder.exists()){ // если файл существует, то переименовываем его
+                        folder.renameTo(new java.io.File(jsonSource+jsonArchiveName+"_toProcess"));
+                    }
 
 
                 }

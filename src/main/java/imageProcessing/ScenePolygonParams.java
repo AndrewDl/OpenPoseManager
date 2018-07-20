@@ -27,14 +27,16 @@ public class ScenePolygonParams {
     public void setPoints(java.util.List<Point> pArray) {
         polygon = new Polygon();
 
+        int[] x = new int[pArray.size()];
+        int[] y = new int[pArray.size()];
+
         int n=pArray.size();
-        //TODO: extend number of point to n
-        polygon.npoints=(n>4)?n=4:n;
         for(int i=0; i<n; i++){
             Point p = pArray.get(i);
-            polygon.xpoints[i] = p.x;
-            polygon.ypoints[i] = p.y;
+            x[i] = p.x;
+            y[i] = p.y;
         }
+        polygon = new Polygon(x,y,n);
     }
 
     @Override
