@@ -45,11 +45,11 @@ public class ArchiveLoader implements ArchiveListener {
         GetRequesterArchive getRequester = new GetRequesterArchive();
         //check link
 
-        if(getRequester.sendGETRequest(data)){
+        if(getRequester.sendGETRequest(data) && !getRequester.getResponse().equals("")){
 
             final String pathToArchive = PathJSONParser.getPathToArchive(getRequester.getResponse());
             //createFolder
-            File folder = new File(jsonSource +jsonArchiveName);
+            final File folder = new File(jsonSource +jsonArchiveName);
             if (!folder.exists()){
                 folder.mkdir();
             }
@@ -67,6 +67,9 @@ public class ArchiveLoader implements ArchiveListener {
                     //unZip archive
                     Archiver archiver = new Archiver();
                     archiver.unZip(jsonSource+jsonArchiveName+".zip",jsonSource);
+                    if(folder.exists()){ // если файл существует, то переименовываем его
+                        folder.renameTo(new java.io.File(jsonSource+jsonArchiveName+"_toProcess"));
+                    }
 
 
                 }
