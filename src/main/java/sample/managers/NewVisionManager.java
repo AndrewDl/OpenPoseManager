@@ -145,10 +145,10 @@ public class NewVisionManager implements IManager{
                          //start OffNewVision with new profileParameters
                          String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName()+ "_toProcess" + "\\";
                          TasksClass.startTask(str);
-//                         for (;;) {
-//                             if(checkNewVisionWork()==true)
-//                                 break;
-//                         }
+                         for (;;) {
+                             if(checkNewVisionWork()==true)
+                                 break;
+                         }
                          for (;;) {
                              if(checkNewVisionWork()==false) {
                                  final String videoName = parametersNV.getVideoParameters().getName();
