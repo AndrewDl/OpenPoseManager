@@ -22,7 +22,8 @@ import org.apache.logging.log4j.Logger;
 public class PostRequester implements IPostRequester {
 
     @Override
-    public void sendPOSTRequest(IRequestData data) {
+    public boolean sendPOSTRequest(IRequestData data) {
+        boolean success = false;
         DataForPostArchive obtainedData = (DataForPostArchive) data;
         Logger logger = LogManager.getLogger("HTTPLogger");
 
@@ -47,11 +48,16 @@ public class PostRequester implements IPostRequester {
         String responseString = null; //server response
         try {
             responseString = EntityUtils.toString(responseEntity,"UTF-8");
+            int code = response.getStatusLine().getStatusCode();
+            if(code == 200) {
+                success = true;
+            }
         } catch (IOException e) {
             logger.error(e);
             e.printStackTrace();
         }
         logger.info("File: "+obtainedData.getName()+" was sent to server. Server response: "+responseString);
+        return success;
     }
 }
 

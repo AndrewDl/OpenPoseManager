@@ -7,5 +7,5 @@ public interface IPostRequester {
     /**
      * Method sends to server POST request
      */
-    void sendPOSTRequest(IRequestData data);
+    boolean sendPOSTRequest(IRequestData data);
 }
