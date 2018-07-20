@@ -118,7 +118,6 @@ public class ParametersReader {
      * @return list of LineLocation object
      */
     private LinkedList<LineLocation> getLineLocationByTaskID(int id){
-        //TODO: зробити параметри глобільні, щоб в кожному методі не звертатися до файлу
         LinkedList<LineLocation> lineLocations = null;
         //создание фабрики объектов для работы с базой данных
         IDAOFactory daoFactory = new MySQLDaoFactory(param.getDB_URL(), param.getDB_USER(), param.getDB_PASSWORD());
