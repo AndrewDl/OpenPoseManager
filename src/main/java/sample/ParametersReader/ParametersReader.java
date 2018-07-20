@@ -215,13 +215,12 @@ public class ParametersReader {
             if(f.exists()){
                 task = t;
                 return task;
-            }//TODO: check server
+        }
             else{
                 f = new File(path);
                 if (f.exists()) {
                     System.out.println("JSON by "+videoName+" video, in processing");
                 }else {
-                    //TODO: check server
                     fireOnAchiveRequestEvent(videoName);
                         System.out.println("Not found JSON by "+videoName+" video");
                 }

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Andrew on 11/28/17.
  */
-public class Parameters implements IOpenPoseParams, INewVisionParams {
+public class Parameters implements IOpenPoseParams, INewVisionParams, IParametersReader {
 
     private Logger logger = LogManager.getLogger("OPManager");
     private String jsonSource = "";
@@ -135,11 +135,33 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
         nvParametersPath = path;
     }
 
-
-    //TODO: сделать для параметров ниже интерфейс
+    @Override
     public String getDB_URL() {
         return DB_URL;
     }
+
+    public void setDB_URL(String DB_URL) {
+        this.DB_URL = DB_URL;
+    }
+
+    @Override
+    public String getDB_USER() {
+        return DB_USER;
+    }
+
+    public void setDB_USER(String DB_USER) {
+        this.DB_USER = DB_USER;
+    }
+
+    @Override
+    public String getDB_PASSWORD() {
+        return DB_PASSWORD;
+    }
+
+    public void setDB_PASSWORD(String DB_PASSWORD) {
+        this.DB_PASSWORD = DB_PASSWORD;
+    }
+
     public Boolean getDeleteProcessedJsonFolder(){return  deleteProcessedJsonFolder;}
 
     public void setDeleteProcessedJsonFolder(){this.deleteProcessedJsonFolder = deleteProcessedJsonFolder;}
@@ -154,25 +176,6 @@ public class Parameters implements IOpenPoseParams, INewVisionParams {
 
     public String getURLforPOST(){return URLforPOST; }
 
-    public void setDB_URL(String DB_URL) {
-        this.DB_URL = DB_URL;
-    }
-
-    public String getDB_USER() {
-        return DB_USER;
-    }
-
-    public void setDB_USER(String DB_USER) {
-        this.DB_USER = DB_USER;
-    }
-
-    public String getDB_PASSWORD() {
-        return DB_PASSWORD;
-    }
-
-    public void setDB_PASSWORD(String DB_PASSWORD) {
-        this.DB_PASSWORD = DB_PASSWORD;
-    }
     public void setURLforPOST(String URLforPOST){ this.URLforPOST = URLforPOST;}
 
     @Override

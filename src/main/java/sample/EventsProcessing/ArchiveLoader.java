@@ -4,6 +4,7 @@ import sample.Archiver;
 import sample.FileDownloader;
 import sample.PathJSONParser;
 import sample.parameters.INewVisionParams;
+import sample.parameters.IParametersReader;
 import sample.parameters.Parameters;
 import sample.requests.DataForGetArchive;
 import sample.requests.GetRequesterArchive;
@@ -18,8 +19,7 @@ public class ArchiveLoader implements ArchiveListener {
     String jsonArchiveSource;
     String jsonSource;
     public ArchiveLoader(){
-        //TODO: read json archive directory url parameters,
-        INewVisionParams param =Parameters.loadParameters("managerParameters\\parameters.xml");
+        IParametersReader param =Parameters.loadParameters("managerParameters\\parameters.xml");
         this.jsonSource = param.getJsonSource();
         this.jsonArchiveSource = param.getJsonArchiveSource();
 
