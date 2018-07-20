@@ -18,7 +18,6 @@
             <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} class:%C line:%L [%t] %c{1} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 KB"/>
             </Policies>
         </RollingFile>
         <RollingFile name="RollingFile-Appender-info"
@@ -53,6 +52,11 @@
             <AppenderRef ref="Console-Appender" level="fatal"/>
         </Logger>
         <Logger name="Archiver" level="info" additivity="false">
+            <AppenderRef ref="RollingFile-Appender-error" level="error"/>
+            <AppenderRef ref="RollingFile-Appender-info" level="info"/>
+            <AppenderRef ref="Console-Appender" level="fatal"/>
+        </Logger>
+        <Logger name="MySQL" level="info" additivity="false">
             <AppenderRef ref="RollingFile-Appender-error" level="error"/>
             <AppenderRef ref="RollingFile-Appender-info" level="info"/>
             <AppenderRef ref="Console-Appender" level="fatal"/>

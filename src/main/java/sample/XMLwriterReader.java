@@ -2,6 +2,8 @@ package sample;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
@@ -11,6 +13,7 @@ import java.io.*;
  */
 public class XMLwriterReader<T> {
     String address;
+    private Logger logger = LogManager.getLogger("General");
     public XMLwriterReader(String address) {
         this.address = address;
     }
@@ -31,6 +34,7 @@ public class XMLwriterReader<T> {
         try {
             out.writeObject(object);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         out.close();
@@ -42,6 +46,7 @@ public class XMLwriterReader<T> {
         try {
             in = xstream.createObjectInputStream(new FileReader(address));
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
 
@@ -49,9 +54,11 @@ public class XMLwriterReader<T> {
         try {
             newObject = (T) in.readObject();
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
             System.out.println("Can't read Parameters File");
         } catch (ClassNotFoundException e) {
+            logger.error(e);
             e.printStackTrace();
             System.out.println("Class Not Found");
         }

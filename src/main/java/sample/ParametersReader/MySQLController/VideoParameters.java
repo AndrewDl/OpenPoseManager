@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -17,6 +20,8 @@ public class VideoParameters {
     private Timestamp video_date;
     private Timestamp date_add;
 
+    private Logger logger = LogManager.getLogger("MySQL");
+
     /**
      * create VideoParameters object by rs
      * @param rs result of query
@@ -33,6 +38,7 @@ public class VideoParameters {
             this.date_add = rs.getTimestamp(8);
 
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

@@ -9,12 +9,7 @@ public class Main {
 
         Controller controller = new Controller(args);
         while(true){
-
         }
-
-
-
-
     }
 
 

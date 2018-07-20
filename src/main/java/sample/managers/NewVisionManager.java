@@ -95,6 +95,7 @@ public class NewVisionManager implements IManager{
                             TasksClass.startTask(str);
 
                         } catch (Exception ee) {
+                            logger.error(ee);
                             System.out.println(ee);
                         }
                         jsonFolderPointer++;
@@ -160,6 +161,7 @@ public class NewVisionManager implements IManager{
                          }
 
                      }catch (Exception ee){
+                         logger.error(ee);
                          ee.printStackTrace();
                      }
 
@@ -180,6 +182,7 @@ public class NewVisionManager implements IManager{
                 try {
                     throw new Exception("Wrong parameters value (int typeOfJsonFolderReceiving)");
                 } catch (Exception e) {
+                    logger.error(e);
                     e.printStackTrace();
                 }
             }
@@ -196,6 +199,7 @@ public class NewVisionManager implements IManager{
                         }
                     });
                 } catch (IOException e) {
+                    logger.error(e);
                     e.printStackTrace();
                 }
                 watchDir.processEvents();
@@ -226,6 +230,7 @@ public class NewVisionManager implements IManager{
             }
         }
         catch(IOException ex){
+            logger.error(ex);
 
             System.out.println(ex.getMessage());
         }
@@ -239,6 +244,7 @@ public class NewVisionManager implements IManager{
         try {
             p = Runtime.getRuntime().exec(TASKLIST);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
 
@@ -253,6 +259,7 @@ public class NewVisionManager implements IManager{
                 }
             }
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         return false;

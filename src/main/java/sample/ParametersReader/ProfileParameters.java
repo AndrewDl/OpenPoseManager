@@ -3,6 +3,8 @@ package sample.ParametersReader;
 
 import imageProcessing.SceneLineParams;
 import imageProcessing.ScenePolygonParams;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sample.XMLwriterReader;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
  * Created by Andrew on 28.05.2017.
  */
 public class ProfileParameters implements ISubtractorParameters {
+
+    private Logger logger = LogManager.getLogger("MySQL");
 
     public ProfileParameters(){
         addLineParams(new SceneLineParams(0,0,0,0));
@@ -46,6 +50,7 @@ public class ProfileParameters implements ISubtractorParameters {
         try {
             writer.WriteFile(parameters, ProfileParameters.class);
         } catch (IOException e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

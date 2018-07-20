@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -10,6 +13,8 @@ public class Task {
     private int task_id;
     private boolean completed;
     private Timestamp date_add;
+
+    private Logger logger = LogManager.getLogger("MySQL");
 
     /**
      * create Task object by rs
@@ -23,6 +28,7 @@ public class Task {
             this.completed = rs.getBoolean(4);
             this.date_add = rs.getTimestamp(5);
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

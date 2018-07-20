@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
@@ -13,6 +16,9 @@ public class LineLocation {
     private int x2;
     private int y2;
     private Timestamp date_add;
+
+    private Logger logger = LogManager.getLogger("MySQL");
+
 
     /**
      * create LineLocation object by rs
@@ -30,6 +36,7 @@ public class LineLocation {
             this.date_add = rs.getTimestamp(8);
 
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

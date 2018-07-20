@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +13,8 @@ import java.util.List;
 public class MySQLZoneLocationDAO extends AbstractJDBCDao<ZoneLocation, Integer>{
 
     private String tableName = "zonelocation";
+
+    private Logger logger = LogManager.getLogger("MySQL");
 
     public MySQLZoneLocationDAO(Connection connection) {
         super(connection);
@@ -35,6 +40,7 @@ public class MySQLZoneLocationDAO extends AbstractJDBCDao<ZoneLocation, Integer>
                 result.add(l);
             }
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         return result;

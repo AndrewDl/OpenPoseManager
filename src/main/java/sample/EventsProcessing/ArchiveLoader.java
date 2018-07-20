@@ -1,5 +1,7 @@
 package sample.EventsProcessing;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sample.Archiver;
 import sample.FileDownloader;
 import sample.PathJSONParser;
@@ -10,6 +12,7 @@ import sample.requests.GetRequesterArchive;
 import sample.requests.IGetRequester;
 import sample.requests.IRequestData;
 
+
 import java.io.File;
 import java.io.IOException;
 
@@ -17,6 +20,8 @@ public class ArchiveLoader implements ArchiveListener {
     private Thread downloadJSONArchive;
     String jsonArchiveSource;
     String jsonSource;
+    private Logger logger = LogManager.getLogger("General");
+
     public ArchiveLoader(){
         //TODO: read json archive directory url parameters,
         INewVisionParams param =Parameters.loadParameters("managerParameters\\parameters.xml");
@@ -61,6 +66,7 @@ public class ArchiveLoader implements ArchiveListener {
                     try {
                         fileDownloader.downloadFile(pathToArchive, jsonSource+jsonArchiveName+".zip");
                     } catch (IOException e) {
+                        logger.error(e);
                         e.printStackTrace();
                     }
 

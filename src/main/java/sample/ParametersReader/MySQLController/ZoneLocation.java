@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
@@ -12,6 +15,7 @@ public class ZoneLocation {
     private int x;
     private int y;
     private Timestamp date_add;
+    private Logger logger = LogManager.getLogger("MySQL");
 
     /**
      * create ZoneLocation object by rs
@@ -28,6 +32,7 @@ public class ZoneLocation {
             this.date_add = rs.getTimestamp(7);
 
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

@@ -1,5 +1,7 @@
 package sample.ParametersReader;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sample.EventsProcessing.ArchiveListener;
 import sample.ParametersReader.MySQLController.*;
 import imageProcessing.SceneLineParams;
@@ -40,6 +42,7 @@ public class ParametersReader {
     private VideoParameters videoParameters = null;
     private ArrayList<SceneLineParams> sceneLineParams = new ArrayList<SceneLineParams>();
     private ArrayList<ScenePolygonParams> scenePolygonParams = new ArrayList<ScenePolygonParams>();
+    private Logger logger = LogManager.getLogger("MySQL");
 
 
     /**
@@ -127,8 +130,10 @@ public class ParametersReader {
             lineLocations = (LinkedList<LineLocation>) daoL.getByTaskId(id);
             con.close();
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         } catch (Exception e) {
+            logger.error(e);
             lineLocations = null;
             System.out.println("Not found Line by task" + id +"!");
             //e.printStackTrace();
@@ -156,8 +161,10 @@ public class ParametersReader {
             zoneLocation = (LinkedList<ZoneLocation>) daoL.getByTaskId(id);
             con.close();
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         } catch (Exception e) {
+            logger.error(e);
             zoneLocation = null;
             System.out.println("Not found Zone by task" + id +"!");
             //e.printStackTrace();
@@ -183,8 +190,10 @@ public class ParametersReader {
             videoParameters = (VideoParameters) daoL.getByTaskId(task_id).get(0);
             con.close();
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         } catch (Exception e) {
+            logger.error(e);
             e.printStackTrace();
         }
 
@@ -210,6 +219,7 @@ public class ParametersReader {
             tasks = (List<Task>) daoL.getEarlyTask();
             con.close();
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
 
@@ -286,8 +296,10 @@ public class ParametersReader {
             daoL.setCompleted(task_id);
             con.close();
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         } catch (Exception e) {
+            logger.error(e);
             e.printStackTrace();
         }
     }

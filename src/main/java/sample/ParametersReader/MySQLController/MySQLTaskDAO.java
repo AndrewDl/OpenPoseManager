@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +14,7 @@ import java.util.List;
 public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
 
     private String tableName = "ZoneLocation";
+    private Logger logger = LogManager.getLogger("MySQL");
 
     public MySQLTaskDAO(Connection connection) {
         super(connection);
@@ -44,6 +48,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
                 result.add(l);
             }
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         return result;
@@ -64,6 +69,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
             list = parseResultSet(rs);
             statement.close();
         }catch (Exception e){
+            logger.error(e);
             e.printStackTrace();
         }
         if ((list == null) || (list.size() == 0)){
@@ -83,6 +89,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
             statement.executeUpdate();
             statement.close();
         }catch (Exception e){
+            logger.error(e);
             e.printStackTrace();
         }
     }

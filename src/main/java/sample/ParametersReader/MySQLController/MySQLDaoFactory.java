@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -9,6 +12,8 @@ import java.util.Map;
  * Class use to determine different connection to different table of DB
  */
 public class MySQLDaoFactory implements IDAOFactory {
+
+    private Logger logger = LogManager.getLogger("MySQL");
 
     private static String DB_URL;
     private static String DB_USER;

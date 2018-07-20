@@ -1,5 +1,8 @@
 package sample.ParametersReader.MySQLController;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +13,8 @@ import java.util.List;
 public class MySQLVideoParametersDAO extends AbstractJDBCDao<VideoParameters, Integer> {
 
     private String tableName = "video";
+
+    private Logger logger = LogManager.getLogger("MySQL");
 
     public MySQLVideoParametersDAO(Connection connection) {
         super(connection);
@@ -34,6 +39,7 @@ public class MySQLVideoParametersDAO extends AbstractJDBCDao<VideoParameters, In
                 result.add(l);
             }
         } catch (SQLException e) {
+            logger.error(e);
             e.printStackTrace();
         }
         return result;
