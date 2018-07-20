@@ -60,7 +60,7 @@ public class NewVisionManager implements IManager{
     /**
      * @param params
      */
-    public NewVisionManager(INewVisionParams params){
+    public NewVisionManager(final INewVisionParams params){
         this.jsonFolderPath = params.getJsonSource();
         this.newVisionPath = params.getNewVisionPath();
         this.profileName = params.getProfileName();
@@ -116,7 +116,7 @@ public class NewVisionManager implements IManager{
                 if(checkNewVisionWork()==false){
                      try {
                          //Read parameters from DB
-                         ParametersReader parametersNV = ParametersReader.getInstance();
+                         ParametersReader parametersNV = ParametersReader.getInstance(params);
                          parametersNV.setArchiveListener(new ArchiveLoader());
                          parametersNV.nextAfterThis();
                          System.out.println(parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss"));

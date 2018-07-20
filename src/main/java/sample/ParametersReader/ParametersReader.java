@@ -5,6 +5,7 @@ import sample.ParametersReader.MySQLController.*;
 import imageProcessing.SceneLineParams;
 import imageProcessing.ScenePolygonParams;
 import sample.XMLwriterReader;
+import sample.parameters.INewVisionParams;
 import sample.parameters.Parameters;
 
 import java.awt.*;
@@ -34,6 +35,9 @@ import java.util.List;
  *        }
  */
 public class ParametersReader {
+
+    private Parameters param;
+
     private static ParametersReader instance;
     private ArchiveListener requestJSONList;
     private Task task = null;
@@ -46,8 +50,8 @@ public class ParametersReader {
      * create parameters by early created task from DB where completed = 0
      * @throws Exception not completed task with JSONs not found
      */
-    private ParametersReader(){
-
+    private ParametersReader(INewVisionParams params){
+        this.param = (Parameters)params;
 //        this.task = getEarlyTask();
 //        this.videoParameters = getVideoParametersByTaskId(task.getId());
 //        List<LineLocation> lineLocation = getLineLocationByTaskID(task.getId());
@@ -62,9 +66,9 @@ public class ParametersReader {
 //        System.out.println(lineLocation.toString());
 
     }
-    public static synchronized ParametersReader getInstance(){
+    public static synchronized ParametersReader getInstance(INewVisionParams params){
         if(instance==null){
-            instance = new ParametersReader();
+            instance = new ParametersReader(params);
         }
 
         return instance;
@@ -115,8 +119,6 @@ public class ParametersReader {
      */
     private LinkedList<LineLocation> getLineLocationByTaskID(int id){
         //TODO: зробити параметри глобільні, щоб в кожному методі не звертатися до файлу
-        XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
-        Parameters param = reader.ReadFile(Parameters.class);
         LinkedList<LineLocation> lineLocations = null;
         //создание фабрики объектов для работы с базой данных
         IDAOFactory daoFactory = new MySQLDaoFactory(param.getDB_URL(), param.getDB_USER(), param.getDB_PASSWORD());
@@ -143,8 +145,6 @@ public class ParametersReader {
      * @return list of ZoneLocation object
      */
     private LinkedList<ZoneLocation> getZoneLocationByTaskID(int id){
-        XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
-        Parameters param = reader.ReadFile(Parameters.class);
 
         LinkedList<ZoneLocation> zoneLocation = new LinkedList<>();
         //создание фабрики объектов для работы с базой данных
@@ -171,8 +171,6 @@ public class ParametersReader {
      * @return VideoParameters object
      */
     private VideoParameters getVideoParametersByTaskId(int task_id){
-        XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
-        Parameters param = reader.ReadFile(Parameters.class);
         VideoParameters videoParameters = null;
         //создание фабрики объектов для работы с базой данных
         IDAOFactory daoFactory = new MySQLDaoFactory(param.getDB_URL(), param.getDB_USER(), param.getDB_PASSWORD());
@@ -197,8 +195,6 @@ public class ParametersReader {
      * @throws Exception Not found any task where completed=0 and JSON folder are exist
      */
     private Task getEarlyTask() throws Exception {
-        XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
-        Parameters param = reader.ReadFile(Parameters.class);
         List<Task> tasks = null;
         Task task = null;
         //создание фабрики объектов для работы с базой данных
@@ -275,8 +271,6 @@ public class ParametersReader {
      * @param task_id id of the task
      */
     private void makeTaskComplete(int task_id) {
-        XMLwriterReader<Parameters> reader = new XMLwriterReader("managerParameters/parameters.xml");
-        Parameters param = reader.ReadFile(Parameters.class);
         Task task = null;
         //создание фабрики объектов для работы с базой данных
         IDAOFactory daoFactory = new MySQLDaoFactory(param.getDB_URL(), param.getDB_USER(), param.getDB_PASSWORD());
