@@ -6,6 +6,7 @@ import imageProcessing.ScenePolygonParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.XMLwriterReader;
+import sample.parameters.ISlashInPath;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Andrew on 28.05.2017.
  */
-public class ProfileParameters implements ISubtractorParameters {
+public class ProfileParameters implements ISubtractorParameters, ISlashInPath {
 
     private Logger logger = LogManager.getLogger("MySQL");
 
@@ -36,6 +37,14 @@ public class ProfileParameters implements ISubtractorParameters {
 
         profile = reader.ReadFile(ProfileParameters.class);
 
+        profile.addressRTSP = profile.checkIsSlash(profile.addressRTSP);
+        profile.snapshotAddress =profile.checkIsSlash(profile.snapshotAddress);
+        profile.db_host =profile.checkIsSlash(profile.db_host);
+        profile.jsonFolderPath =profile.checkIsSlash(profile.jsonFolderPath);
+        profile.Domain =profile.checkIsSlash(profile.Domain);
+        profile.PostfixCounter =profile.checkIsSlash(profile.PostfixCounter);
+        profile.PostfixTrack =profile.checkIsSlash(profile.PostfixTrack);
+        profile.PostfixSnapshot =profile.checkIsSlash(profile.PostfixSnapshot);
 
         return profile;
     }
@@ -120,7 +129,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setWeightsFilePath(String weightsFileName) {
-        this.weightsFilePath = weightsFileName;
+        this.weightsFilePath = checkIsSlash(weightsFileName);
     }
 
     private String weightsFilePath;
@@ -172,7 +181,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setJsonFolderPath(String jsonFolderPath) {
-        this.jsonFolderPath = jsonFolderPath;
+        this.jsonFolderPath = checkIsSlash(jsonFolderPath);
     }
 
     public int getNeuralLimit() {
@@ -398,7 +407,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setPostfixCounter(String postfixCounter) {
-        PostfixCounter = postfixCounter;
+        PostfixCounter = checkIsSlash(postfixCounter);
     }
 
     public String getPostfixTrack() {
@@ -406,7 +415,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setPostfixTrack(String postfixTrack) {
-        PostfixTrack = postfixTrack;
+        PostfixTrack = checkIsSlash(postfixTrack);
     }
 
     public String getPostfixSnapshot() {
@@ -414,7 +423,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setPostfixSnapshot(String postfixSnapshot) {
-        PostfixSnapshot = postfixSnapshot;
+        PostfixSnapshot = checkIsSlash(postfixSnapshot);
     }
 
     public float getImageSendPeriodInHours() {
@@ -478,7 +487,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setAddressRTSP(String addressRTSP) {
-        this.addressRTSP = addressRTSP;
+        this.addressRTSP = checkIsSlash(addressRTSP);
     }
 
     public String getCamName() {
@@ -548,7 +557,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setSnapshotAddress(String snapshotAddress) {
-        this.snapshotAddress = snapshotAddress;
+        this.snapshotAddress = checkIsSlash(snapshotAddress);
     }
 
     public int getMergeRememberDepth() {
@@ -560,7 +569,7 @@ public class ProfileParameters implements ISubtractorParameters {
     }
 
     public void setDb_host(String DB_HOST){
-        this.db_host = DB_HOST;
+        this.db_host = checkIsSlash(DB_HOST);
     }
 
     public void setDb_name(String DB_NAME){
@@ -648,6 +657,15 @@ public class ProfileParameters implements ISubtractorParameters {
 
     public void setSceneLineParams(ArrayList<SceneLineParams> sceneLineParams) {
         this.sceneLineParams = sceneLineParams;
+    }
+
+    @Override
+    public String checkIsSlash(String path) {
+        if(path.substring(path.length()-1).equals("\\") || path.substring(path.length()-1).equals("/")){
+            path = path.substring(0,path.length()-1);
+            path = checkIsSlash(path);
+        }
+        return path;
     }
 
 }

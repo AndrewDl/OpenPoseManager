@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Andrew on 11/28/17.
  */
-public class Parameters implements IOpenPoseParams, INewVisionParams, IParametersReader {
+public class Parameters implements IOpenPoseParams, INewVisionParams, IParametersReader, ISlashInPath{
 
     private Logger logger = LogManager.getLogger("OPManager");
     private String jsonSource = "";
@@ -47,7 +47,16 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
         XMLwriterReader<Parameters> reader = new XMLwriterReader(file);
         Logger logger = LogManager.getLogger("General");
         Parameters parameters = reader.ReadFile(Parameters.class);
-
+        parameters.jsonArchiveSource = parameters.checkIsSlash(parameters.jsonArchiveSource);
+        parameters.jsonSource = parameters.checkIsSlash(parameters.jsonSource);
+        parameters.newVisionPath = parameters.checkIsSlash(parameters.newVisionPath);
+        parameters.videoSource = parameters.checkIsSlash(parameters.videoSource);
+        parameters.videoDestination = parameters.checkIsSlash(parameters.videoDestination);
+        parameters.nvParametersPath = parameters.checkIsSlash(parameters.nvParametersPath);
+        parameters.DB_URL = parameters.checkIsSlash(parameters.nvParametersPath);
+        parameters.URLforGET = parameters.checkIsSlash(parameters.nvParametersPath);
+        parameters.URLforPOST = parameters.checkIsSlash(parameters.nvParametersPath);
+        parameters.telegramURL = parameters.checkIsSlash(parameters.nvParametersPath);
         return parameters;
     }
 
@@ -59,7 +68,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
 
     @Override
     public void setJsonSource(String jsonSource) {
-        this.jsonSource = jsonSource;
+        this.jsonSource = checkIsSlash(jsonSource);
     }
 
     public String getJsonArchiveSource() {
@@ -67,7 +76,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setJsonArchiveSource(String jsonArchiveSource) {
-        this.jsonArchiveSource = jsonArchiveSource;
+        this.jsonArchiveSource = checkIsSlash(jsonArchiveSource);
     }
 
     @Override
@@ -87,7 +96,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
 
     @Override
     public void setNewVisionPath(String newVisionPath) {
-        this.newVisionPath = newVisionPath;
+        this.newVisionPath = checkIsSlash(newVisionPath);
     }
 
     @Override
@@ -96,7 +105,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setVideoSource(String videoSource) {
-        this.videoSource = videoSource;
+        this.videoSource = checkIsSlash(videoSource);
     }
 
     @Override
@@ -105,7 +114,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setVideoDestination(String videoDestination) {
-        this.videoDestination = videoDestination;
+        this.videoDestination = checkIsSlash(videoDestination);
     }
 
     @Override
@@ -132,7 +141,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setNvParametersPath(String path){
-        nvParametersPath = path;
+        nvParametersPath = checkIsSlash(path);
     }
 
     @Override
@@ -141,7 +150,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setDB_URL(String DB_URL) {
-        this.DB_URL = DB_URL;
+        this.DB_URL = checkIsSlash(DB_URL);
     }
 
     @Override
@@ -172,11 +181,11 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
 
     public String getURLforGET(){return URLforGET; }
 
-    public void setURLforGET(String URLforGET){ this.URLforGET = URLforGET;}
+    public void setURLforGET(String URLforGET){ this.URLforGET = checkIsSlash(URLforGET);}
 
     public String getURLforPOST(){return URLforPOST; }
 
-    public void setURLforPOST(String URLforPOST){ this.URLforPOST = URLforPOST;}
+    public void setURLforPOST(String URLforPOST){ this.URLforPOST = checkIsSlash(URLforPOST);}
 
     @Override
     public  String getTelegramURL(){
@@ -184,7 +193,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     }
 
     public void setTelegramURL(String telegramURL){
-        this.telegramURL = telegramURL;
+        this.telegramURL = checkIsSlash(telegramURL);
     }
 
     @Override
@@ -194,5 +203,14 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
 
     public void setKeyURL(String keyURL) {
         this.keyURL = keyURL;
+    }
+
+    @Override
+    public String checkIsSlash(String path) {
+        if(path.substring(path.length()-1).equals("\\") || path.substring(path.length()-1).equals("/")){
+            path = path.substring(0,path.length()-1);
+            path = checkIsSlash(path);
+        }
+        return path;
     }
 }

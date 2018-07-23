@@ -4,7 +4,7 @@
         <!--path to the folder with json folders-->
         <jsonSource>F:\CIF\pistobribitka\JSONs\</jsonSource>
         <!--path to the JSON with linc on archive with JSONs-->
-        <jsonArchiveSource>https://vision.ecsv.org.ua/json-store/get</jsonArchiveSource>
+        <jsonArchiveSource>https://vision.ecsv.org.ua/json-store/get/</jsonArchiveSource>
         <!--profile that will start-->
         <profileName>profile 1</profileName>
         <!--path to the NewVision jar file. як виявилося джарнік повинен
