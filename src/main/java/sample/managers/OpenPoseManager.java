@@ -273,8 +273,8 @@ public class OpenPoseManager implements IManager{
                     System.out.println("Starting new process...");
                     System.out.println(new Date());
                     cmdLine="bin\\"+processName+" -video "+inputFolder
-                            +fileList.get(i).getName()+" -write_keypoint_json "+outputFolderForJsons
-                            +fileList.get(i).getName().split("\\.")[0]+"/ "+this.param;
+                            +fileList.get(i).getName()+" -write_json "+outputFolderForJsons
+                            +fileList.get(i).getName().substring(0,fileList.get(i).getName().length()-3)+"/ "+this.param;
                     task.startTask(cmdLine);
                     logger.info(fileList.get(i).getName()+" in process");
                     //System.out.println(inputFolder+fileList.get(i).getName());
