@@ -286,8 +286,8 @@ public class OpenPoseManager implements IManager{
                             logger.info(fileList.get(i).getName()+" failed ");
                         }else {
                             File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
-                            File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]);
-                            File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().split("\\.")[0]+"_toProcess");
+                            File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i).getName().length()-3));
+                            File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i).getName().length()-3)+"_toProcess");
                             toProcess.renameTo(folderDestination);
                             fileList.get(i-1).renameTo(destination);
                             System.out.println(destination);
