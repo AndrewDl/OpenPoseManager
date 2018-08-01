@@ -389,15 +389,21 @@ public class OpenPoseManager implements IManager{
      else return c;
     }
 
+    /**
+     * if parameter isDeletingVideo true, this method move video to computedVideos folder and delete,
+     * other way just move video to computedVideos folder
+     * @param isDel delete video or not
+     * @param file video file
+     * @return true if video deleted and false if it just replace
+     */
     public boolean moveProcessedFile(boolean isDel, File file){
+        File destination = new File(outputFolder + "/computedVideos/" + file.getName());
+        file.renameTo(destination);
+        System.out.println(destination);
         if(isDel){
             file.delete();
             return true;
-        }else{
-            File destination = new File(outputFolder + "/computedVideos/" + file.getName());
-            file.renameTo(destination);
-            System.out.println(destination);
-            return false;
         }
+            return false;
     }
 }
