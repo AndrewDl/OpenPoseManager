@@ -36,6 +36,7 @@ public class OpenPoseManager implements IManager{
     private String param = "";
     private String outputFolderForVideos = outputFolder+"/computedVideos/";
     private String outputFolderForFails = outputFolder+"/failedVideos/";
+    private boolean isDeeteVideo = false;
     private String outputFolderForJsons = outputFolder+"/jsonFolders/";
     private Integer index = 0;
     private File currentVideoFolder;
@@ -68,6 +69,7 @@ public class OpenPoseManager implements IManager{
         this.param = param.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
+        this.isDeeteVideo = param.getIsDeleteVideo();
         this.processName = param.getOpenPose();
         final TasksClass task = new TasksClass();
 
@@ -285,12 +287,10 @@ public class OpenPoseManager implements IManager{
                             System.out.println(destination);
                             logger.info(fileList.get(i).getName()+" failed ");
                         }else {
-                            File destination = new File(outputFolder + "/computedVideos/" + fileList.get(i - 1).getName());
+                            moveProcessedFile(isDeeteVideo,fileList.get(i-1));
                             File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4));
                             File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4)+"_toProcess");
                             toProcess.renameTo(folderDestination);
-                            fileList.get(i-1).renameTo(destination);
-                            System.out.println(destination);
                             logger.info(fileList.get(i).getName()+" completed");
                         }
                         }
@@ -318,8 +318,7 @@ public class OpenPoseManager implements IManager{
                             else
                             {
                                 System.out.println("filelist.size:"+fileList.size());
-                                File destination = new File(outputFolder+"/computedVideos/"+fileList.get(i-1).getName());
-                                fileList.get(i-1).renameTo(destination);
+                                moveProcessedFile(isDeeteVideo,fileList.get(i-1));
                                 File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4));
                                 File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4)+"_toProcess");
                                 toProcess.renameTo(folderDestination);
@@ -408,4 +407,21 @@ public class OpenPoseManager implements IManager{
      else return c;
     }
 
+    /**
+     * if parameter isDeletingVideo true, this method move video to computedVideos folder and delete,
+     * other way just move video to computedVideos folder
+     * @param isDel delete video or not
+     * @param file video file
+     * @return true if video deleted and false if it just replace
+     */
+    public boolean moveProcessedFile(boolean isDel, File file){
+        File destination = new File(outputFolder + "/computedVideos/" + file.getName());
+        file.renameTo(destination);
+        System.out.println(destination);
+        if(isDel){
+            file.delete();
+            return true;
+        }
+            return false;
+    }
 }

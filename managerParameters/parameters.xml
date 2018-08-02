@@ -14,6 +14,8 @@
         <videoSource>input/</videoSource>
         <!--destination of the output of the OpenPose & OpenPoseManager-->
         <videoDestination>output/</videoDestination>
+        <!--needing to delete video after processed-->
+        <isDeleteVideo>false</isDeleteVideo>
         <!--OpenPose arguments-->
         <arguments>-process_real_time</arguments>
         <!--name of current OpenPose executable file-->
