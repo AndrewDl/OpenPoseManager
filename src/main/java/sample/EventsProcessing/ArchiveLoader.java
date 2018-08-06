@@ -19,8 +19,8 @@ import java.io.IOException;
 
 public class ArchiveLoader implements ArchiveListener {
     private Thread downloadJSONArchive;
-    String jsonArchiveSource;
-    String jsonSource;
+    private String jsonArchiveSource;
+    private String jsonSource;
     private Logger logger = LogManager.getLogger("General");
 
     public ArchiveLoader(){
@@ -36,7 +36,7 @@ public class ArchiveLoader implements ArchiveListener {
      */
     @Override
     public void onJsonRequest(final String jsonArchiveName) {
-        final String jsonARchiveURL = jsonArchiveSource +jsonArchiveName;
+        final String jsonARchiveURL = jsonArchiveSource+"/"+jsonArchiveName;
         System.out.println("download archive.........." + jsonARchiveURL);
         //get JsonFrom Srver
         //............
@@ -54,7 +54,7 @@ public class ArchiveLoader implements ArchiveListener {
 
             final String pathToArchive = PathJSONParser.getPathToArchive(getRequester.getResponse());
             //createFolder
-            final File folder = new File(jsonSource +jsonArchiveName);
+            final File folder = new File(jsonSource +"\\"+jsonArchiveName);
             if (!folder.exists()){
                 folder.mkdir();
             }
@@ -64,7 +64,7 @@ public class ArchiveLoader implements ArchiveListener {
                     //download archive
                     FileDownloader fileDownloader = new FileDownloader();
                     try {
-                        fileDownloader.downloadFile(pathToArchive, jsonSource+jsonArchiveName+".zip");
+                        fileDownloader.downloadFile(pathToArchive, jsonSource+"\\"+jsonArchiveName+".zip");
                     } catch (IOException e) {
                         logger.error(e);
                         e.printStackTrace();
@@ -72,9 +72,9 @@ public class ArchiveLoader implements ArchiveListener {
 
                     //unZip archive
                     Archiver archiver = new Archiver();
-                    archiver.unZip(jsonSource+jsonArchiveName+".zip",jsonSource);
+                    archiver.unZip(jsonSource+"\\"+jsonArchiveName+".zip",jsonSource);
                     if(folder.exists()){ // если файл существует, то переименовываем его
-                        folder.renameTo(new java.io.File(jsonSource+jsonArchiveName+"_toProcess"));
+                        folder.renameTo(new java.io.File(jsonSource+"\\"+jsonArchiveName+"_toProcess"));
                     }
 
 

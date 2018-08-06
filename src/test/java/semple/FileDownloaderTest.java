@@ -17,14 +17,14 @@ public class FileDownloaderTest {
         FileDownloader downloader = new FileDownloader();
         try {
             downloader.downloadFile("https://cifrusconverter.s3.eu-west-1.amazonaws.com/json/5b507d103f0cb/5b507d103f170.zip",
-                    param.getJsonSource()+archiveName);
+                    param.getJsonSource()+"\\"+archiveName);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //check
 
-        File f = new File(param.getJsonSource()+archiveName);
+        File f = new File(param.getJsonSource()+"\\"+archiveName);
         boolean actual = f.exists();
         Assert.assertEquals("File download is ",true,actual);
 
