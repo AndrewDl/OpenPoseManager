@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.requests.DataForGetTelegram;
-import sample.requests.GetRequesterArchive;
 import sample.requests.GetRequesterTelegram;
 import sample.requests.IGetRequester;
 
@@ -36,7 +35,7 @@ public class OpenPoseManager implements IManager{
     private String param = "";
     private String outputFolderForVideos = outputFolder+"/computedVideos/";
     private String outputFolderForFails = outputFolder+"/failedVideos/";
-    private boolean isDeeteVideo = false;
+    private boolean isDeleteVideo = false;
     private String outputFolderForJsons = outputFolder+"/jsonFolders/";
     private Integer index = 0;
     private File currentVideoFolder;
@@ -69,7 +68,7 @@ public class OpenPoseManager implements IManager{
         this.param = param.getArguments();
         this.outputFolderForVideos = outputFolder + "\\computedVideos\\";
         this.outputFolderForFails = outputFolder + "\\failedVideos\\";
-        this.isDeeteVideo = param.getIsDeleteVideo();
+        this.isDeleteVideo = param.getIsDeleteVideo();
         this.processName = param.getOpenPose();
         final TasksClass task = new TasksClass();
 
@@ -87,24 +86,24 @@ public class OpenPoseManager implements IManager{
                     jSonTimer = new Timer(3000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println("boop!");
+                            System.out.println("OPM: WatchDir timer tick. (boob!)");
 
                             try{
                                 //if openpose processing without errors its getting amount of json changes
                                 if(task.isProcessRunning(processName)&&!task.isProcessRunning("WerFault.exe")) {
                                     Amount = wdir.getCount();
-                                    System.out.println("Amount ="+Amount);
                                 }
                                 // if openpose processing and some errors shoots it saving current amount of json
                                 // then sleeps for 2 seconds and compare saved value with new one
                                 // if value is the same - open
                                 if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
                                     Max = Amount;
+                                    System.out.println("");
                                     Thread.sleep(2000);
                                     if(task.isProcessRunning("WerFault.exe")&&task.isProcessRunning(processName)){
                                         if(Max==Amount){
                                             String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                                            System.out.println("WerFault closed");
+                                            System.out.println("OPM: WerFault closed");
                                             task.startTask(cmdLine);
                                             logger.info("WerFaultTask was closed. OpenPoseFailure!");
                                             failed = true;
@@ -117,7 +116,7 @@ public class OpenPoseManager implements IManager{
                                 }
                                 if(task.isProcessRunning("WerFault.exe")&&currentVideoFolder!=null&&!currentVideoFolder.exists()){
                                     String cmdLine = "TASKKILL /f /IM WerFault.exe";
-                                    System.out.println("WerFault closed");
+                                    System.out.println("OPM: WerFault closed");
                                     task.startTask(cmdLine);
                                     failed = true;
                                     requestData.setMainURL(telegramURL);
@@ -154,7 +153,7 @@ public class OpenPoseManager implements IManager{
          * checking on availability of folder
          */
         if(!folder.exists()){
-            System.out.println("folder does not exist");
+            System.out.println("OPM: folder does not exist");
             return;
         }
 
@@ -248,31 +247,31 @@ public class OpenPoseManager implements IManager{
         Boolean status = false;
 
        // String outputFolderForVideos = outputFolder+"\\computedVideos\\";
-        System.out.println("Starting loop");
+        System.out.println("OPM: Starting loop");
         for(;;){
             try {
                 if(task.isProcessRunning(processName)!=false){
                     if(status!=true){
                         index = 0;
-                        System.out.println("Process works");
+                        System.out.println("OPM: Process works");
                         System.out.println(new Date());
                         status=true;
-                        System.out.println("sleep...");
+                        System.out.println("OPM: Going to sleep for 10 seconds.");
                         Thread.sleep(10 * 1000);
-                        System.out.println("awaken...");
+                        System.out.println("OPM: Awaken!");
                         File folder = new File(outputFolderForJsons +fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-3));
                         if(folder.exists())setCurrentVideoFolder(folder);
                         if(!folder.exists()){
                             setCurrentVideoFolder(folder);
-                            System.out.println("failed!");
+                            System.out.println("OPM: Folder did not created! Mark as failed!");
                             failed = true;
                         }
                     }
 
                 }else{
                     status=false;
-                    System.out.println("No process found...");
-                    System.out.println("Starting new process...");
+                    System.out.println("OPM: No process found...");
+                    System.out.println("OPM: Starting new process...");
                     System.out.println(new Date());
                     cmdLine="bin\\"+processName+" -video "+inputFolder
                             +fileList.get(i).getName()+" -write_json "+outputFolderForJsons
@@ -287,7 +286,7 @@ public class OpenPoseManager implements IManager{
                             System.out.println(destination);
                             logger.info(fileList.get(i).getName()+" failed ");
                         }else {
-                            moveProcessedFile(isDeeteVideo,fileList.get(i-1));
+                            moveProcessedFile(isDeleteVideo,fileList.get(i-1));
                             File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4));
                             File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4)+"_toProcess");
                             toProcess.renameTo(folderDestination);
@@ -303,7 +302,7 @@ public class OpenPoseManager implements IManager{
                 e.printStackTrace();
             }
             if(i>=fileList.size()){
-                System.out.println("We've done here! Waiting for OpenPoseDemo finish processing!");
+                System.out.println("OPM: We've done here! Waiting for OpenPoseDemo finish processing!");
                 for(;;){
                     try {
                         if(task.isProcessRunning(processName))
@@ -317,15 +316,15 @@ public class OpenPoseManager implements IManager{
                                 jSonTimer.stop();}
                             else
                             {
-                                System.out.println("filelist.size:"+fileList.size());
-                                moveProcessedFile(isDeeteVideo,fileList.get(i-1));
+                                System.out.println("OPM: filelist.size:"+fileList.size());
+                                moveProcessedFile(isDeleteVideo,fileList.get(i-1));
                                 File toProcess = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4));
                                 File folderDestination = new File(outputFolderForJsons+fileList.get(i-1).getName().substring(0,fileList.get(i-1).getName().length()-4)+"_toProcess");
                                 toProcess.renameTo(folderDestination);
                                 logger.info(fileList.get(i-1).getName()+" completed");
                             }
                             jSonTimer.stop();
-                            System.out.println("Got it!");
+                            System.out.println("OPM: Got it! Process complete, breaking loop!");
                             System.out.println(new Date());
                             dirMan.dropFilelist();
 //                            List<File> secondFileList = new ArrayList<>();
