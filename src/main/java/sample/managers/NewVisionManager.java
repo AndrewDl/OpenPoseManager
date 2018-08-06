@@ -266,9 +266,14 @@ public class NewVisionManager implements IManager{
     }
 
     /**
-     *
+     * This method is responsible for last lifecycle steps of json folders and zip files
+     * Method will send zipped folders to server and then, if needed, this folders and archives will be deleted
+     * @param videoName - name of video
+     * @param toDeleteName - name of video with _toDelete postfix
+     * @param toProcessName - name of video with _toProcess postfix
      */
     private void endLifeProcessing(final String videoName, final String toDeleteName, final String toProcessName){
+
         Thread endLifeProcessThread = new Thread (new Runnable(){
         public void run(){
             try {
