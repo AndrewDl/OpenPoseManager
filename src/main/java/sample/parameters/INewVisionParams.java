@@ -38,4 +38,6 @@ public interface INewVisionParams {
     Boolean getDeleteProcessedJsonFolder();
 
     Boolean getDeleteUploadedZippedJsons();
+
+    Boolean getNewVisionGUIMode();
 }

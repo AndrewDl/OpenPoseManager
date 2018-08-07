@@ -5,8 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.XMLwriterReader;
 
-import java.io.IOException;
-
 
 /**
  * Created by Andrew on 11/28/17.
@@ -34,6 +32,7 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     private String keyURL = "";
     private Boolean deleteProcessedJsonFolder = Boolean.FALSE;
     private Boolean deleteUploadedZippedJsons = Boolean.FALSE;
+    private Boolean NewVisionGUIMode = Boolean.FALSE;
 
 
 
@@ -201,4 +200,10 @@ public class Parameters implements IOpenPoseParams, INewVisionParams, IParameter
     public void setKeyURL(String keyURL) {
         this.keyURL = keyURL;
     }
+
+    public Boolean getNewVisionGUIMode() {return NewVisionGUIMode;}
+
+    public void setNewVisionGUIMode(Boolean nvguimode) {this.NewVisionGUIMode = nvguimode;}
+
+
 }

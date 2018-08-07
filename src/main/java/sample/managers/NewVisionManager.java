@@ -56,6 +56,7 @@ public class NewVisionManager implements IManager{
     private Boolean deleteJsonFolderFlag = false;
     private Boolean deleteJsonZipFlag = false;
     private DataForPostArchive requestData = new DataForPostArchive();
+    private Boolean newVisionGUIModFlag = false;
 
     /**
      * @param params
@@ -71,6 +72,7 @@ public class NewVisionManager implements IManager{
         this.postURL = params.getURLforPOST();
         this.deleteJsonFolderFlag = params.getDeleteProcessedJsonFolder();
         this.deleteJsonZipFlag = params.getDeleteUploadedZippedJsons();
+        this.newVisionGUIModFlag = params.getNewVisionGUIMode();
 
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
             @Override
@@ -89,7 +91,6 @@ public class NewVisionManager implements IManager{
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
-
                             String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
@@ -139,11 +140,17 @@ public class NewVisionManager implements IManager{
                          profileParameters.setVideoDate(videoDate);
                          profileParameters.setTaskID(taskID);
 
+                         //start OffNewVision with new profileParameters
+                         String str;
+                         if(!newVisionGUIModFlag)
+                             str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                         else {
+                             str = "cmd.exe /c start java -jar " + newVisionPath + " gui ";
+                             profileParameters.setJsonFolderPath(jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\");
+                             profileParameters.setEnableAutoconnect(true);
+                         }
                          //Save new profileParameters.java to the profileParameters.xml
                          profileParameters.writeProfileParameters(profileParameters,path);
-
-                         //start OffNewVision with new profileParameters
-                         String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName()+ "_toProcess" + "\\";
                          TasksClass.startTask(str);
                          for (;;) {
                              if(checkNewVisionWork()==true)

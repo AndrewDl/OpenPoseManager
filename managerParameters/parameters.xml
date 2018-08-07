@@ -43,5 +43,8 @@
         <telegramURL>https://notify.ecsv.org.ua/callback/send?message=</telegramURL>
         <!--part of URL with key to send GET request to notify Telegram bot-->
         <keyURL>&amp;key=5b4892663974d</keyURL>
+
+        <!--This flag enables or disables GUI mode of NewVision. Works only with TASKS-->
+        <NewVisionGUIMode>False</NewVisionGUIMode>
     </java.lang.Class>
 </object-stream>
