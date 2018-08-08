@@ -143,10 +143,14 @@ public class NewVisionManager implements IManager{
                          //start OffNewVision with new profileParameters
                          String str;
                          if(!newVisionGUIModFlag)
-                             str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                             str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" +
+                                     parametersNV.getVideoParameters().getName() + "_toProcess";
                          else {
                              str = "cmd.exe /c start java -jar " + newVisionPath + " gui ";
-                             profileParameters.setJsonFolderPath(jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\");
+//
+                             //TODO:: ОБЯЗАТЕЛЬНО ПОСЛЕ jsonfolderPath ПОСТАВИТЬ СЛЕШ ПОСЛЕ МЕРДЖА С ВЕТКОЙ СЛЕШ ИН ПАС
+                             System.out.println("vivod:"+ jsonFolderPath +  parametersNV.getVideoParameters().getName());
+                             profileParameters.setJsonFolderPath(jsonFolderPath +  parametersNV.getVideoParameters().getName()+"_toProcess");
                              profileParameters.setEnableAutoconnect(true);
                          }
                          //Save new profileParameters.java to the profileParameters.xml
