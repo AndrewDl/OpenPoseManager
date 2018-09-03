@@ -73,7 +73,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
             e.printStackTrace();
         }
         if ((list == null) || (list.size() == 0)){
-            throw new Exception("Record with  not found.");
+            throw new Exception("Record with not completed task not found.");
         }
         /*if (list.size()>1){
             throw new Exception("Received more than one record.");
