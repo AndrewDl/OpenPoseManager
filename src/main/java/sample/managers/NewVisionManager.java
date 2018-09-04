@@ -1,5 +1,6 @@
 package sample.managers;
 
+import OPMException.TaskException;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -160,7 +161,10 @@ public class NewVisionManager implements IManager{
                              }
                          }
 
-                     }catch (Exception ee){
+                     } catch (TaskException te){
+                         logger.error(te);
+                         System.err.print(te.getMessage());
+                     } catch (Exception ee){
                          logger.error(ee);
                          ee.printStackTrace();
                      }

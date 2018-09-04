@@ -1,4 +1,5 @@
 package semple.ParametersReader;
+import OPMException.TaskException;
 import org.junit.Assert;
 import org.junit.Test;
 import sample.EventsProcessing.ArchiveLoader;
@@ -20,7 +21,10 @@ public class ParametersReaderTest {
         for (int i =0; i <3;i++) {
             try {
                 paramReader.nextAfterThis();
-            } catch (Exception e) {
+            }catch (TaskException te){
+                System.err.print(te.getMessage());
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
 

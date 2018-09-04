@@ -1,5 +1,6 @@
 package sample.ParametersReader;
 
+import OPMException.TaskException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sample.EventsProcessing.ArchiveListener;
@@ -202,7 +203,7 @@ public class ParametersReader {
      * @return id of the task
      * @throws Exception Not found any task where completed=0 and JSON folder are exist
      */
-    private Task getEarlyTask() throws Exception {
+    private Task getEarlyTask() throws TaskException, Exception{
         List<Task> tasks = null;
         Task task = null;
         //создание фабрики объектов для работы с базой данных
@@ -237,7 +238,7 @@ public class ParametersReader {
             }
         }
         if(task==null){
-            throw new Exception("Not found any prepared task");
+            throw new TaskException("Not found any prepared task");
         }
         return task;
     }

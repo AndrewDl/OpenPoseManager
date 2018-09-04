@@ -1,5 +1,6 @@
 package sample.ParametersReader.MySQLController;
 
+import OPMException.TaskException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,7 +62,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
     }
 
     @Override
-    public List<Task> getEarlyTask()throws Exception{
+    public List<Task> getEarlyTask()throws TaskException{
         List<Task> list = null;
         String sql = getEarlyTaskQuery();
         try(PreparedStatement statement = connection.prepareStatement(sql)){
@@ -73,7 +74,8 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
             e.printStackTrace();
         }
         if ((list == null) || (list.size() == 0)){
-            throw new Exception("Record with  not found.");
+            //System.err.println("NVM: Record with not completed task not found.");
+            throw new TaskException("NVM: Record with not completed task not found.");
         }
         /*if (list.size()>1){
             throw new Exception("Received more than one record.");
