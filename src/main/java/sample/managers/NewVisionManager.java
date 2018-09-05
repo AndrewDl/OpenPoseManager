@@ -91,7 +91,26 @@ public class NewVisionManager implements IManager{
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
-                            String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
+                            ParametersReader parametersNV = ParametersReader.getInstance(params);
+
+                            String path = nvParametersPath;
+                            ProfileParameters profileParameters = ProfileParameters.loadProfileParameters(path);
+
+                            String str;
+                            if(!newVisionGUIModFlag)
+                                str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" +
+                                        parametersNV.getVideoParameters().getName() + "_toProcess";
+                            else {
+                                str = "cmd.exe /c start java -jar " + newVisionPath + " gui ";
+//
+                                //TODO:: ОБЯЗАТЕЛЬНО ПОСЛЕ jsonfolderPath ПОСТАВИТЬ СЛЕШ ПОСЛЕ МЕРДЖА С ВЕТКОЙ СЛЕШ ИН ПАС
+                                System.out.println("vivod:"+ jsonFolderPath +  parametersNV.getVideoParameters().getName());
+                                profileParameters.setJsonFolderPath(jsonFolderPath +  parametersNV.getVideoParameters().getName()+"_toProcess");
+                                profileParameters.setEnableAutoconnect(true);
+                                profileParameters.setAddressRTSP(jsonFolderPath+".mp4");
+                            }
+
+
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
 
