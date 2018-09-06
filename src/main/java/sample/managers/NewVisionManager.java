@@ -76,7 +76,7 @@ public class NewVisionManager implements IManager{
         receiveJsonFolderFromList_Timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("NV PID is: "+PID);
+                System.out.println("NVM: NVM is working... NV PID is: "+PID);
 
                 if(jsonFoldersList==null || jsonFoldersList.size() == 0) {
                     jsonFoldersList = (ArrayList<String>) dirManager.getJsonFoldersList(jsonFolderPath, toProcessKey);
@@ -85,19 +85,19 @@ public class NewVisionManager implements IManager{
                     if(jsonFolderPointer>0){
                         String newName  = dirManager.replaceNamePart(jsonFoldersList.get(jsonFolderPointer-1), toProcessKey,completedKey);
                         dirManager.renameFolder(jsonFolderPath,jsonFoldersList.get(jsonFolderPointer-1),newName);
-                        System.out.println(newName);
+                        System.out.println("NVM: "+jsonFoldersList.get(jsonFolderPointer-1)+" renamed to "+newName);
                     }
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
 
                             String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + jsonFoldersList.get(jsonFolderPointer) + "\\";
-                            System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
+                            System.out.println("NVM: NV starting... "+str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                             TasksClass.startTask(str);
 
                         } catch (Exception ee) {
                             logger.error(ee);
-                            System.out.println(ee);
+                            ee.printStackTrace();
                         }
                         jsonFolderPointer++;
                     } else {
@@ -113,7 +113,7 @@ public class NewVisionManager implements IManager{
         receiveJsonFolderFromDB_Timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("NV PID is: "+PID);
+                System.out.println("NVM: NVM is working... NV PID is: "+PID);
 
                 if(checkNewVisionWork()==false){
                      try {
@@ -121,10 +121,10 @@ public class NewVisionManager implements IManager{
                          ParametersReader parametersNV = ParametersReader.getInstance(params);
                          parametersNV.setArchiveListener(new ArchiveLoader());
                          parametersNV.nextAfterThis();
-                         System.out.println(parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss"));
+                         //System.out.println(parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss"));
 
                          //Set needed parameters to necessary classes
-                         System.out.println(parametersNV.getVideoParameters().toString());
+                         //System.out.println(parametersNV.getVideoParameters().toString());
                          ArrayList<SceneLineParams> sceneLineParams = new ArrayList<>(parametersNV.getSceneLineParams());
                          ArrayList<ScenePolygonParams> scenePolygonParams = new ArrayList<>(parametersNV.getScenePolygonParams());
                          String videoDate = parametersNV.getVideoParameters().getVideoDateInFormat("yyyyMMddHHmmss");
@@ -145,7 +145,13 @@ public class NewVisionManager implements IManager{
 
                          //start OffNewVision with new profileParameters
                          String str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" + parametersNV.getVideoParameters().getName()+ "_toProcess" + "\\";
+                         System.out.println("NVM: NV starting... "+str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
                          TasksClass.startTask(str);
+
+                         System.out.println("NVM: NewVision is starting...");
+                         System.out.println("    If you wait too long something might have happened wrong");
+                         System.out.println("    Check the paths to resources (in parameters.xml) and the availability of all libraries.");
+                         System.out.println("    Also, the problem may be in the parameter");
                          for (;;) {
                              if(checkNewVisionWork()==true)
                                  break;
@@ -221,7 +227,7 @@ public class NewVisionManager implements IManager{
     }
 
     private void loadPID(){
-        System.out.println("loadPid");
+        System.out.println("NVM: PID load starting...");
         String PIDstring="";
 
         try(FileReader reader = new FileReader(NVpidPath))
@@ -235,11 +241,12 @@ public class NewVisionManager implements IManager{
         }
         catch(IOException ex){
             logger.error(ex);
-
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
 
         PID = Integer.parseInt(PIDstring);
+        System.out.println("NVM: PID load completed: "+PID);
+
     }
 
     private boolean checkNewVisionWork(){
@@ -296,8 +303,7 @@ public class NewVisionManager implements IManager{
 
                     long finish = System.currentTimeMillis();
                     long timeConsumedMillis = finish - start;
-                    System.out.println("Time was taken: "+timeConsumedMillis/1000+"s");
-                    System.out.println("Folder "+videoName+" was deleted!");
+                    System.out.println("NVM: Folder "+videoName+" was deleted. Time: "+timeConsumedMillis/1000+"s");
                     logger.info("Folder "+videoName+" was deleted!");
                 }else
                 {
@@ -307,7 +313,7 @@ public class NewVisionManager implements IManager{
                 if(deleteJsonZipFlag){
                     File zipToDelete = new File(jsonFolderPath+"/"+videoName+".zip");
                     zipToDelete.delete();
-                    System.out.println("zip "+videoName+" was deleted!");
+                    System.out.println("NVM: zip "+videoName+" was deleted!");
                     logger.info("zip "+videoName+" was deleted!");
                 }
             } catch (Exception e1) {
