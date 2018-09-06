@@ -73,6 +73,7 @@ public class MySQLTaskDAO extends AbstractJDBCDao<Task, Integer> {
             logger.error(e);
             e.printStackTrace();
         }
+
         if ((list == null) || (list.size() == 0)){
             //System.err.println("NVM: Record with not completed task not found.");
             throw new TaskException("NVM: Record with not completed task not found.");
