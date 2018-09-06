@@ -91,10 +91,6 @@ public class NewVisionManager implements IManager{
                     if (checkNewVisionWork() == false && jsonFolderPointer < jsonFoldersList.size()) {
                         try {
                             //робимо PID нулем, щоб перевірки не відбувалися доки NV не збереже новий PID
-                            ParametersReader parametersNV = ParametersReader.getInstance(params);
-
-                            String path = nvParametersPath;
-                            ProfileParameters profileParameters = ProfileParameters.loadProfileParameters(path);
 
                             String str;
                             if(!newVisionGUIModFlag)
@@ -105,15 +101,10 @@ public class NewVisionManager implements IManager{
 //
                                 //TODO:: ОБЯЗАТЕЛЬНО ПОСЛЕ jsonfolderPath ПОСТАВИТЬ СЛЕШ ПОСЛЕ МЕРДЖА С ВЕТКОЙ СЛЕШ ИН ПАС
                                 System.out.println("vivod:"+ jsonFolderPath+jsonFoldersList.get(jsonFolderPointer));
-                                profileParameters.setJsonFolderPath(jsonFolderPath + jsonFoldersList.get(jsonFolderPointer)+"/");
-                                profileParameters.setEnableAutoconnect(true);
-                                profileParameters.setAlgorithmType(3);
-                                profileParameters.setAddressRTSP(jsonFolderPath+jsonFoldersList.get(jsonFolderPointer)+".mp4");
                             }
 
 
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
-                            profileParameters.writeProfileParameters(profileParameters,path);
                             TasksClass.startTask(str);
 
                         } catch (Exception ee) {
