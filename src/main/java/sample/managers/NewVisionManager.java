@@ -99,24 +99,35 @@ public class NewVisionManager implements IManager{
                             String str;
                             if(!newVisionGUIModFlag)
                                 str = "cmd.exe /c start java -jar " + newVisionPath + " nogui " + profileName + " " + jsonFolderPath + "\\" +
-                                        parametersNV.getVideoParameters().getName() + "_toProcess";
+                                        jsonFoldersList.get(jsonFolderPointer);
                             else {
                                 str = "cmd.exe /c start java -jar " + newVisionPath + " gui ";
 //
                                 //TODO:: ОБЯЗАТЕЛЬНО ПОСЛЕ jsonfolderPath ПОСТАВИТЬ СЛЕШ ПОСЛЕ МЕРДЖА С ВЕТКОЙ СЛЕШ ИН ПАС
-                                System.out.println("vivod:"+ jsonFolderPath +  parametersNV.getVideoParameters().getName());
-                                profileParameters.setJsonFolderPath(jsonFolderPath +  parametersNV.getVideoParameters().getName()+"_toProcess");
+                                System.out.println("vivod:"+ jsonFolderPath+jsonFoldersList.get(jsonFolderPointer));
+                                profileParameters.setJsonFolderPath(jsonFolderPath + jsonFoldersList.get(jsonFolderPointer)+"/");
                                 profileParameters.setEnableAutoconnect(true);
-                                profileParameters.setAddressRTSP(jsonFolderPath+".mp4");
+                                profileParameters.setAlgorithmType(3);
+                                profileParameters.setAddressRTSP(jsonFolderPath+jsonFoldersList.get(jsonFolderPointer)+".mp4");
                             }
 
 
                             System.out.println(str + "\n" + (jsonFolderPointer + 1) + "/" + jsonFoldersList.size());
+                            profileParameters.writeProfileParameters(profileParameters,path);
                             TasksClass.startTask(str);
 
                         } catch (Exception ee) {
-                            logger.error(ee);
-                            System.out.println(ee);
+                            logger.error(ee.getMessage());
+                            ee.printStackTrace();
+                        }
+                        for (;;) {
+                            if(checkNewVisionWork()==true)
+                                break;
+                        }
+                        for (;;) {
+                            if(checkNewVisionWork()==false) {
+                                break;
+                            }
                         }
                         jsonFolderPointer++;
                     } else {
@@ -169,6 +180,7 @@ public class NewVisionManager implements IManager{
 //
                              //TODO:: ОБЯЗАТЕЛЬНО ПОСЛЕ jsonfolderPath ПОСТАВИТЬ СЛЕШ ПОСЛЕ МЕРДЖА С ВЕТКОЙ СЛЕШ ИН ПАС
                              System.out.println("vivod:"+ jsonFolderPath +  parametersNV.getVideoParameters().getName());
+                             profileParameters.setAlgorithmType(3);
                              profileParameters.setJsonFolderPath(jsonFolderPath +  parametersNV.getVideoParameters().getName()+"_toProcess");
                              profileParameters.setEnableAutoconnect(true);
                          }
