@@ -270,8 +270,7 @@ public class OpenPoseManager implements IManager{
                 }else{
                     status=false;
                     System.out.println("OPM: No process found...");
-                    System.out.println("OPM: Starting new process...");
-                    System.out.println(new Date());
+                    System.out.println("OPM: Starting new process..."+new Date());
                     cmdLine="bin\\"+processName+" -video "+inputFolder
                             +fileList.get(i).getName()+" -write_json "+outputFolderForJsons
                             +fileList.get(i).getName().substring(0,fileList.get(i).getName().length()-4)+"/ "+this.param;
@@ -338,7 +337,7 @@ public class OpenPoseManager implements IManager{
         }
     }
     private File getCurrentVideoFolder(){
-        if(currentVideoFolder == null) System.out.println("NULL");
+        if(currentVideoFolder == null) System.out.println("OPM: CurrentVideofolder NULL");
         return this.currentVideoFolder;
     }
     private void setCurrentVideoFolder(File file){
