@@ -253,8 +253,7 @@ public class OpenPoseManager implements IManager{
                 if(task.isProcessRunning(processName)!=false){
                     if(status!=true){
                         index = 0;
-                        System.out.println("OPM: Process works");
-                        System.out.println(new Date());
+                        System.out.println("OPM: Process works"+new Date());
                         status=true;
                         System.out.println("OPM: Going to sleep for 10 seconds.");
                         Thread.sleep(10 * 1000);
@@ -283,7 +282,7 @@ public class OpenPoseManager implements IManager{
                         if(failed){
                             File destination = new File(outputFolder+"/failedVideos/"+fileList.get(i-1).getName());
                             fileList.get(i-1).renameTo(destination);
-                            System.out.println(destination);
+                            System.out.println("OPM:"+destination);
                             logger.info(fileList.get(i).getName()+" failed ");
                         }else {
                             moveProcessedFile(isDeleteVideo,fileList.get(i-1));
@@ -392,7 +391,7 @@ public class OpenPoseManager implements IManager{
     public boolean moveProcessedFile(boolean isDel, File file){
         File destination = new File(outputFolder + "/computedVideos/" + file.getName());
         file.renameTo(destination);
-        System.out.println(destination);
+        System.out.println("OPM:"+destination);
         if(isDel){
             file.delete();
             return true;
