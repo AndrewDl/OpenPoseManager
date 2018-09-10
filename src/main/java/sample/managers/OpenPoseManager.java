@@ -324,32 +324,8 @@ public class OpenPoseManager implements IManager{
                                 logger.info(fileList.get(i-1).getName()+" completed");
                             }
                             jSonTimer.stop();
-                            System.out.println("OPM: Got it! Process complete, breaking loop!");
-                            System.out.println(new Date());
+                            System.out.println("OPM: Got it! Process complete, breaking loop!"+new Date());
                             dirMan.dropFilelist();
-//                            List<File> secondFileList = new ArrayList<>();
-//                            if(secondFileList.size()==0){
-//                                System.out.println("filling new list");
-//                                secondFileList = dirMan.getVideoNamesList(inputFolder);}
-//                            else
-//                            {
-//                                System.out.println("clear second list");
-//                                secondFileList.clear();
-//                                secondFileList = dirMan.getVideoNamesList(inputFolder);
-//                            }
-//                            if(!secondFileList.isEmpty())
-//                                loop(task,secondFileList);
-//                            else {
-//                                System.out.println("No Video File Found");
-//                                try {
-//                                    Thread.sleep(10 * 1000);
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                System.out.println("start again");
-//                                start();
-//                            }
-                           // System.out.println("Checking folder for new videos");
                             this.stop();
                             break;
                         }
